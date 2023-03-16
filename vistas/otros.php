@@ -36,67 +36,7 @@
               <!-- Main content -->
               <section class="content">
                 <div class="container-fluid">
-                  <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-6g col-xl-6">
-                      <!-- TBLA - BANCOS -->
-                      <div class="row">
-                        <div class="col-sm-6">
-                          <h2>Bancos</h2>
-                        </div>
-                        <div class="col-sm-6">
-                          <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Bancos</li>
-                          </ol>
-                        </div>
-                        <div class="col-12">
-                          <div class="card card-primary card-outline">
-                            <div class="card-header">
-                              <h3 class="card-title">
-                                <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-bancos" onclick="limpiar_banco();"><i class="fas fa-plus-circle"></i> Agregar</button>
-                                Administrar Bancos.
-                              </h3>
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                              <table id="tabla-bancos" class="table table-bordered table-striped display" style="width: 100% !important;">
-                                <thead>
-                                  <tr>
-                                    <th class="text-center">#</th>
-                                    <th class="">Acciones</th>
-                                    <th>Nombre</th>
-                                    <th>Formato Cta/CCI</th>
-                                    <th>Estado</th>
-                                    <th>Nombre</th>
-                                    <th>Alias</th>
-                                    <th>Formato Cta</th>
-                                    <th>Formato CCI</th>
-                                    <th>Formato Cta. Dtrac.</th>
-                                  </tr>
-                                </thead>
-                                <tbody></tbody>
-                                <tfoot>
-                                  <tr>
-                                    <th class="text-center">#</th>
-                                    <th class="">Acciones</th>
-                                    <th>Nombre</th>
-                                    <th>Formato</th>
-                                    <th>Estado</th>
-                                    <th>Nombre</th>
-                                    <th>Alias</th>
-                                    <th>Formato Cta</th>
-                                    <th>Formato CCI</th>
-                                    <th>Formato Cta. Dtrac.</th>
-                                  </tr>
-                                </tfoot>
-                              </table>
-                            </div>
-                            <!-- /.card-body -->
-                          </div>
-                          <!-- /.card -->
-                        </div>
-                      </div>
-                    </div>
+                  <div class="row">                    
 
                     <div class="col-sm-12 col-md-12 col-lg-6g col-xl-6">
                       <!-- TBLA - UNIDAD DE MEDIDA-->
@@ -255,13 +195,13 @@
                       <!-- TBLA - CATEGORIAS PRODUCTO -->
                       <div class="row">
                         <div class="col-sm-6">
-                          <h2>Categorias Producto</h2>
+                          <h2>Laboratorio (Marcas)</h2>
                         </div>
                         <!-- /.col-6 -->
                         <div class="col-sm-6">
                           <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Producto</li>
+                            <li class="breadcrumb-item active">Laboratorio</li>
                           </ol>
                         </div>
                         <!-- /.col-6 -->
@@ -270,7 +210,7 @@
                             <div class="card-header">
                               <h3 class="card-title">
                                 <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-categorias-af" onclick="limpiar_c_af();"><i class="fas fa-plus-circle"></i> Agregar</button>
-                                Categorías Producto.
+                                Lista de Laboratorio.
                               </h3>
                             </div>
                             <!-- /.card-header -->
@@ -310,111 +250,7 @@
               <!-- /.content -->     
 
               <!-- MODAL - BANCOS -->
-              <div class="modal fade" id="modal-agregar-bancos">
-                <div class="modal-dialog modal-dialog-scrollable modal-md">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title">Agregar Banco</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span class="text-danger" aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    <div class="modal-body">
-                      <!-- form start -->
-                      <form id="form-bancos" name="form-bancos" method="POST" autocomplete="off">
-                        <div class="card-body">
-                          <div class="row" id="cargando-a-fomulario">
-                            <!-- id banco -->
-                            <input type="hidden" name="idbancos" id="idbancos" />
-
-                            <!-- Nombre -->
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                              <div class="form-group">
-                                <label for="nombre_b">Nombre</label>
-                                <input type="text" name="nombre_b" id="nombre_b" class="form-control" placeholder="Nombre del banco." />
-                              </div>
-                            </div>
-
-                            <!-- alias -->
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                              <div class="form-group">
-                                <label for="alias">Alias</label>
-                                <input type="text" name="alias" id="alias" class="form-control" placeholder="Alias del banco." />
-                              </div>
-                            </div>
-
-                            <!-- Formato cuenta bancaria -->
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                              <div class="form-group">
-                                <label for="formato_cta">Formato Cuenta Bancaria</label>
-                                <input type="text" name="formato_cta" id="formato_cta" class="form-control" placeholder="Formato." value="00000000" data-inputmask="'mask': ['99-99-99-99', '99 99 99 99']" data-mask />
-                              </div>
-                            </div>
-
-                            <!-- Formato CCI -->
-                            <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                              <div class="form-group">
-                                <label for="formato_cci">Formato CCI</label>
-                                <input type="text" name="formato_cci" id="formato_cci" class="form-control" placeholder="Formato." value="00000000" data-inputmask="'mask': ['99-99-99-99', '99 99 99 99']" data-mask />
-                              </div>
-                            </div>
-
-                            <!-- Formato CCI -->
-                            <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                              <div class="form-group">
-                                <label for="formato_detracciones">Formato Detracción</label>
-                                <input type="text" name="formato_detracciones" id="formato_detracciones" class="form-control" placeholder="Formato." value="00000000" data-inputmask="'mask': ['99-99-99-99', '99 99 99 99']" data-mask />
-                              </div>
-                            </div> 
-
-                            <!--img-material-->
-                            <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                              <label for="imagen1">Imagen</label>
-                              <div style="text-align: center;">
-                                <img
-                                  onerror="this.src='../dist/img/default/img_defecto_banco.png';"
-                                  src="../dist/img/default/img_defecto_banco.png"
-                                  class="img-thumbnail"
-                                  id="imagen1_i"
-                                  style="cursor: pointer !important; height: 100% !important;"
-                                  width="auto"
-                                />
-                                <input style="display: none;" type="file" name="imagen1" id="imagen1" accept="image/*" />
-                                <input type="hidden" name="imagen1_actual" id="imagen1_actual" />
-                                <div class="text-center" id="imagen1_nombre"><!-- aqui va el nombre de la FOTO --></div>
-                              </div>
-                            </div>
-
-                            <!-- barprogress -->
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-                              <div class="progress" id="div_barra_progress_banco">
-                                <div id="barra_progress_banco" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
-                                  0%
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="row" id="cargando-b-fomulario" style="display: none;">
-                            <div class="col-lg-12 text-center">
-                              <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
-                              <br />
-                              <h4>Cargando...</h4>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- /.card-body -->
-                        <button type="submit" style="display: none;" id="submit-form-bancos">Submit</button>
-                      </form>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_banco();">Close</button>
-                      <button type="submit" class="btn btn-success" id="guardar_registro">Guardar Cambios</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
 
               <!-- MODAL - COLOR -->
               
@@ -773,11 +609,10 @@
         <?php  require 'script.php'; ?>
         
         <script type="text/javascript" src="scripts/otros.js"></script>
-        <script type="text/javascript" src="scripts/bancos.js"></script>
         <script type="text/javascript" src="scripts/unidades_m.js"></script>
-        <script type="text/javascript" src="scripts/tipo.js"></script>
+        <script type="text/javascript" src="scripts/tipo_persona.js"></script>
         <script type="text/javascript" src="scripts/cargo.js"></script>
-        <script type="text/javascript" src="scripts/categoria_p.js"></script>
+        <script type="text/javascript" src="scripts/laboratorio.js"></script>
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

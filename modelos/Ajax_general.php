@@ -112,7 +112,7 @@
     }
 
     public function select2_cargo_trabajador() {
-      $sql = "SELECT * FROM cargo_trabajador WHERE estado='1' AND estado_delete = '1' ORDER BY nombre ASC";
+      $sql = "SELECT * FROM cargo_trabajador WHERE estado='1' AND estado_delete = '1' AND idcargo_trabajador > 1 ORDER BY nombre ASC";
       return ejecutarConsulta($sql);
     }
     

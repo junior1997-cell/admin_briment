@@ -9,9 +9,9 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
     
-    require_once "../modelos/Tipo.php";
+    require_once "../modelos/Tipo_persona.php";
 
-    $tipo = new Tipo();
+    $tipo = new Tipo_persona();
 
     $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
 

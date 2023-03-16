@@ -271,7 +271,7 @@ function modal_comprobante(comprobante, fecha, tipo_comprobante, serie_comproban
       No hay un documento para ver. Edite este registro en su modulo correspondiente.
     </div>`);
   }else{
-    var host = window.location.host == 'localhost'? `http://localhost/front_jdl/admin/dist/docs/${carpeta}/${subcarpeta}/${comprobante}` : `${window.location.origin}/dist/docs/${carpeta}/${subcarpeta}/${comprobante}` ;
+    var host = window.location.host == 'localhost'? `http://localhost/admin_briment/dist/docs/${carpeta}/${subcarpeta}/${comprobante}` : `${window.location.origin}/dist/docs/${carpeta}/${subcarpeta}/${comprobante}` ;
     
     if ( UrlExists(host) == 200 ) {
       nombre_download = `${format_d_m_a(fecha)} ─ ${tipo_comprobante} - ${serie_comprobante}`;

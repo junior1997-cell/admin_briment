@@ -186,7 +186,7 @@ class SidebarSearch {
     }
 
     const groupItemElement = $('<a/>', {
-      href:  (window.location.host=='localhost'?'http://localhost/front_jdl/admin/vistas/':window.location.origin +'/vistas/' ) + link.replace(/^.*[\\\/]/, ''),
+      href:  (window.location.host=='localhost'?'http://localhost/admin_briment/vistas/':window.location.origin +'/vistas/' ) + link.replace(/^.*[\\\/]/, ''),
       class: 'list-group-item'
     })
     const searchTitleElement = $('<div/>', {

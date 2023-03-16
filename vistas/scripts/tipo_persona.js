@@ -39,12 +39,15 @@ function listar_tipo() {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
     aServerSide: true,//Paginación y filtrado realizados por el servidor
-    dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2], } } ,
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_tipo.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,3], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,3], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,3], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
     ],
     ajax:{
-      url: '../ajax/tipo.php?op=listar_tipo',
+      url: '../ajax/tipo_persona.php?op=listar_tipo',
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -77,7 +80,7 @@ function guardaryeditar_tipo(e) {
   var formData = new FormData($("#form-tipo")[0]);
  
   $.ajax({
-    url: "../ajax/tipo.php?op=guardaryeditar_tipo",
+    url: "../ajax/tipo_persona.php?op=guardaryeditar_tipo",
     type: "POST",
     data: formData,
     contentType: false,
@@ -138,7 +141,7 @@ function mostrar_tipo(idtipo_persona) {
 
   $("#modal-agregar-tipo").modal("show")
 
-  $.post("../ajax/tipo.php?op=mostrar_tipo", { idtipo_persona: idtipo_persona }, function (e, status) {
+  $.post("../ajax/tipo_persona.php?op=mostrar_tipo", { idtipo_persona: idtipo_persona }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);  
 
@@ -159,8 +162,8 @@ function mostrar_tipo(idtipo_persona) {
 function eliminar_tipo(idtipo_persona, nombre) {  
   
   crud_eliminar_papelera(
-    "../ajax/tipo.php?op=desactivar_tipo",
-    "../ajax/tipo.php?op=eliminar_tipo", 
+    "../ajax/tipo_persona.php?op=desactivar_tipo",
+    "../ajax/tipo_persona.php?op=eliminar_tipo", 
     idtipo_persona, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 

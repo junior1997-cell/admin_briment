@@ -256,7 +256,7 @@ class Venta_producto
     if ( empty($comprobante) ) { } else { $filtro_comprobante = "AND vp.tipo_comprobante = '$comprobante'"; } 
 
     $data = Array();
-    $scheme_host=  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/front_jdl/admin/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
+    $scheme_host=  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_briment/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
 
     $sql = "SELECT vp.idventa_producto, vp.idpersona, vp.fecha_venta, vp.establecimiento, vp.tipo_comprobante, vp.serie_comprobante, 
     vp.val_igv, vp.subtotal, vp.igv, vp.total, vp.descripcion, vp.fecha_proximo_pago, vp.comprobante, vp.metodo_pago, vp.estado,

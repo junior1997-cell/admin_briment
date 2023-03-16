@@ -237,8 +237,7 @@
                               <input type="hidden" name="idpersona_per" id="idpersona_per" />                                
 
                               <!-- tipo persona  -->
-                              <input type="hidden" name="id_tipo_persona_per" id="id_tipo_persona_per" value="4" />                              
-                              <input type="hidden" name="input_socio_per" id="input_socio_per" value="0"  >
+                              <input type="hidden" name="id_tipo_persona_per" id="id_tipo_persona_per" value="4" /> 
 
                               <!-- Tipo de documento -->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-2">
@@ -270,7 +269,7 @@
                               </div>
 
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                                 <div class="form-group">
                                   <label for="nombre_per">Nombres/Razon Social</label>
                                   <input type="text" name="nombre_per" class="form-control" id="nombre_per" placeholder="Nombres y apellidos" />
@@ -304,44 +303,10 @@
                               </div>
 
                               <!-- edad -->
-                              <div class="col-12 col-sm-2 col-md-6 col-lg-1">
+                              <div class="col-12 col-sm-2 col-md-6 col-lg-3">
                                 <div class="form-group">
                                   <label for="edad_per">Edad</label>
                                   <p class="edad_per" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
-                                </div>
-                              </div>
-
-                              <!-- banco -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="banco">Banco</label>
-                                  <select name="banco" id="banco" class="form-control select2 banco" style="width: 100%;" onchange="formato_banco();">
-                                    <!-- Aqui listamos los bancos -->
-                                  </select>
-                                </div>
-                              </div>
-
-                              <!-- Cuenta bancaria -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="cta_bancaria" class="chargue-format-1">Cuenta Bancaria</label>
-                                  <input type="text" name="cta_bancaria" class="form-control" id="cta_bancaria" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
-                                </div>
-                              </div>
-
-                              <!-- CCI -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="cci" class="chargue-format-2">CCI</label>
-                                  <input type="text" name="cci" class="form-control" id="cci" placeholder="CCI" data-inputmask="" data-mask />
-                                </div>
-                              </div>
-
-                              <!-- Titular de la cuenta -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="titular_cuenta_per">Titular de la cuenta</label>
-                                  <input type="text" name="titular_cuenta_per" class="form-control" id="titular_cuenta_per" placeholder="Titular de la cuenta" />
                                 </div>
                               </div> 
                               
@@ -374,8 +339,8 @@
                               <!-- Direccion -->
                               <div class="col-12 col-sm-12 col-md-12 col-lg-12 classdirecc">
                                 <div class="form-group">
-                                  <label for="direccion_per">Dirección</label>
-                                  <input type="text" name="direccion_per" id="direccion_per" class="form-control" placeholder="Dirección" />
+                                  <label for="direccion_per">Dirección</label>                                  
+                                  <textarea name="direccion_per" id="direccion_per" class="form-control" placeholder="Dirección" rows="2"></textarea>
                                 </div>
                               </div>
 

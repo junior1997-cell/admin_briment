@@ -33,13 +33,7 @@
       $direccion		    = isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
       $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";     
       $email			      = isset($_POST["email"])? limpiarCadena($_POST["email"]):"";
-      $banco            = isset($_POST["banco"])? $_POST["banco"] :"";
-      $cta_bancaria_format  = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-      $cta_bancaria     = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-      $cci_format      	= isset($_POST["cci"])? $_POST["cci"]:"";
-      $cci            	= isset($_POST["cci"])? $_POST["cci"]:"";
-      $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
-
+      
       $nacimiento       = isset($_POST["nacimiento"])? limpiarCadena($_POST["nacimiento"]):"";
       $cargo_trabajador = isset($_POST["cargo_trabajador"])? limpiarCadena($_POST["cargo_trabajador"]):"";
       $sueldo_mensual   = isset($_POST["sueldo_mensual"])? limpiarCadena($_POST["sueldo_mensual"]):"";
@@ -62,8 +56,8 @@
 
           if (empty($idpersona)){
             
-            $rspta=$persona->insertar($id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,
-            $titular_cuenta,$direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario,$edad, $imagen1);
+            $rspta=$persona->insertar($id_tipo_persona,$tipo_documento,$num_documento,$nombre,$email,$telefono,
+            $direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario,$edad, $imagen1);
             
             echo json_encode($rspta, true);
   
@@ -77,8 +71,8 @@
             }            
 
             // editamos un persona existente
-            $rspta=$persona->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,
-            $titular_cuenta,$direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario,$edad, $imagen1);
+            $rspta=$persona->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,
+            $direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario,$edad, $imagen1);
             
             echo json_encode($rspta, true);
           }            
@@ -134,15 +128,11 @@
                 </div>',
                 "3"=> '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $value['direccion'] . '</textarea>',
                 "4"=> '<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al persona.">'. $value['celular'] . '</a>',
-                "5"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
+                "5"=> $value['sueldo_mensual'] ,
                 "6"=> (($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
                 "7"=> $value['nombres'],
                 "8"=> $value['tipo_documento'],
-                "9"=> $value['numero_documento'],
-                "10"=> $value['banco'],
-                "11"=> $value['cuenta_bancaria'],
-                "12"=> $value['cci']
-
+                "9"=> $value['numero_documento'], 
               );
             }
             $results = array(
@@ -163,18 +153,10 @@
           echo json_encode($rspta, true);
         break;        
 
-        case 'formato_banco':           
-          $rspta=$persona->formato_banco($_POST["idbanco"]);
-          //Codificar el resultado utilizando json
-          echo json_encode($rspta, true);           
-        break;
+        
 
         /* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
-        case 'recuperar_banco':           
-          $rspta=$persona->recuperar_banco();
-          //Codificar el resultado utilizando json
-          echo json_encode($rspta, true);           
-        break;
+       
         /* =========================== S E C C I O N  T I P O   P E R S O N A  =========================== */
         case 'tipo_persona':
 

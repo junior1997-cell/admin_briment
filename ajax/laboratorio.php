@@ -9,9 +9,9 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
     
-    require_once "../modelos/categoria_p.php";
+    require_once "../modelos/laboratorio.php";
 
-    $categoria_p = new Categoria_p();
+    $categoria_p = new Laboratorio();
 
     $idcategoria_producto = isset($_POST["idcategoria_producto"]) ? limpiarCadena($_POST["idcategoria_producto"]) : "";
     $nombre_categoria = isset($_POST["nombre_categoria"]) ? limpiarCadena($_POST["nombre_categoria"]) : "";

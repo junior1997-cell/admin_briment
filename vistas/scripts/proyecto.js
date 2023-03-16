@@ -944,7 +944,7 @@ function mostrar_detalle(idproyecto) {
     var ruta_carpeta = window.location.host;
 
     if (ruta_carpeta == 'localhost') {
-      ruta_carpeta = 'http://localhost/front_jdl/admin/dist/docs/valorizacion/documento/'
+      ruta_carpeta = 'http://localhost/admin_briment/dist/docs/valorizacion/documento/'
     } else {
       ruta_carpeta = `${window.location.origin}/dist/docs/valorizacion/documento/`;
     }

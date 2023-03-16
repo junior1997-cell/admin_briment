@@ -11,7 +11,7 @@ var tablamateriales;
 var tabla_pago_venta;
 
 var array_doc = [];
-var host = window.location.host == 'localhost'? `http://localhost/front_jdl/admin/dist/docs/compra_insumo/comprobante_compra/` : `${window.location.origin}/dist/docs/compra_insumo/comprobante_compra/` ;
+var host = window.location.host == 'localhost'? `http://localhost/admin_briment/dist/docs/compra_insumo/comprobante_compra/` : `${window.location.origin}/dist/docs/compra_insumo/comprobante_compra/` ;
 
 var array_class_trabajador = [];
 

@@ -32,10 +32,15 @@ function listar_c_insumos_af () {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
     aServerSide: true,//Paginación y filtrado realizados por el servidor
-    dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
-    buttons: ['copyHtml5', 'excelHtml5','pdf'],
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
+    buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_tipo.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,3], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,3], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,3], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+    ],
     ajax:{
-      url: '../ajax/categoria_p.php?op=listar_c_producto',
+      url: '../ajax/laboratorio.php?op=listar_c_producto',
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -69,7 +74,7 @@ function guardaryeditar_c_insumos_af(e) {
   var formData = new FormData($("#form-categoria-af")[0]);
  
   $.ajax({
-    url: "../ajax/categoria_p.php?op=guardaryeditar_c_insumos_af",
+    url: "../ajax/laboratorio.php?op=guardaryeditar_c_insumos_af",
     type: "POST",
     data: formData,
     contentType: false,
@@ -133,7 +138,7 @@ function mostrar_c_insumos_af (idcategoria_producto ) {
 
   $("#modal-agregar-categorias-af").modal("show")
 
-  $.post("../ajax/categoria_p.php?op=mostrar", {idcategoria_producto : idcategoria_producto }, function (e, status) {
+  $.post("../ajax/laboratorio.php?op=mostrar", {idcategoria_producto : idcategoria_producto }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);
 
@@ -155,8 +160,8 @@ function mostrar_c_insumos_af (idcategoria_producto ) {
 //Función para desactivar y eliminar registros
 function eliminar_c_insumos_af(idcategoria_producto, nombre ) {
   crud_eliminar_papelera(
-    "../ajax/categoria_p.php?op=desactivar",
-    "../ajax/categoria_p.php?op=delete", 
+    "../ajax/laboratorio.php?op=desactivar",
+    "../ajax/laboratorio.php?op=delete", 
     idcategoria_producto, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 

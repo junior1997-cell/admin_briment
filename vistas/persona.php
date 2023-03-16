@@ -74,7 +74,7 @@
                                       <div class="row">
                                         <div class="col-12 mb-2 class_btn">
                                           <h3 class="card-title">
-                                            <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-persona" onclick="limpiar_form_persona();"><i class="fas fa-user-plus"></i> Agregar</button>                           
+                                            <button type="button" class="btn bg-gradient-primary mb-2" data-toggle="modal" data-target="#modal-agregar-persona" onclick="limpiar_form_persona();"><i class="fas fa-user-plus"></i> Agregar</button>                           
                                           </h3> 
                                         </div>                                        
                                         <div class="col-12">
@@ -86,15 +86,12 @@
                                                 <th class="">Nombres</th>
                                                 <th>Dirección</th>
                                                 <th>Telefono</th>
-                                                <th>C. Bancaria</th>
+                                                <th>Sueldo</th>
 
                                                 <th>Estado</th>
                                                 <th>Nombres</th>
                                                 <th>Tipo Doc.</th>
                                                 <th>Num. Doc</th>
-                                                <th>Banco</th>
-                                                <th>C. Bancaria</th>
-                                                <th>CCI</th>
 
                                               </tr>
                                             </thead>
@@ -106,15 +103,12 @@
                                                 <th class="">Nombres</th>
                                                 <th>Dirección</th>
                                                 <th>Telefono</th>
-                                                <th>C. Bancaria</th>
+                                                <th>Sueldo</th>
 
                                                 <th>Estado</th>
                                                 <th>Nombres</th>
                                                 <th>Tipo Doc.</th>
                                                 <th>Num. Doc.</th>
-                                                <th>Banco</th>
-                                                <th>C. Bancaria</th>
-                                                <th>CCI</th>
 
                                               </tr>
                                             </tfoot>
@@ -195,7 +189,7 @@
                               </div>
 
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-7">
                                 <div class="form-group">
                                   <label for="nombre">Nombres/Razon Social</label>
                                   <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Nombres y apellidos" />
@@ -235,54 +229,13 @@
                               </div>
 
                               <!-- edad -->
-                              <div class="col-12 col-sm-2 col-md-6 col-lg-1">
+                              <div class="col-12 col-sm-2 col-md-6 col-lg-3">
                                 <div class="form-group">
                                   <label for="edad">Edad</label>
                                   <p class="edad" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
                                 </div>
                               </div>
-
-                              <!-- banco -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="banco">Banco</label>
-                                  <select name="banco" id="banco" class="form-control select2 banco" style="width: 100%;" onchange="formato_banco();">
-                                    <!-- Aqui listamos los bancos -->
-                                  </select>
-                                </div>
-                              </div>
-
-                              <!-- Cuenta bancaria -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="cta_bancaria" class="chargue-format-1">Cuenta Bancaria</label>
-                                  <input type="text" name="cta_bancaria" class="form-control" id="cta_bancaria" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
-                                </div>
-                              </div>
-
-                              <!-- CCI -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="cci" class="chargue-format-2">CCI</label>
-                                  <input type="text" name="cci" class="form-control" id="cci" placeholder="CCI" data-inputmask="" data-mask />
-                                </div>
-                              </div>
-
-                              <!-- Titular de la cuenta -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="titular_cuenta">Titular de la cuenta</label>
-                                  <input type="text" name="titular_cuenta" class="form-control" id="titular_cuenta" placeholder="Titular de la cuenta" />
-                                </div>
-                              </div>
-
-                              <!-- Ruc -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4" style="display: none;">
-                                <div class="form-group">
-                                  <label for="ruc">Ruc</label>
-                                  <input type="number" name="ruc" class="form-control" id="ruc" placeholder="Ingrese número de ruc" />
-                                </div>
-                              </div>
+                              
                               <!-- cargo_trabajador  -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-6 campos_trabajador">
                                 <div class="form-group">
@@ -307,25 +260,16 @@
                                   <label for="sueldo_diario">Sueldo(Diario)</label>
                                   <input type="number" step="any" name="sueldo_diario" class="form-control" id="sueldo_diario" readonly />
                                 </div>
-                              </div>
-                              <!--nacimiento,ruc,cargo_trabajador, sueldo_mensual,sueldo_diario -->
-                              <!-- Swichs permanente -->
-                              <div class="col-4 col-sm-5 col-md-6 col-lg-3 classswichs">
-                                  <label for="socio">Es socio ? <small class="text-danger text-bold sino">(NO)</small> </label>
-                                  <div class="switch-toggle">
-                                    <input type="checkbox" id="socio" >
-                                    <label for="socio" onclick="habilitando_socio();" onchange="habilitando_socio();"></label>
-                                  </div>
-                                  <input type="hidden" name="input_socio" id="input_socio" value="0"  >
-                              </div>
+                              </div>                              
 
                               <!-- Direccion -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-9 classdirecc">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-12">
                                 <div class="form-group">
-                                  <label for="direccion">Dirección</label>
-                                  <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Dirección" />
+                                  <label for="direccion">Dirección</label>                                  
+                                  <textarea name="direccion" id="direccion" class="form-control" placeholder="Dirección" rows="2"></textarea>
                                 </div>
                               </div>
+
                               <!-- imagen perfil -->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                                 <div class="col-lg-12 borde-arriba-naranja mt-2 mb-2"></div>

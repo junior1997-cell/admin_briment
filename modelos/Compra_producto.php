@@ -221,7 +221,7 @@ class Compra_producto
     if ( empty($comprobante) ) { } else { $filtro_comprobante = "AND cp.tipo_comprobante = '$comprobante'"; } 
 
     $data = Array();
-    $scheme_host=  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/front_jdl/admin/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
+    $scheme_host=  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_briment/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
 
     $sql = "SELECT cp.idcompra_producto, cp.idpersona,cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante,cp.total, cp.tipo_gravada,cp.descripcion, p.nombres
     FROM compra_producto as cp, persona as p  

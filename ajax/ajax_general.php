@@ -25,7 +25,7 @@
     $venta_producto = new Venta_producto();
     $compra_cafe = new Compra_cafe();
 
-    $scheme_host  =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/front_jdl/admin/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
+    $scheme_host  =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_briment/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
     $imagen_error = "this.src='../dist/svg/404-v2.svg'";
     $toltip       = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
 
@@ -123,7 +123,7 @@
           $retorno = array(
             'status' => true, 
             'message' => 'Salió todo ok', 
-            'data' => $data, 
+            'data' => '<option value="1" >Ninguno</option>' . $data, 
           );
   
           echo json_encode($retorno, true);
