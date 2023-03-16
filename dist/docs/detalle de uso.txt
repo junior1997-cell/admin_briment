@@ -1,0 +1,12 @@
+orden:
+
+../dist/docs/modulo/carpetas
+
+ejemplo:
+
+../dist/docs/escritorio/baucher
+
+../dist/docs/usuarios/img_perfil
+../dist/docs/usuarios/dni_reverso
+../dist/docs/usuarios/dni_anverso
+../dist/docs/usuarios/cv_documentado

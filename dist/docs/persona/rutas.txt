@@ -1,0 +1,5 @@
+../dist/docs/all_trabajador/cv_documentado/
+../dist/docs/all_trabajador/cv_no_documentado/
+../dist/docs/all_trabajador/dni_anverso/
+../dist/docs/all_trabajador/dni_reverso/
+../dist/docs/all_trabajador/perfil/

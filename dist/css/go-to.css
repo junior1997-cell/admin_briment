@@ -1,0 +1,38 @@
+.go-to {
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    z-index: 9999;
+    width: 2.6875rem;
+    height: 2.6875rem;
+    background-color: rgba(113 134 157 / 56%);
+    color: #000000;
+    font-size: .8125rem;
+    opacity: .5;
+    border-radius: 50%;
+    transition: .3s ease-out;
+}
+
+.fadeInUp {
+    -webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+}
+
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.go-to:focus:hover,
+.go-to:hover {
+  color: #fff;
+  background-color: #377dff;
+  opacity: 1;
+}

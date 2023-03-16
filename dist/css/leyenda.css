@@ -1,0 +1,80 @@
+.contenedor{
+display: flex;
+/*justify-content:flex-end;*/
+  height: 40px;
+  font-size: 20px;
+  line-height: 40px;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+
+  overflow: hidden;
+}
+.cls-ul{
+  list-style: none;
+  padding-left: 10px;
+  animation: cambiar 9s infinite;
+}
+@keyframes cambiar {
+  0%{margin-top: 0; }
+  20%{margin-top: 0; }
+
+  25%{margin-top: -40px; }
+  50%{margin-top: -40px; }
+
+  55%{margin-top: -80px; }
+  80%{margin-top: -80px; }
+
+  85%{margin-top: -40px; }
+  95%{margin-top: -40px; }
+
+  100%{margin-top: 0px; }
+}
+/**------------------- */
+
+.contenedorr{
+display: flex;
+/*  justify-content:flex-end;*/
+  height: 40px;
+  font-size: 20px;
+  line-height: 40px;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+
+  overflow: hidden;
+}
+.clss-ul{
+  list-style: none;
+  padding-left: 10px;
+  animation: cambiarr 12s infinite;
+}
+@keyframes cambiarr {
+  0%{margin-top: 0; }
+  20%{margin-top: 0; }
+
+  25%{margin-top: -40px; }
+  50%{margin-top: -40px; }
+
+  55%{margin-top: -80px; }
+  80%{margin-top: -80px; }
+
+  85%{margin-top: -40px; }
+  95%{margin-top: -40px; }
+
+  100%{margin-top: 0px; }
+}
+/* Para 341px hasta 960px */  
+@media only screen and (max-width: 960px) and (min-width: 341px) {  
+  .hiddenn{
+    display: none;
+  }
+}  

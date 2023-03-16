@@ -1,0 +1,5 @@
+../dist/docs/servicio_maquina/comprobantes_pago/
+../dist/docs/servicio_maquina/comprobantes_facturas/
+
+
+

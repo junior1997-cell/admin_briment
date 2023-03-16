@@ -1,0 +1,27 @@
+/**
+ * Spanish translation for bootstrap-datepicker
+ * Bruno Bonamin <bruno.bonamin@gmail.com>
+ */
+ jQuery(function($) {
+	$.datetimepicker.regional['es'] = {
+	  closeText: 'Cerrar',
+	  prevText: '&#x3c;Ant',
+	  nextText: 'Sig&#x3e;',
+	  currentText: 'Hoy',
+	  monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+		'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+	  ],
+	  monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+		'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+	  ],
+	  dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi&eacute;rcoles', 'Jueves', 'Viernes', 'S&aacute;bado'],
+	  dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mi&eacute;', 'Juv', 'Vie', 'S&aacute;b'],
+	  dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'S&aacute;'],
+	  weekHeader: 'Sm',
+	  firstDay: 1,
+	  isRTL: false,
+	  showMonthAfterYear: false,
+	  yearSuffix: ''
+	};
+	$.datetimepicker.setDefaults($.datetimepicker.regional['es']);
+  });
