@@ -2,8 +2,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   <a href="escritorio.php" class="brand-link">
-    <img src="../dist/svg/logo-short-jdl.svg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8;" />
-    <span class="brand-text font-weight-light">Admin JDL</span>
+    <img src="../dist/svg/ico-briment.svg" alt="AdminLTE Logo" class="brand-image img-circle- elevation-3" style="opacity: 0.8;" />
+    <span class="brand-text font-weight-light">Admin Briment</span>
   </a>
 
   <!-- Sidebar -->
