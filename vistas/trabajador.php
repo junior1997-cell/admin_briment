@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Trabajadores | Admin JDL</title>
+        <title>Trabajadores | Admin Briment</title>
 
         <?php $title = "Trabajadores"; require 'head.php'; ?>
         <link rel="stylesheet" href="../dist/css/switch_domingo.css">

@@ -8,7 +8,7 @@ function init() {
 
   $("#lAllpersona").addClass("active");
   lista_de_items()
-  tbla_principal('todos');
+  tbla_principal('todos', 'ninguno');
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
@@ -85,13 +85,13 @@ function lista_de_items() {
       e.data.forEach((val, index) => {
         data_html = data_html.concat(`
         <li class="nav-item">
-          <a class="nav-link" onclick="delay(function(){tbla_principal('${val.idtipo_persona}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
+          <a class="nav-link" onclick="delay(function(){tbla_principal('${val.idtipo_persona}', '${val.nombre}')}, 50 );" id="tabs-for-persona-tab" data-toggle="pill" href="#tabs-for-persona" role="tab" aria-controls="tabs-for-persona" aria-selected="false">${val.nombre}</a>
         </li>`);
       });
 
       $(".lista-items").html(`
         <li class="nav-item">
-          <a class="nav-link active" onclick="delay(function(){tbla_principal('todos')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="true">Todos</a>
+          <a class="nav-link active" onclick="delay(function(){tbla_principal('todos')}, 50 );" id="tabs-for-persona-tab" data-toggle="pill" href="#tabs-for-persona" role="tab" aria-controls="tabs-for-persona" aria-selected="true">Todos</a>
         </li>
         ${data_html}
       `); 
@@ -102,8 +102,8 @@ function lista_de_items() {
 }
 
 //Función Listar
-function tbla_principal(tipo_persona) {
-  show_hide_btn_add(tipo_persona);
+function tbla_principal(tipo_persona, nombre_tipo) {
+  show_hide_btn_add(tipo_persona, nombre_tipo);  
 
   tabla=$('#tabla-persona').dataTable({
     responsive: true,
@@ -147,36 +147,32 @@ function tbla_principal(tipo_persona) {
 
 }
 
-function show_hide_btn_add(tipo_persona) {
-  $("#sueldo_mensual").val("");
-  $(".campos_trabajador").hide();
+function show_hide_btn_add(tipo_persona, nombre_tipo) {
+
+  $(".class_btn").show();
+  $("#id_tipo_persona").val(tipo_persona);
 
   if (tipo_persona=="todos") {
     $("#id_tipo_persona").val("");
     $(".class_btn").hide();
     
-  }else{
+  }else if (tipo_persona=="2") {
 
-    $("#id_tipo_persona").val(tipo_persona);
-    $(".class_btn").show();
+    $(".campos_trabajador").show();
+    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar Trabajador`);      
 
-    if (tipo_persona=="2") {
-      $("#sueldo_mensual").val("0.00");
-      $(".campos_trabajador").hide();
+  }else if (tipo_persona=="3") {
+    $("#sueldo_mensual").val("0.00");
+    $(".campos_trabajador").hide();
+    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar Proveedor`);
 
-      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Productor`);
-
-    }else if (tipo_persona=="3") {
-      $("#sueldo_mensual").val("0.00");
-      $(".campos_trabajador").hide();
-
-      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Proveedor`);
-
-    }else if (tipo_persona=="4") {
-      $(".campos_trabajador").show();
-
-      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Trabajador`);      
-    }    
+  }else if (tipo_persona=="4") {
+    $("#sueldo_mensual").val("0.00");
+    $(".campos_trabajador").hide();
+    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar Cliente`);
+  } else {
+    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar ${nombre_tipo}`);
+    
   }
 }
 

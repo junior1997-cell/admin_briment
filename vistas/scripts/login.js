@@ -42,7 +42,7 @@ function validar_response(e) {
         } else {
             $(document).Toasts('create', {
                 class: 'bg-success',
-                title: 'Bienvenido al sistema "Admin JDL"',
+                title: 'Bienvenido al sistema "Admin Briment"',
                 subtitle: 'cerrar',
                 body: 'Se inicio sesion correctamente. Te hemos extrañado, estamos muy contentos de tenerte de vuelta.'
             });

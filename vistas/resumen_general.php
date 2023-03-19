@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin JDL | Resumen General</title>
+        <title>Admin Briment | Resumen General</title>
 
         <?php $title = "Resumen General"; require 'head.php'; ?>
           

@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Graficos venta | Admin JDL</title>
+        <title>Graficos venta | Admin Briment</title>
 
         <?php $title = "Graficos venta"; require 'head.php'; ?>
 

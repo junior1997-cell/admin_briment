@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Escritorio | Admin JDL</title>
+        <title>Escritorio | Admin Briment</title>
 
         <?php $title = "Escritorio"; require 'head.php'; ?>
      

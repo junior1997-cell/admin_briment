@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Personas | Admin JDL</title>
+        <title>Personas | Admin Briment</title>
 
         <?php $title = "Personas"; require 'head.php'; ?>
         <link rel="stylesheet" href="../dist/css/switch_persona.css">
@@ -70,7 +70,7 @@
                                 <div class="card-body" > 
                                   <div class="tab-content" id="tabs-for-tabContent">
                                     <!-- TABLA - RESUMEN -->
-                                    <div class="tab-pane fade show active" id="tabs-for-activo-fijo" role="tabpanel" aria-labelledby="tabs-for-activo-fijo-tab">
+                                    <div class="tab-pane fade show active" id="tabs-for-persona" role="tabpanel" aria-labelledby="tabs-for-persona-tab">
                                       <div class="row">
                                         <div class="col-12 mb-2 class_btn">
                                           <h3 class="card-title">
@@ -143,7 +143,7 @@
                   <div class="modal-dialog modal-dialog-scrollable modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title btn_add">Agregar persona</h4>
+                        <h4 class="modal-title titulo-modal">Agregar persona</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
@@ -160,7 +160,7 @@
                               <!-- tipo persona  -->
                               <input type="hidden" name="id_tipo_persona" id="id_tipo_persona" />
                               <!-- Tipo de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-2 cp_tipo_doc">
                                 <div class="form-group">
                                   <label for="tipo_documento">Tipo Doc.</label>
                                   <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
@@ -173,7 +173,7 @@
                               </div>
                               
                               <!-- N° de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-3 cp_num_doc">
                                 <div class="form-group">
                                   <label for="num_documento">N° de documento</label>
                                   <div class="input-group">
@@ -189,14 +189,14 @@
                               </div>
 
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-7">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-7 cp_nombre">
                                 <div class="form-group">
                                   <label for="nombre">Nombres/Razon Social</label>
                                   <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Nombres y apellidos" />
                                 </div>
                               </div>
                               <!-- Telefono -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-2">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-2 cp_telefono">
                                 <div class="form-group">
                                   <label for="telefono">Teléfono</label>
                                   <input type="text" name="telefono" id="telefono" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
@@ -204,7 +204,7 @@
                               </div>
 
                               <!-- Correo electronico -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-4 cp_email">
                                 <div class="form-group">
                                   <label for="email">Correo electrónico</label>
                                   <input type="email" name="email" class="form-control" id="email" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
@@ -212,7 +212,7 @@
                               </div>
 
                               <!-- fecha de nacimiento -->
-                              <div class="col-12 col-sm-10 col-md-6 col-lg-3">
+                              <div class="col-12 col-sm-10 col-md-6 col-lg-3 cp_f_nacimiento">
                                 <div class="form-group">
                                   <label for="nacimiento">Fecha Nacimiento</label>
                                   <input
@@ -229,7 +229,7 @@
                               </div>
 
                               <!-- edad -->
-                              <div class="col-12 col-sm-2 col-md-6 col-lg-3">
+                              <div class="col-12 col-sm-2 col-md-6 col-lg-3 cp_edad">
                                 <div class="form-group">
                                   <label for="edad">Edad</label>
                                   <p class="edad" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
@@ -237,7 +237,7 @@
                               </div>
                               
                               <!-- cargo_trabajador  -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 campos_trabajador">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 cp_cargo">
                                 <div class="form-group">
                                   <label for="cargo_trabajador">Cargo </label>
                                   <select name="cargo_trabajador" id="cargo_trabajador" class="form-control select2 cargo_trabajador" style="width: 100%;">
@@ -247,7 +247,7 @@
                               </div>
 
                               <!-- Sueldo(Mensual) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 campos_trabajador">
+                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 cp_s_mensual">
                                 <div class="form-group">
                                   <label for="sueldo_mensual">Sueldo(Mensual)</label>
                                   <input type="number" step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
@@ -255,7 +255,7 @@
                               </div>
 
                               <!-- Sueldo(Diario) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 campos_trabajador">
+                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 cp_s_diario">
                                 <div class="form-group">
                                   <label for="sueldo_diario">Sueldo(Diario)</label>
                                   <input type="number" step="any" name="sueldo_diario" class="form-control" id="sueldo_diario" readonly />
@@ -263,7 +263,7 @@
                               </div>                              
 
                               <!-- Direccion -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-12">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-12 cp_direccion">
                                 <div class="form-group">
                                   <label for="direccion">Dirección</label>                                  
                                   <textarea name="direccion" id="direccion" class="form-control" placeholder="Dirección" rows="2"></textarea>
