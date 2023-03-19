@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Resumen Venta Producto | Admin JDL</title>       
+        <title>Resumen Venta Producto | Admin Briment</title>       
 
         <?php $title = "Resumen Venta Producto"; require 'head.php';  ?>
         <link rel="stylesheet" href="../dist/css/switch_materiales.css">

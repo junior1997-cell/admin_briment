@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title> Resumen de Factura | Admin JDL</title>
+        <title> Resumen de Factura | Admin Briment</title>
 
         <?php $title = "Resumen de Activos Fijos"; require 'head.php'; ?>
         
