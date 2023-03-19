@@ -14,14 +14,16 @@ function init() {
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
 
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
+  lista_select2("../ajax/ajax_general.php?op=select2laboratorio", '#laboratorio', null);
+  lista_select2("../ajax/ajax_general.php?op=select2presentacion", '#presentacion', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
-  $("#guardar_registro").on("click", function (e) { $("#submit-form-materiales").submit(); });
+  $("#guardar_registro").on("click", function (e) { $("#submit-form-producto").submit(); });
 
    // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   $("#unidad_medida").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
-  $("#categoria_producto").select2({ theme: "bootstrap4", placeholder: "Seleccinar una categoria", allowClear: true, });
+  $("#laboratorio").select2({ theme: "bootstrap4", placeholder: "Seleccinar laboratorio", allowClear: true, });
+  $("#presentacion").select2({ theme: "bootstrap4", placeholder: "Seleccinar presentacion", allowClear: true, });
 // ══════════════════════════════════════ I N I T I A L I Z E   N U M B E R   F O R M A T ══════════════════════════════════════
   //$('#precio_unitario').number( true, 2 );
   //$('#precio_unitario').number( true, 2 );
@@ -30,7 +32,7 @@ function init() {
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
-
+//presentacion,laboratorio
 function templateColor (state) {
   if (!state.id) { return state.text; }
   var color_bg = state.title != '' ? `${state.title}`: '#ffffff00';   
@@ -48,20 +50,22 @@ function foto1_eliminar() {
 }
 
 //Función limpiar
-function limpiar_form_material() {
+function limpiar_form_producto() {
 
   $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
   $('.name-modal-title-agregar').html('Agregar Producto');
 
   //Mostramos los Materiales
   $("#idproducto").val("");  
-  $("#nombre_producto").val("");  
-  $("#categoria_producto").val("").trigger("change");
+  $("#codigo").val("");  
+  $("#nombre_producto").val(""); 
+  $("#laboratorio").val("null").trigger("change");
+  $("#presentacion").val("null").trigger("change");
   $("#unidad_medida").val("null").trigger("change");
-  $("#marca").val(""); 
-  $("#contenido_neto").val(1).trigger("change");  
-  $("#precio_unitario").val('0.00');  
-  $("#stock").val('0.00').trigger("change");
+  $("#sub_total").val(""); 
+  $("#igv").val(""); 
+  $("#precio_unitario").val('0.00');
+  $("#lote").val("");
   $("#descripcion").val(""); 
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto_producto.jpg");
@@ -162,13 +166,11 @@ function tbla_principal(idcategoria = 'todos') {
   }).DataTable();
 }
 
-//ver ficha tecnica
-
 
 //Función para guardar o editar
 function guardaryeditar(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-materiales")[0]);
+  var formData = new FormData($("#form-producto")[0]);
 
   $.ajax({
     url: "../ajax/producto.php?op=guardaryeditar",
@@ -183,11 +185,11 @@ function guardaryeditar(e) {
 
           tabla.ajax.reload(null, false);
 
-          limpiar_form_material();
+          limpiar_form_producto();
 
           Swal.fire("Correcto!", "Insumo guardado correctamente", "success");
 
-          $("#modal-agregar-material").modal("hide");          
+          $("#modal-agregar-producto").modal("hide");          
           
         } else {
           ver_errores(e);
@@ -222,14 +224,14 @@ function guardaryeditar(e) {
 }
 
 function mostrar(idproducto) {
-  limpiar_form_material(); //console.log(idproducto);
+  limpiar_form_producto(); //console.log(idproducto);
 
   $("#cargando-1-fomulario").hide();
   $("#cargando-2-fomulario").show();
 
   $('.name-modal-title-agregar').html('Editar Producto');
 
-  $("#modal-agregar-material").modal("show");
+  $("#modal-agregar-producto").modal("show");
 
   $.post("../ajax/producto.php?op=mostrar", { 'idproducto': idproducto }, function (e, status) {
     
@@ -238,7 +240,7 @@ function mostrar(idproducto) {
     if (e.status == true) {
       $("#idproducto").val(e.data.idproducto);
       $("#nombre_producto").val(e.data.nombre);
-      $("#marca").val(e.data.marca).trigger("change");  
+      $("#laboratorio").val(e.data.laboratorio).trigger("change");  
       $("#descripcion").val(e.data.descripcion);
       $("#stock").val(e.data.stock); 
       $("#contenido_neto").val(e.data.contenido_neto);  
@@ -312,7 +314,7 @@ function verdatos(idproducto){
                   <td> <b>Nombre: </b> ${e.data.nombre}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <td> <b>Marca: </b> ${e.data.marca}</td>
+                  <td> <b>laboratorio: </b> ${e.data.laboratorio}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Categoria</th>
@@ -380,6 +382,24 @@ function eliminar(idproducto, nombre) {
   );
 }
 
+function cal_igv_subtotal() {
+
+  var precio_unit = $("#precio_unitario").val();
+  var igv, subtotal;
+
+  if (precio_unit ==null || precio_unit=='0') {
+    
+  }else{
+    
+    subtotal = precio_unit/1.18 ;
+    igv = precio_unit-subtotal;
+    $("#igv").val(redondearExp(igv));
+    $("#sub_total").val( redondearExp(subtotal) );
+
+  }
+  
+}
+
 
 init();
 
@@ -387,28 +407,28 @@ init();
 
 $(function () {   
 
-  $('#unidad_medida').on('change', function() { $(this).trigger('blur'); });
-  $('#marca').on('change', function() { $(this).trigger('blur'); });
-  $('#categoria_producto').on('change', function() { $(this).trigger('blur'); });
+  $('#laboratorio').on('change', function() { $(this).trigger('blur'); });
+  $('#presentacion').on('change', function() { $(this).trigger('blur'); });
+  $('#Unidad_medida').on('change', function() { $(this).trigger('blur'); });
 
-  $("#form-materiales").validate({
+  $("#form-producto").validate({
     rules: {
       nombre_producto:    { required: true, minlength:3, maxlength:200},
-      categoria_producto: { required: true },
-      marca:              { required: true },
+      laboratorio:        { required: true },
+      presentacion:       { required: true },
       unidad_medida:      { required: true },
-      contenido_neto:     {  min: 1, number: true },
-      //precio_unitario:    { required: true },
+      // contenido_neto:     {  min: 1, number: true },
+      precio_unitario:    { required: true },
       descripcion:        { minlength: 4 },
       
     },
     messages: {
       nombre_producto:    { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
-      categoria_producto: { required: "Campo requerido", },
-      marca:              { required: "Campo requerido" },
+      laboratorio:        { required: "Campo requerido" },
+      presentacion:       { required: "Campo requerido", },
       unidad_medida:      { required: "Campo requerido" },
-      contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },
-      //precio_unitario:    { required: "Ingresar precio compra", },      
+      // contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },
+      precio_unitario:    { required: "Ingresar precio compra", },      
       descripcion:        { minlength: "Minimo 4 caracteres" },
     },
 
@@ -433,9 +453,9 @@ $(function () {
     },
   });
 
-  $('#unidad_medida').rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $('#marca').rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $('#categoria_producto').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $('#laboratorio').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $('#presentacion').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $('#Unidad_medida').rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
 });
 

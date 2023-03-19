@@ -21,16 +21,20 @@
 
       $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_briment/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
       
-      $idproducto           = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "" ;
-      $idcategoria_producto = isset($_POST["categoria_producto"]) ? limpiarCadena($_POST["categoria_producto"]) : "" ;
-      $unidad_medida        = isset($_POST["unidad_medida"]) ? limpiarCadena($_POST["unidad_medida"]) : "" ;
-      $nombre_producto      = isset($_POST["nombre_producto"]) ? encodeCadenaHtml($_POST["nombre_producto"]) : "" ;
-      $marca                = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "" ;
-      $contenido_neto       = isset($_POST["contenido_neto"]) ? limpiarCadena($_POST["contenido_neto"]) : "" ;
-      $descripcion          = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
+      $idproducto       = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "" ;
+      $codigo           = isset($_POST["codigo"]) ? limpiarCadena($_POST["codigo"]) : "" ;
+      $nombre_producto  = isset($_POST["nombre_producto"]) ? limpiarCadena($_POST["nombre_producto"]) : "" ;
+      $laboratorio      = isset($_POST["laboratorio"]) ? limpiarCadena($_POST["laboratorio"]) : "" ;
+      $presentacion     = isset($_POST["presentacion"]) ? encodeCadenaHtml($_POST["presentacion"]) : "" ;
+      $unidad_medida    = isset($_POST["unidad_medida"]) ? encodeCadenaHtml($_POST["unidad_medida"]) : "" ;
+      $sub_total        = isset($_POST["sub_total"]) ? limpiarCadena($_POST["sub_total"]) : "" ;
+      $igv              = isset($_POST["igv"]) ? encodeCadenaHtml($_POST["igv"]) : "" ;
+      $precio_unitario  = isset($_POST["precio_unitario"]) ? encodeCadenaHtml($_POST["precio_unitario"]) : "" ;
+      $lote             = isset($_POST["lote"]) ? encodeCadenaHtml($_POST["lote"]) : "" ;
+      $descripcion      = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
 
-      $imagen1              = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
-
+      $imagen1          = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
+##$idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$sub_total,$igv,$precio_unitario,$lote,$descripcion,$imagen1
       switch ($_GET["op"]) {
 
         case 'guardaryeditar':
@@ -47,7 +51,7 @@
 
           if (empty($idproducto)) {
            
-            $rspta = $producto->insertar($idcategoria_producto, $unidad_medida, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );            
+            $rspta = $producto->insertar($codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$sub_total,$igv,$precio_unitario,$lote,$descripcion,$imagen1 );            
             echo json_encode( $rspta, true);
 
           } else {
@@ -59,7 +63,7 @@
               if ( !empty( $img1_ant ) ) { unlink("../dist/docs/producto/img_perfil/" . $img1_ant); }
             }
             
-            $rspta = $producto->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );            
+            $rspta = $producto->editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$sub_total,$igv,$precio_unitario,$lote,$descripcion,$imagen1 );            
             echo json_encode( $rspta, true) ;
           }
         break;

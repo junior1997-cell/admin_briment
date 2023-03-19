@@ -13,10 +13,10 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Producto | Admin JDL</title>
+        <title>Producto | Admin Briment</title>
         <?php $title = "Producto"; require 'head.php';  ?>       
 
-        <link rel="stylesheet" href="../dist/css/switch_materiales.css">
+        <!-- <link rel="stylesheet" href="../dist/css/switch_materiales.css"> -->
 
       </head>
       <body class="hold-transition sidebar-collapse sidebar-mini layout-fixed layout-navbar-fixed">
@@ -36,12 +36,12 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1><img src="../dist/svg/negro-abono-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Producto</h1>
+                      <h1> <!--<img src="../dist/svg/negro-abono-ico.svg" class="nav-icon" alt="" style="width: 21px !important;">--> <i class="fa-solid fa-pills"></i> Producto</h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Insumos</li>
+                        <li class="breadcrumb-item active">Producto</li>
                       </ol>
                     </div>
                   </div>
@@ -57,8 +57,8 @@
                       <div class="card card-primary card-outline">
                         <div class="card-header">
                           <h3 class="card-title">
-                            <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-material" onclick="limpiar_form_material();"><i class="fas fa-plus-circle"></i> Agregar</button>
-                            Admnistra de manera eficiente de tus Insumos.
+                            <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-producto" onclick="limpiar_form_producto();"><i class="fas fa-plus-circle"></i> Agregar</button>
+                            Admnistra de manera eficiente de tus fármacos.
                           </h3>
                         </div>
                         <!-- /.card-header -->
@@ -79,7 +79,7 @@
                                     <div class="tab-pane fade show active" id="tabs-for-activo-fijo" role="tabpanel" aria-labelledby="tabs-for-activo-fijo-tab">
                                       <div class="row">                                        
                                         <div class="col-12">
-                                          <table id="tabla-materiales" class="table table-bordered table-striped display" style="width: 100% !important;">
+                                          <table id="tabla-producto" class="table table-bordered table-striped display" style="width: 100% !important;">
                                             <thead>
                                               <tr>
                                                 <th class="py-1text-center">#</th>
@@ -144,9 +144,9 @@
                 </div>
                 <!-- /.container-fluid -->
 
-                <!-- MODAL - AGREGAR MATERIAL - charge-1 -->
-                <div class="modal fade" id="modal-agregar-material">
-                  <div class="modal-dialog modal-dialog-scrollable modal-md">
+                <!-- MODAL - AGREGAR producto - charge-1 -->
+                <div class="modal fade" id="modal-agregar-producto">
+                  <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h4 class="modal-title name-modal-title-agregar">Agregar Producto</h4>
@@ -157,68 +157,91 @@
 
                       <div class="modal-body">
                         <!-- form start -->
-                        <form id="form-materiales" name="form-materiales" method="POST" autocomplete="off">
+                        <form id="form-producto" name="form-producto" method="POST" autocomplete="off">
                           <div class="card-body">
                             <div class="row" id="cargando-1-fomulario">
     
-                              <!-- id proveedores -->
+                              <!-- id producto -->
                               <input type="hidden" name="idproducto" id="idproducto" />
+
+                              <!-- código -->
+                              <div class="col-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group">
+                                  <label for="codigo">Código</label>
+                                  <input type="text" name="codigo" class="form-control" id="codigo" placeholder="código." />
+                                </div>
+                              </div>
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                              <div class="col-12 col-sm-12 col-md-9 col-lg-9">
                                 <div class="form-group">
                                   <label for="nombre_producto">Nombre <sup class="text-danger">(unico*)</sup></label>
                                   <input type="text" name="nombre_producto" class="form-control" id="nombre_producto" placeholder="Nombre del Insumo." />
                                 </div>
                               </div>
 
-                              <!-- Categoria -->
+                              <!-- Laboratorio -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                  <label for="categoria_producto">Categoria <sup class="text-danger">(unico*)</sup></label>
-                                  <select name="categoria_producto" id="categoria_producto" class="form-control select2" style="width: 100%;"> 
+                                  <label for="laboratorio">Laboratorio <sup class="text-danger">(unico*)</sup></label>
+                                  <select name="laboratorio" id="laboratorio" class="form-control select2" style="width: 100%;"> 
                                   </select>
                                 </div>
                               </div>                               
 
+                              <!-- Presentación-->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6" >
+                                <div class="form-group">
+                                  <label for="presentacion">Presentación <sup class="text-danger">(unico*)</sup></label>
+                                  <select name="presentacion" id="presentacion" class="form-control select2" style="width: 100%;"> </select>
+                                </div>
+                              </div>
+
                               <!-- Unnidad de medida-->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
+                              <div class="col-12 col-sm-12 col-md-3 col-lg-3" >
                                 <div class="form-group">
                                   <label for="Unidad_medida">Unidad medida <sup class="text-danger">(unico*)</sup></label>
                                   <select name="unidad_medida" id="unidad_medida" class="form-control select2" style="width: 100%;"> </select>
                                 </div>
                               </div>
 
-                               <!-- Marca -->
-                               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                              <!--sub-total-->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-3">
                                 <div class="form-group">
-                                  <label for="marca">Marca <sup class="text-danger">(unico*)</sup></label>
-                                  <input type="text" name="marca" class="form-control" id="marca" placeholder="Marca." />
+                                  <label for="sub_total">Sub total</label>
+                                  <input type="text" name="sub_total" id="sub_total" value="0" class="form-control" readonly  />
                                 </div>
                               </div>
 
-                              <!-- ContenidoNeto -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                              <!--I.G.V-->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-2">
                                 <div class="form-group">
-                                  <label for="contenido_neto">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
-                                  <input type="text" name="contenido_neto" id="contenido_neto" class="form-control"  placeholder="Contenido Neto." />
+                                  <label for="igv">I.G.V</label>
+                                  <input type="text" name="igv" id="igv" value="0" class="form-control" readonly  />
                                 </div>
                               </div>
 
                               <!--Precio U-->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
                                   <label for="precio_unitario">Precio <sup class="text-danger">*</sup></label>
-                                  <input type="text" name="precio_unitario" id="precio_unitario" value="0" class="form-control" readonly  />
+                                  <input type="text" name="precio_unitario" id="precio_unitario" class="form-control" onkeyup="cal_igv_subtotal();"/>
                                 </div>
                               </div>
 
-                              <!-- Stock -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
+                              <!-- lote -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                  <label for="stock">Stock: </label>
-                                  <input type="text" name="stock" id="stock" value="0.00"  class="form-control" readonly="readonly">                                  
+                                  <label for="lote">Lote </label>
+                                  <input type="text" name="lote" class="form-control" id="lote" placeholder="lote." />
                                 </div>
-                              </div> 
+                              </div>
+                              <!-- fecha -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                  <label for="fecha">Fecha </label>
+                                  <input type="date" name="fecha" class="form-control" id="fecha" placeholder="fecha." />
+                                </div>
+                              </div>
 
                               <!-- Descripcion-->
                               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -228,7 +251,7 @@
                                 </div>
                               </div>
 
-                              <!--imagen-material-->
+                              <!--imagen-producto-->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                                 <label for="foto1">Imagen</label>
                                 <div style="text-align: center;">
@@ -260,11 +283,11 @@
                             </div>
                           </div>
                           <!-- /.card-body -->
-                          <button type="submit" style="display: none;" id="submit-form-materiales">Submit</button>
+                          <button type="submit" style="display: none;" id="submit-form-producto">Submit</button>
                         </form>
                       </div>
                       <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_form_material();">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_form_producto();">Close</button>
                         <button type="submit" class="btn btn-success" id="guardar_registro">Guardar Cambios</button>
                       </div>
                     </div>

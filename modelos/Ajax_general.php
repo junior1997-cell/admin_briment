@@ -216,6 +216,15 @@
       return ejecutarConsulta($sql);
     }
 
+    public function presentacion(){
+      $sql = "SELECT idpresentacion, nombre FROM presentacion WHERE estado=1 AND estado_delete=1;";
+      return ejecutarConsulta($sql);
+    }
+    public function laboratorio(){
+      $sql = "SELECT idlaboratorio, nombre FROM laboratorio WHERE estado=1 AND estado_delete=1;";
+      return ejecutarConsulta($sql);
+    }
+
   }
 
 ?>

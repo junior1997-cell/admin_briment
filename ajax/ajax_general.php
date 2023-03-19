@@ -322,6 +322,60 @@
           echo json_encode($rspta, true); 
         }
       break;
+      /* ══════════════════════════════ P R E S E N T A C I Ó N ══════════════════════════════════════ */
+
+      case 'select2presentacion': 
+    
+        $rspta = $ajax_general->presentacion(); $cont = 1; $data = "";
+
+        if ($rspta['status'] == true) {
+
+          foreach ($rspta['data'] as $key => $value) {  
+
+            $data .= '<option value=' . $value['idpresentacion'] . '>' . $value['nombre'] .'</option>';
+          }
+
+          $retorno = array(
+            'status' => true, 
+            'message' => 'Salió todo ok', 
+            'data' => $data, 
+          );
+  
+          echo json_encode($retorno, true);
+
+        } else {
+
+          echo json_encode($rspta, true); 
+        }
+      break;
+            /* ══════════════════════════════ L A B O R A T O R I O ══════════════════════════════════════ */
+
+            case 'select2laboratorio': 
+    
+              $rspta = $ajax_general->laboratorio(); $cont = 1; $data = "";
+      
+              if ($rspta['status'] == true) {
+      
+                foreach ($rspta['data'] as $key => $value) {  
+      
+                  $data .= '<option value=' . $value['idlaboratorio'] . '>' . $value['nombre'] .'</option>';
+                }
+      
+                $retorno = array(
+                  'status' => true, 
+                  'message' => 'Salió todo ok', 
+                  'data' => $data, 
+                );
+        
+                echo json_encode($retorno, true);
+      
+              } else {
+      
+                echo json_encode($rspta, true); 
+              }
+            break;
+
+      //presentacion()laboratorio
 
       /* ══════════════════════════════════════ P R O D U C T O ══════════════════════════════════════ */
 
