@@ -5,11 +5,11 @@ var mes_pago_trabajador = 0;
 //Función que se ejecuta al inicio
 function init() {
 
-  $("#bloc_Recurso").addClass("menu-open bg-color-191f24");
+  $("#bloc_ContableFinanciero").addClass("menu-open bg-color-191f24");
 
-  $("#mRecurso").addClass("active");
+  $("#mContableFinanciero").addClass("active");
 
-  $("#lAllTrabajador").addClass("active");
+  $("#lPagoTrabajador").addClass("active");
 
   tbla_trabajador();
 
@@ -89,11 +89,13 @@ function tbla_trabajador() {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
     aServerSide: true,//Paginación y filtrado realizados por el servidor
-    dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } },
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,8,9,10,2,4,11,12,13,14], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true, }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,8,9,10,2,4,11,12,13,14], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true, }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,8,9,10,2,4,11,12,13,14,], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax:{
       url: '../ajax/pago_trabajador.php?op=tbla_trabajador',
@@ -120,7 +122,7 @@ function tbla_trabajador() {
     iDisplayLength: 10,//Paginación
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs: [
-      { targets: [8, 9, 10, 11, 12, 13, 14, 15, 16,17,18], visible: false, searchable: false, }, 
+      { targets: [7,8, 9, 10, 11, 12, 13, 14], visible: false, searchable: false, }, 
     ],
   }).DataTable();
 
@@ -145,7 +147,7 @@ function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
     aServerSide: true,//Paginación y filtrado realizados por el servidor
-    dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
     buttons: [
       { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,1,2,4], } }, 
       { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,1,2,4], } }, 
@@ -164,12 +166,7 @@ function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
       if (data[0] != '') { $("td", row).eq(0).addClass('text-center'); } 
       // columna: 1
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
-    },
-    language: {
-      lengthMenu: "Mostrar: _MENU_ registros",
-      buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
-      sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
-    },
+    },    
     footerCallback: function( tfoot, data, start, end, display ) {
       var api1 = this.api(); var total1 = api1.column( 4 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
       $( api1.column( 4 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );      

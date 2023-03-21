@@ -67,7 +67,31 @@
         if ($rspta['status'] == true) {
 
           foreach ($rspta['data'] as $key => $value) {
-            $data .= '<option  value=' . $value['idpersona'] . ' >' . $value['nombre']  . '</option>';
+            $data .= '<option  value=' . $value['idtipo_persona'] . ' >' . $value['nombre']  . '</option>';
+          }
+
+          $retorno = array(
+            'status' => true, 
+            'message' => 'Salió todo ok', 
+            'data' => '<option value="1" >Ninguno</option>' . $data, 
+          );
+  
+          echo json_encode($retorno, true);
+
+        } else {
+
+          echo json_encode($rspta, true); 
+        } 
+      break;
+
+      case 'select2TipoPersonaV2': 
+
+        $rspta = $ajax_general->select2_tipo_persona();  $cont = 1; $data = "";
+
+        if ($rspta['status'] == true) {
+
+          foreach ($rspta['data'] as $key => $value) {
+            $data .= '<option  value=' . $value['idtipo_persona'] . ' >' . $value['nombre']  . '</option>';
           }
 
           $retorno = array(

@@ -126,9 +126,11 @@
 
     /* ══════════════════════════════════════ TIPO PERSONA  ══════════════════════════════════════ */
     public function select2_tipo_persona() {
-      $sql = "SELECT idtipo_persona, nombre, descripcion FROM tipo_persona WHERE estado='1' AND estado_delete = '1' ORDER BY nombre ASC;";
+      $sql = "SELECT idtipo_persona, nombre, descripcion FROM tipo_persona WHERE estado='1' AND estado_delete = '1' AND idtipo_persona > 1 ORDER BY nombre ASC;";
       return ejecutarConsulta($sql);
     }
+
+    
 
     /* ══════════════════════════════════════ P R O V E E D O R -- C L I E N T E S  ══════════════════════════════════════ */
 

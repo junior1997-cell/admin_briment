@@ -113,7 +113,8 @@
               <!-- Producto para la empresa -->
               <li class="nav-item ">
                 <a href="producto.php" class="nav-link" id="lAllProducto">                  
-                  <img src="../dist/svg/plomo-abono-ico.svg" class="nav-icon lAllProducto-img" alt="" style="width: 21px !important;" >
+                  <!-- <img src="../dist/svg/plomo-abono-ico.svg" class="nav-icon lAllProducto-img" alt="" style="width: 21px !important;" > -->
+                  <i class="fas fa-vial nav-icon"></i>
                   <p>Producto</p>
                 </a>
               </li>              
@@ -153,7 +154,7 @@
               <li class="nav-item  b-radio-3px" id="bloc_Compras">
                 <a href="#" class="nav-link pl-2" id="mCompra">
                 <i class="fa-solid fa-boxes-stacked"></i>
-                  <p>Almacén Abono <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
+                  <p>Almacén Producto <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Compras producto -->
@@ -184,7 +185,7 @@
               <li class="nav-item  b-radio-3px" id="bloc_Ventas">
                 <a href="#" class="nav-link pl-2" id="mVentas">
                   <i class="fas fa-shopping-cart nav-icon"></i>
-                  <p>Venta Abonos <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
+                  <p>Venta Producto <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Ventas Producto -->
@@ -208,39 +209,7 @@
                   </li> 
                 </ul>
               </li>
-            <?php  }  ?>      
-            
-            <?php if ($_SESSION['compra_grano']==1) {  ?>   
-              <!-- COMPRAS -->      
-              <li class="nav-item  b-radio-3px" id="bloc_ComprasGrano">
-                <a href="#" class="nav-link pl-2" id="mCompraGrano">
-                  <img src="../dist/svg/plomo-grano-cafe-ico.svg" class="nav-icon lComprasGrano-img" alt="" style="width: 21px !important;" >
-                  <p>Compras Café <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">2</span></p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <!-- Compras del proyecto -->
-                  <li class="nav-item ">
-                    <a href="compra_cafe.php" class="nav-link" id="lComprasGrano">
-                      <i class="nav-icon fas fa-cart-plus"></i> 
-                      <p>Compras</p>
-                    </a>
-                  </li>       
-                  <li class="nav-item ">
-                    <a href="compra_cafe_v2.php" class="nav-link" id="lComprasGranoV2">
-                      <i class="nav-icon fas fa-cart-plus"></i> 
-                      <p>Compras v2 <span class="right badge badge-danger">Nuevo</span></p>
-                    </a>
-                  </li>                  
-                  
-                  <!-- graficos insumos -->
-                  <li class="nav-item ">
-                    <a href="chart_compra_grano.php" class="nav-link" id="lChartCompraGrano">
-                      <i class="nav-icon fas fa-chart-line"></i> <p>Gráficos</p>
-                    </a>
-                  </li> 
-                </ul>
-              </li>
-            <?php  }  ?>             
+            <?php  }  ?>                        
 
             <?php /* if ($_SESSION['otro_gasto']==1) { */ ?>
               <!-- OTROS GASTOS -->       

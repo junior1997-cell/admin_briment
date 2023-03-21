@@ -37,9 +37,22 @@
         $sw = array( 'status' => 'duplicado', 'message' => 'duplicado', 'data' => '<ul>'.$info_repetida.'</ul>', 'id_tabla' => '' );
         return $sw;
       }   
+    }
 
+    public function tbla_principal() {
+      
+      $sql="SELECT p.idpersona, p.idtipo_persona, p.idcargo_trabajador, p.nombres, p.tipo_documento, p.numero_documento, p.fecha_nacimiento, 
+      p.celular, p.direccion, p.correo, p.sueldo_mensual, p.sueldo_diario, p.foto_perfil, p.estado, cp.nombre as cargo
+      FROM persona as p, cargo_trabajador as cp 
+      WHERE p.idcargo_trabajador=cp.idcargo_trabajador AND p.idtipo_persona='2' AND p.estado='1' AND p.estado_delete ='1';";
+
+      $trabajdor = ejecutarConsultaArray($sql); if ($trabajdor['status'] == false) { return  $trabajdor;}
+
+      return $trabajdor;
+      // var_dump($trabajdor);die();
 
     }
+
     // =====================================================================================================
     // =====================================================================================================
     //================================== S E C C I O N   P A G O S ========================================= 
@@ -128,10 +141,9 @@
     public function datos_trabajador($idtrabajador)
     {
       $sql = "SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.idcargo_trabajador, p.nombres, p.tipo_documento, p.numero_documento, 
-      p.fecha_nacimiento, p.edad, p.celular, p.direccion, p.correo, p.cuenta_bancaria, p.cci, 
-      p.titular_cuenta, p.es_socio, p.sueldo_mensual, p.sueldo_diario, p.foto_perfil, ct.nombre as cargo,b.nombre as banco 
-      FROM persona as p , cargo_trabajador as ct, bancos as b
-      WHERE p.idcargo_trabajador = ct.idcargo_trabajador AND p.idbancos=b.idbancos AND p.idpersona='$idtrabajador';";
+      p.fecha_nacimiento, p.celular, p.direccion, p.correo, p.sueldo_mensual, p.sueldo_diario, p.foto_perfil, ct.nombre as cargo 
+      FROM persona as p , cargo_trabajador as ct
+      WHERE p.idcargo_trabajador = ct.idcargo_trabajador AND p.idpersona='$idtrabajador';";
       return ejecutarConsultaSimpleFila($sql);
     }
     // Ver pagos trabajador
@@ -185,26 +197,7 @@
 
     /* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
 
-    public function recuperar_banco(){
-      $sql="SELECT idtrabajador, idbancos, cuenta_bancaria_format, cci_format FROM trabajador;";
-      $bancos_old = ejecutarConsultaArray($sql);
-      if ($bancos_old['status'] == false) { return $bancos_old;}	
-      
-      $bancos_new = [];
-      foreach ($bancos_old['data'] as $key => $value) {
-        $id = $value['idtrabajador']; 
-        $idbancos = $value['idbancos']; 
-        $cuenta_bancaria_format = $value['cuenta_bancaria_format']; 
-        $cci_format = $value['cci_format'];
-
-        $sql2="INSERT INTO cuenta_banco_trabajador( idtrabajador, idbancos, cuenta_bancaria, cci, banco_seleccionado) 
-        VALUES ('$id','$idbancos','$cuenta_bancaria_format','$cci_format', '1');";
-        $bancos_new = ejecutarConsulta($sql2);
-        if ($bancos_new['status'] == false) { return $bancos_new;}
-      } 
-      
-      return $bancos_new;
-    }
+   
 
   }
 

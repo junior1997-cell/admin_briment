@@ -84,22 +84,19 @@
                               <thead>
                                 <tr>
                                   <th class="text-center">#</th>
-                                  <th class=""><i class="fa fa-cogs" aria-hidden="true"></i></th>
                                   <th>Nombres</th>
                                   <th>Cargo</th>
                                   <th>Sueldo</th>
                                   <th>Teléfono</th>
                                   <th>Pagar</th>
-                                  <th>Cuenta bancaria</th>
+                                  <th>Pago total</th>
+
                                   <th>Estado</th>
                                   <th>Nombres</th>
-                                  <th>Tipo</th>
+                                  <th>Tipo Doc.</th>
                                   <th>Num Doc.</th>
                                   <th>Nacimiento</th>
-                                  <th>Edad</th>
-                                  <th>Banco</th>
-                                  <th>Cta. Cte.</th>
-                                  <th>CCI</th>
+                                  <th>Edad</th>                                  
                                   <th>Sueldo mensual</th>
                                   <th>Sueldo Diario</th>
                                 </tr>
@@ -108,22 +105,19 @@
                               <tfoot>
                                 <tr>
                                   <th class="text-center">#</th>
-                                  <th><i class="fa fa-cogs" aria-hidden="true"></i></th>
                                   <th>Nombres</th>
                                   <th>Cargo</th>
                                   <th>Sueldo</th>
                                   <th>Teléfono</th>
                                   <th>Pagar</th>
-                                  <th>Cuenta bancaria</th>
+                                  <th>Pago total</th>
+
                                   <th>Estado</th>
                                   <th>Nombres</th>
-                                  <th>Tipo</th>
+                                  <th>Tipo Doc.</th>
                                   <th>Num Doc.</th>
                                   <th>Nacimiento</th>
-                                  <th>Edad</th>
-                                  <th>Banco</th>
-                                  <th>Cta. Cte.</th>
-                                  <th>CCI</th>
+                                  <th>Edad</th>                                  
                                   <th>Sueldo mensual</th>
                                   <th>Sueldo Diario</th>
                                 </tr>

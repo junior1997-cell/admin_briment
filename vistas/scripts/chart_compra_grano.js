@@ -12,7 +12,7 @@ function init() {
 
   $("#bloc_ComprasGrano").addClass("menu-open bg-color-191f24");
 
-  $("#mCompraGrano").addClass("active bg-green");
+  $("#mCompraGrano").addClass("active bg-color-0037a4");
 
   $("#lChartCompraGrano").addClass("active");
   $('.lComprasGrano-img').attr('src', '../dist/svg/blanco-grano-cafe-ico.svg');

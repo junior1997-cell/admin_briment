@@ -17,7 +17,7 @@
 
       require_once "../modelos/Persona.php";
 
-      $persona = new Persona();
+      $persona = new Persona($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
 
@@ -28,8 +28,7 @@
       $id_tipo_persona 	= isset($_POST["id_tipo_persona"])? limpiarCadena($_POST["id_tipo_persona"]):"";
       $nombre 		      = isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
       $tipo_documento 	= isset($_POST["tipo_documento"])? limpiarCadena($_POST["tipo_documento"]):"";
-      $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
-      $input_socio     	= isset($_POST["input_socio"])? limpiarCadena($_POST["input_socio"]):"";
+      $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";      
       $direccion		    = isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
       $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";     
       $email			      = isset($_POST["email"])? limpiarCadena($_POST["email"]):"";
@@ -57,7 +56,7 @@
           if (empty($idpersona)){
             
             $rspta=$persona->insertar($id_tipo_persona,$tipo_documento,$num_documento,$nombre,$email,$telefono,
-            $direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario,$edad, $imagen1);
+            $direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario, $imagen1);
             
             echo json_encode($rspta, true);
   
@@ -71,8 +70,8 @@
             }            
 
             // editamos un persona existente
-            $rspta=$persona->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,
-            $direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario,$edad, $imagen1);
+            $rspta=$persona->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$email,$telefono,
+            $direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario, $imagen1);
             
             echo json_encode($rspta, true);
           }            
@@ -115,11 +114,12 @@
             foreach ($rspta['data'] as $key => $value) {        
 
               $imagen = (empty($value['foto_perfil']) ? '../dist/svg/user_default.svg' : '../dist/docs/persona/perfil/'.$value['foto_perfil']) ;
-              $edit_tipo = $_GET["tipo_persona"] == 'todos' ? '' : '<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idpersona'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' ;
+              $edit_tipo = $_GET["tipo_persona"] == 'todos' ? ' <button class="btn btn-outline-info btn-sm" onclick="cambiar_tipo_persona('.$value['idpersona'].','.$value['idtipo_persona'].')" data-toggle="tooltip" data-original-title="Cambiar tipo persona"><i class="fas fa-exchange-alt"></i></button>' : '<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idpersona'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'  ;
               
               $data[]=array(
                 "0"=>$cont++,
                 "1"=>$edit_tipo.
+                  ' <button class="btn btn-info btn-sm" onclick="verdatos('.$value['idpersona'].')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa-solid fa-eye"></i></button>'.
                   ' <button class="btn btn-danger btn-sm" onclick="eliminar_persona('.$value['idpersona'].', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>',
                 "2"=>'<div class="user-block">
                   <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'. $imagen .'" alt="User Image" onerror="'.$imagen_error.'" onclick="ver_img_persona(\'' . $imagen . '\', \''.encodeCadenaHtml($value['nombres']).'\');" data-toggle="tooltip" data-original-title="Ver foto">
@@ -159,11 +159,15 @@
        
         /* =========================== S E C C I O N  T I P O   P E R S O N A  =========================== */
         case 'tipo_persona':
-
           $rspta=$persona->tipo_persona();
           //Codificar el resultado utilizando json
           echo json_encode($rspta, true);
+        break;
 
+        case 'guardar_y_editar_tipo_persona':
+          $rspta=$persona->actualizar_tipo_persona($_POST["idpersona_tp"], $_POST["tipo_persona_cambio"]);
+          //Codificar el resultado utilizando json
+          echo json_encode($rspta, true);
         break;
 
         default: 

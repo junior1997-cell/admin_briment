@@ -275,9 +275,18 @@ function validarFechaMenorQue(fecha_1, fecha_2) {
 }
 
 function diferencia_de_dias(fecha_i, fecha_f) {
-  var fecha1 = moment(fecha_i);
-  var fecha2 = moment(fecha_f); 
+  var fecha1 = moment(fecha_i), fecha2 = moment(fecha_f); 
   return fecha2.diff(fecha1, 'days');
+}
+
+function diferencia_de_meses(fecha_i, fecha_f) {
+  var fecha1 = moment(fecha_i), fecha2 = moment(fecha_f); 
+  return fecha2.diff(fecha1, 'month');
+}
+
+function diferencia_de_anios(fecha_i, fecha_f) {
+  var fecha1 = moment(fecha_i), fecha2 = moment(fecha_f); 
+  return fecha2.diff(fecha1, 'year');
 }
 
 /*  ══════════════════════════════════════════ - N U M E R I C O S - ══════════════════════════════════════════ */
@@ -1475,6 +1484,15 @@ function calcular_edad(input_fecha_nacimiento='', input_edad, span_edad='') {
   }
 }
 
+function calcular_edad_v2(fecha) {
+  if (fecha == '' || fecha == null || fecha == '00-00-0000' || fecha == '0000-00-00') {
+    return '-';
+  } else {
+    var anio = diferencia_de_anios(fecha, moment().format('YYYY-MM-DD'));
+    return anio == 0 ? `${anio} años`: (anio == 1 ? `${anio} año` : `${anio} años`) ;
+  }   
+  
+}
 
 function UrlExists(url) {  
   var http = new XMLHttpRequest();

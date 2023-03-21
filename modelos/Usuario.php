@@ -190,7 +190,7 @@ class Usuario
   public function select2_trabajador() {
     $sql = "SELECT p.idpersona, p.nombres, p.numero_documento, p.foto_perfil, p.celular 
     FROM persona as p LEFT JOIN usuario as u ON p.idpersona=u.idpersona 
-    WHERE p.idtipo_persona='4' AND p.estado =1 AND p.estado_delete=1 AND u.idusuario IS NULL;";
+    WHERE p.idtipo_persona='2' AND p.estado =1 AND p.estado_delete=1 AND u.idusuario IS NULL;";
     return ejecutarConsulta($sql);
   }
 

@@ -12,13 +12,17 @@ function init() {
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
+  lista_select2("../ajax/ajax_general.php?op=select2TipoPersonaV2", '#tipo_persona_cambio', null);
   
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro").on("click", function (e) {  $("#submit-form-persona").submit(); });  
+  $("#guardar_registro_tipo_persona").on("click", function (e) {  $("#submit-form-cambiar-tipo-persona").submit(); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
   $("#cargo_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
+
+  $("#tipo_persona_cambio").select2({theme:"bootstrap4", placeholder: "Selecione tipo persona", allowClear: true, });
 
   no_select_over_18('#nacimiento');
 
@@ -52,8 +56,10 @@ function limpiar_form_persona() {
 
   $("#num_documento").val(""); 
   $("#nombre").val(""); 
-  $("#email").val(""); 
   $("#telefono").val(""); 
+  $("#email").val("");   
+  
+  $("#sueldo_mensual").val("").trigger("change");
   $("#direccion").val(""); 
 
   $("#nacimiento").val("");
@@ -149,30 +155,64 @@ function tbla_principal(tipo_persona, nombre_tipo) {
 
 function show_hide_btn_add(tipo_persona, nombre_tipo) {
 
-  $(".class_btn").show();
+  $(".btn-agregar-persona").show();
   $("#id_tipo_persona").val(tipo_persona);
 
   if (tipo_persona=="todos") {
-    $("#id_tipo_persona").val("");
-    $(".class_btn").hide();
-    
-  }else if (tipo_persona=="2") {
-
-    $(".campos_trabajador").show();
-    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar Trabajador`);      
-
-  }else if (tipo_persona=="3") {
-    $("#sueldo_mensual").val("0.00");
-    $(".campos_trabajador").hide();
+    $("#id_tipo_persona").val("1");
+    $(".btn-agregar-persona").hide();    
+  }else if (tipo_persona=="2") { //trabajador
+    $(".cp_tipo_doc").show();
+    $(".cp_num_doc").show();
+    $(".cp_nombre").show();
+    $(".cp_telefono").show();
+    $(".cp_email").show();
+    $(".cp_f_nacimiento").show();
+    $(".cp_edad").show();
+    $(".cp_cargo").show();
+    $(".cp_s_mensual").show();
+    $(".cp_s_diario").show();
+    $(".cp_direccion").show();    
+    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar Trabajador`);
+  }else if (tipo_persona=="3") { //proveedor    
+    $(".cp_tipo_doc").show();
+    $(".cp_num_doc").show();
+    $(".cp_nombre").show();
+    $(".cp_telefono").show();
+    $(".cp_email").show();
+    $(".cp_f_nacimiento").hide();
+    $(".cp_edad").hide();
+    $(".cp_cargo").hide();
+    $(".cp_s_mensual").hide();
+    $(".cp_s_diario").hide();
+    $(".cp_direccion").show();
     $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar Proveedor`);
-
-  }else if (tipo_persona=="4") {
-    $("#sueldo_mensual").val("0.00");
-    $(".campos_trabajador").hide();
+  }else if (tipo_persona=="4") { //cliente    
+    $(".cp_tipo_doc").show();
+    $(".cp_num_doc").show();
+    $(".cp_nombre").show();
+    $(".cp_telefono").show();
+    $(".cp_email").show();
+    $(".cp_f_nacimiento").show();
+    $(".cp_edad").show();
+    $(".cp_cargo").hide();
+    $(".cp_s_mensual").hide();
+    $(".cp_s_diario").hide();
+    $(".cp_direccion").show();
     $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar Cliente`);
   } else {
-    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar ${nombre_tipo}`);
-    
+    $(".cp_tipo_doc").show();
+    $(".cp_num_doc").show();
+    $(".cp_nombre").show();
+    $(".cp_telefono").show();
+    $(".cp_email").show();
+    $(".cp_f_nacimiento").show();
+    $(".cp_edad").show();
+    $(".cp_cargo").hide();
+    $(".cp_s_mensual").hide();
+    $(".cp_s_diario").hide();
+    $(".cp_direccion").show();
+    $(".titulo-modal").html(`<i class="fas fa-plus"></i> Agregar ${nombre_tipo}`);    
   }
 }
 
@@ -217,12 +257,12 @@ function guardar_y_editar_persona(e) {
     },
     beforeSend: function () {
       $("#guardar_registro").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress").css({ width: "0%",  });
-      $("#barra_progress").text("0%");
+      $("#barra_progress").css({ width: "0%",  }).text("0%");
+      $("#barra_progress_div").show();
     },
     complete: function () {
-      $("#barra_progress").css({ width: "0%", });
-      $("#barra_progress").text("0%");
+      $("#barra_progress").css({ width: "0%", }).text("0%");
+      $("#barra_progress_div").hide();
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
@@ -244,7 +284,7 @@ function verdatos(idpersona){
 
   var verdatos=''; 
 
-  var imagen_perfil =''; btn_imagen_perfil=''; 
+  var foto_perfil =''; btn_foto_perfil=''; 
 
   $("#modal-ver-persona").modal("show")
 
@@ -252,26 +292,25 @@ function verdatos(idpersona){
 
     e = JSON.parse(e);  //console.log(e); 
     
-    if (e.status == true) {
-      
+    if (e.status == true) {      
     
-      if (e.data.imagen_perfil != '') {
+      if (e.data.foto_perfil != '') {
 
-        imagen_perfil=`<img src="../dist/docs/persona/perfil/${e.data.imagen_perfil}" alt="" class="img-thumbnail w-130px">`
+        foto_perfil=`<img src="../dist/docs/persona/perfil/${e.data.foto_perfil}" alt="" class="img-thumbnail w-130px">`
         
-        btn_imagen_perfil=`
+        btn_foto_perfil=`
         <div class="row">
           <div class="col-6"">
-            <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/persona/perfil/${e.data.imagen_perfil}"> <i class="fas fa-expand"></i></a>
+            <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/persona/perfil/${e.data.foto_perfil}"> <i class="fas fa-expand"></i></a>
           </div>
           <div class="col-6"">
-            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/persona/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombres}"> <i class="fas fa-download"></i></a>
+            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/persona/perfil/${e.data.foto_perfil}" download="PERFIL ${e.data.nombres}"> <i class="fas fa-download"></i></a>
           </div>
         </div>`;
       
       } else {
-        imagen_perfil='No hay imagen';
-        btn_imagen_perfil='';
+        foto_perfil='No hay imagen';
+        btn_foto_perfil='';
       }
 
       verdatos=`                                                                            
@@ -281,7 +320,7 @@ function verdatos(idpersona){
             <table class="table table-hover table-bordered">        
               <tbody>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th rowspan="2" class="text-center">${imagen_perfil}<br>${btn_imagen_perfil} </th>
+                  <th rowspan="2" class="text-center">${foto_perfil}<br>${btn_foto_perfil} </th>
                   <td> <b>Nombre: </b>${e.data.nombres}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
@@ -293,15 +332,15 @@ function verdatos(idpersona){
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Correo</th>
-                  <td>${e.data.email}</td>
+                  <td>${e.data.correo}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Teléfono</th>
-                  <td>${e.data.telefono}</td>
+                  <td>${e.data.celular}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Fecha Nac.</th>
-                  <td>${e.data.fecha_nacimiento}</td>
+                  <td>${format_d_m_a(e.data.fecha_nacimiento)} ─ ${calcular_edad_v2(e.data.fecha_nacimiento) } </td>
                 </tr>                 
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Sueldo mensual </th>
@@ -334,7 +373,7 @@ function mostrar(idpersona) {
   $("#cargando-1-fomulario").hide();
   $("#cargando-2-fomulario").show();
 
-  $("#modal-agregar-persona").modal("show")
+  $("#modal-agregar-persona").modal("show");
 
   $.post("../ajax/persona.php?op=mostrar", { idpersona: idpersona }, function (e, status) {
 
@@ -397,8 +436,66 @@ function eliminar_persona(idpersona, nombre) {
   ); 
 }
 
-/* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
+/* =========================== S E C C I O N   T I P O   P É R S O N A=========================== */
 
+function cambiar_tipo_persona(id_persona, id_tipo) {
+  $(".tooltip").removeClass("show").addClass("hidde");
+  $("#idpersona_tp").val(id_persona);
+  $("#tipo_persona_cambio").val(id_tipo).trigger("change");
+
+  $("#modal-cambiar-tipo-persona").modal("show");
+}
+
+//Función para guardar o editar
+function guardar_y_editar_tipo_persona(e) {
+  // e.preventDefault(); //No se activará la acción predeterminada del evento
+  var formData = new FormData($("#form-cambiar-tipo-persona")[0]);
+
+  $.ajax({
+    url: "../ajax/persona.php?op=guardar_y_editar_tipo_persona",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (e) {
+      try {
+        e = JSON.parse(e);  //console.log(e); 
+        if (e.status == true) {	
+          Swal.fire("Correcto!", "Cambio realizado correctamente", "success");
+          tabla.ajax.reload(null, false);           
+          $("#modal-cambiar-tipo-persona").modal("hide"); 
+          
+        }else{
+          ver_errores(e);
+        }
+      } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }      
+
+      $("#guardar_registro_tipo_persona").html('Guardar Cambios').removeClass('disabled');
+    },
+    xhr: function () {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = (evt.loaded / evt.total)*100;
+          /*console.log(percentComplete + '%');*/
+          $("#barra_progress_tp").css({"width": percentComplete+'%'});
+          $("#barra_progress_tp").text(percentComplete.toFixed(2)+" %");
+        }
+      }, false);
+      return xhr;
+    },
+    beforeSend: function () {
+      $("#guardar_registro_tipo_persona").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress_tp").css({ width: "0%",  }).text("0%");
+      $("#barra_progress_tp_div").show();
+    },
+    complete: function () {
+      $("#barra_progress_tp").css({ width: "0%", }).text("0%");
+      $("#barra_progress_tp_div").hide();
+    },
+    error: function (jqXhr) { ver_errores(jqXhr); },
+  });
+}
 
 // .....::::::::::::::::::::::::::::::::::::: V A L I D A T E   F O R M  :::::::::::::::::::::::::::::::::::::::..
 
@@ -442,6 +539,32 @@ $(function () {
     submitHandler: function (e) {
       $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
       guardar_y_editar_persona(e);
+    },
+  });
+
+  $("#form-cambiar-tipo-persona").validate({
+    rules: {
+      tipo_persona_cambio: { required: true },
+    },
+    messages: {
+      tipo_persona_cambio: { required: "Campo requerido.", },
+    },
+        
+    errorElement: "span",
+
+    errorPlacement: function (error, element) {
+      error.addClass("invalid-feedback");
+      element.closest(".form-group").append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass("is-invalid").removeClass("is-valid");
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass("is-invalid").addClass("is-valid");
+    },
+    submitHandler: function (e) {
+      $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
+      guardar_y_editar_tipo_persona(e);
     },
   });
 

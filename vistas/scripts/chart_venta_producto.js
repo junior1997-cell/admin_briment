@@ -11,7 +11,7 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#mVentas").addClass("active bg-green");
+  $("#mVentas").addClass("active bg-color-0037a4 text-white");
 
   $("#lChartVentaProducto").addClass("active");
 

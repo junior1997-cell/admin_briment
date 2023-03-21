@@ -72,10 +72,8 @@
                                     <!-- TABLA - RESUMEN -->
                                     <div class="tab-pane fade show active" id="tabs-for-persona" role="tabpanel" aria-labelledby="tabs-for-persona-tab">
                                       <div class="row">
-                                        <div class="col-12 mb-2 class_btn">
-                                          <h3 class="card-title">
-                                            <button type="button" class="btn bg-gradient-primary mb-2" data-toggle="modal" data-target="#modal-agregar-persona" onclick="limpiar_form_persona();"><i class="fas fa-user-plus"></i> Agregar</button>                           
-                                          </h3> 
+                                        <div class="col-12 mb-2">                                          
+                                          <button type="button" class="btn bg-gradient-primary mb-2 btn-agregar-persona" data-toggle="modal" data-target="#modal-agregar-persona" onclick="limpiar_form_persona();"><i class="fas fa-user-plus"></i> Agregar</button>                                                 
                                         </div>                                        
                                         <div class="col-12">
                                           <table id="tabla-persona" class="table table-bordered table-striped display" style="width: 100% !important;">
@@ -281,9 +279,9 @@
                               </div>
 
                               <!-- Progress -->
-                              <div class="col-md-12">
+                              <div class="col-md-12" id="barra_progress_div">
                                 <div class="form-group">
-                                  <div class="progress" id="div_barra_progress" style="display: none !important;">
+                                  <div class="progress" style="display: none !important;">
                                     <div id="barra_progress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                   </div>
                                 </div>
@@ -348,6 +346,67 @@
                     </div>
                   </div>
                 </div>   
+
+                <!--Modal ver persona-->
+                <div class="modal fade" id="modal-cambiar-tipo-persona">
+                  <div class="modal-dialog modal-dialog-scrollable modal-xm">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title titulo-modal-tp">Datos persona</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span class="text-danger" aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+
+                      <div class="modal-body">
+                        <!-- form start -->
+                        <form id="form-cambiar-tipo-persona" name="form-cambiar-tipo-persona" method="POST">
+                          <div class="card-body">
+
+                            <div class="row" id="cargando-3-fomulario">
+                              <!-- id persona -->
+                              <input type="hidden" name="idpersona_tp" id="idpersona_tp" />
+
+                              <!-- Tipo de documento -->
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                  <label for="tipo_persona_cambio">Tipo persona.</label>
+                                  <select name="tipo_persona_cambio" id="tipo_persona_cambio" class="form-control" placeholder="Tipo de persona">
+                                    
+                                  </select>
+                                </div>
+                              </div> 
+
+                              <!-- Progress -->
+                              <div class="col-md-12" id="barra_progress_tp_div">
+                                <div class="form-group">
+                                  <div class="progress" style="display: none !important;">
+                                    <div id="barra_progress_tp" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row" id="cargando-4-fomulario" style="display: none;" >
+                              <div class="col-lg-12 text-center">
+                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
+                                <h4>Cargando...</h4>
+                              </div>
+                            </div>
+                                  
+                          </div>
+                          <!-- /.card-body -->
+                          <button type="submit" style="display: none;" id="submit-form-cambiar-tipo-persona">Submit</button>
+                        </form>
+                      </div>
+
+                      <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success" id="guardar_registro_tipo_persona">Guardar Cambios</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
               </section>
               <!-- /.content -->

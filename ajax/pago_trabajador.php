@@ -17,27 +17,21 @@
 
       require_once "../modelos/pago_trabajador.php";
 
-      require_once "../modelos/Trabajador.php";
-
-      $trabajador = new Trabajador();
-
       $pago_trabajador = new PagoTrabajador;
 
-      date_default_timezone_set('America/Lima');
-      $date_now = date("d-m-Y h.i.s A");
+      date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
 
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
-
+      
+      // ::::::::::::::::: MES TRABAJADOR :::::::::::::::::
       $idmes_pago_trabajador= isset($_POST["idmes_pago_trabajador"])? limpiarCadena($_POST["idmes_pago_trabajador"]):"";
       $idpersona            = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
       $nombres              = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
       $mes                  = isset($_POST["mes"])? limpiarCadena($_POST["mes"]):"";
       $anio                 = isset($_POST["anio"])? limpiarCadena($_POST["anio"]):"";
-      // $idmes_pago_trabajador,$idpersona,$mes,$anio
 
-      //Pago trabajador
-
+      // ::::::::::::::::: PAGO TRABAJADOR :::::::::::::::::
       $idpago_trabajador	  	= isset($_POST["idpago_trabajador"])? limpiarCadena($_POST["idpago_trabajador"]):"";
       $idmes_pago_trabajador_p= isset($_POST["idmes_pago_trabajador_p"])? limpiarCadena($_POST["idmes_pago_trabajador_p"]):"";
       $nombre_mes		          = isset($_POST["nombre_mes"])? limpiarCadena($_POST["nombre_mes"]):"";
@@ -45,7 +39,6 @@
       $fecha_pago		          = isset($_POST["fecha_pago"])? limpiarCadena($_POST["fecha_pago"]):"";
       $descripcion		        = isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
       $comprobante			      = isset($_POST["doc1"])? limpiarCadena($_POST["doc1"]):"";
-      //$idpago_trabajador,$idmes_pago_trabajador_p,$nombre_mes,$monto,$fecha_pago,$descripcion,$comprobante
 
       switch ($_GET["op"]) {
 
@@ -66,7 +59,7 @@
 
         case 'tbla_trabajador':          
 
-          $rspta=$trabajador->tbla_principal();
+          $rspta=$pago_trabajador->tbla_principal();
           
           //Vamos a declarar un array
           $data= Array(); $cont=1;
@@ -78,33 +71,29 @@
               $imagen = (empty($value['foto_perfil']) ? '../dist/svg/user_default.svg' : '../dist/docs/persona/perfil/'.$value['foto_perfil']) ;
           
               $data[]=array(
-                "0"=>$cont++,
-                "1"=> ' <button class="btn btn-info btn-sm" onclick="datos_trabajador('.$value['idpersona'].')"data-toggle="tooltip" data-original-title="ver datos"><i class="far fa-eye"></i></button>',
-                "2"=>'<div class="user-block">
+                "0"=>$cont++,                
+                "1"=>'<div class="user-block">
                   <img class="img-circle cursor-pointer" src="'. $imagen .'" alt="User Image" onerror="'.$imagen_error.'" onclick="ver_img_persona(\'' . $imagen . '\', \''.encodeCadenaHtml($value['nombres']).'\');" data-toggle="tooltip" data-original-title="Ver foto">
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
                 </div>',
-                "3"=> $value['cargo'],
-                "4"=> '<div>
-                <span class="description">Mensual: <b>'. number_format($value['sueldo_mensual']) .'</b> </span><br>
-                <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
+                "2"=> $value['cargo'],
+                "3"=> '<div>
+                  <span class="description">Mensual: <b>'. number_format($value['sueldo_mensual']) .'</b> </span><br>
+                  <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
                 </div>',
-                "5"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['celular'] . '</a>',
-                "6"=> '<button class="btn btn-warning " onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" data-toggle="tooltip" data-original-title="Agregar mes de pago"><i class="fas fa-hand-holding-usd fa-lg"></i></button>',
-                "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'] . $toltip,
+                "4"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['celular'] . '</a>',
+                "5"=> '<button class="btn btn-warning " onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" data-toggle="tooltip" data-original-title="Agregar mes de pago"><i class="fas fa-hand-holding-usd fa-lg"></i></button>',
+                "6"=>  $value['sueldo_diario'],
                 
-                "8"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
-                "9"=> $value['nombres'],
-                "10"=> $value['tipo_documento'],
-                "11"=> $value['numero_documento'],
-                "12"=> format_d_m_a($value['fecha_nacimiento']),
-                "13"=>calculaedad($value['fecha_nacimiento']),
-                "14"=> $value['banco'],
-                "15"=> $value['cuenta_bancaria'],
-                "16"=> $value['cci'],
-                "17"=> number_format($value['sueldo_mensual']),
-                "18"=> $value['sueldo_diario'],
+                "7"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+                "8"=> $value['nombres'],
+                "9"=> $value['tipo_documento'],
+                "10"=> $value['numero_documento'],
+                "11"=> format_d_m_a($value['fecha_nacimiento']),
+                "12"=> calculaedad($value['fecha_nacimiento']),
+                "13"=> number_format($value['sueldo_mensual']),
+                "14"=> $value['sueldo_diario'],
 
               );
             }
@@ -271,11 +260,7 @@
         break;
 
         /* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
-        case 'recuperar_banco':           
-          $rspta=$pago_trabajador->recuperar_banco();
-          //Codificar el resultado utilizando json
-          echo json_encode($rspta, true);           
-        break;
+        
 
         default: 
           $rspta = ['status'=>'error_code', 'message'=>'Te has confundido en escribir en el <b>swich.</b>', 'data'=>[]]; echo json_encode($rspta, true); 
