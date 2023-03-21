@@ -200,9 +200,9 @@
                                 </div>
                               </div>
                               <!-- Precio actual-->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-4 " >
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-4 hidden " >
                                 <div class="form-group">
-                                  <label for=""> <sup class="text-danger">(unico*)</sup></label>
+                                  <label for="">Precio</label>
                                   <input type="text" name="precio_actual" class="form-control" id="precio_actual"/>
 
                                 </div>
