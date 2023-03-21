@@ -62,10 +62,10 @@ function limpiar_form_producto() {
   $("#laboratorio").val("null").trigger("change");
   $("#presentacion").val("null").trigger("change");
   $("#unidad_medida").val("null").trigger("change");
-  $("#sub_total").val(""); 
-  $("#igv").val(""); 
-  $("#precio_unitario").val('0.00');
-  $("#lote").val("");
+  // $("#sub_total").val(""); 
+  // $("#igv").val(""); 
+  $("#precio_actual").val('0.00');
+  // $("#lote").val("");
   $("#descripcion").val(""); 
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto_producto.jpg");
@@ -83,7 +83,7 @@ function lista_de_items() {
 
   $(".lista-items").html(`<li class="nav-item"><a class="nav-link active" role="tab" ><i class="fas fa-spinner fa-pulse fa-sm"></i></a></li>`); 
 
-  $.post("../ajax/producto.php?op=lista_de_categorias", function (e, status) {
+  $.post("../ajax/producto.php?op=lista_de_presentacion", function (e, status) {
     
     e = JSON.parse(e); console.log(e);
     // e.data.idtipo_tierra
@@ -93,7 +93,7 @@ function lista_de_items() {
       e.data.forEach((val, index) => {
         data_html = data_html.concat(`
         <li class="nav-item">
-          <a class="nav-link" onclick="delay(function(){tbla_principal('${val.idcategoria_producto}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
+          <a class="nav-link" onclick="delay(function(){tbla_principal('${val.idpresentacion}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
         </li>`);
       });
 
@@ -110,10 +110,10 @@ function lista_de_items() {
 }
 
 //Función Listar
-function tbla_principal(idcategoria = 'todos') {
+function tbla_principal(idpresentacion = 'todos') {
   
 
-  tabla = $("#tabla-materiales").dataTable({
+  tabla = $("#tabla-producto").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
@@ -122,13 +122,13 @@ function tbla_principal(idcategoria = 'todos') {
     dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
     buttons: [
       { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
-      { extend: 'copyHtml5', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
-      { extend: 'excelHtml5', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
-      { extend: 'pdfHtml5', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
       { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax: {
-      url: `../ajax/producto.php?op=tbla_principal&idcategoria=${idcategoria}`,
+      url: `../ajax/producto.php?op=tbla_principal&idpresentacion=${idpresentacion}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -149,7 +149,7 @@ function tbla_principal(idcategoria = 'todos') {
       // columna: monto igv
       if (data[9] != '') { $("td", row).eq(9).addClass("text-nowrap"); }
       // columna: precio total
-      if (data[10] != '') { $("td", row).eq(10).addClass("text-nowrap"); }
+      // if (data[10] != '') { $("td", row).eq(10).addClass("text-nowrap"); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -160,7 +160,7 @@ function tbla_principal(idcategoria = 'todos') {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [10,11], visible: false, searchable: true, },   
+      { targets: [8,9], visible: false, searchable: true, },   
       { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ],
   }).DataTable();
@@ -239,16 +239,15 @@ function mostrar(idproducto) {
 
     if (e.status == true) {
       $("#idproducto").val(e.data.idproducto);
+      $("#codigo").val(e.data.codigo);
       $("#nombre_producto").val(e.data.nombre);
-      $("#laboratorio").val(e.data.laboratorio).trigger("change");  
-      $("#descripcion").val(e.data.descripcion);
-      $("#stock").val(e.data.stock); 
-      $("#contenido_neto").val(e.data.contenido_neto);  
-      $('#precio_unitario').val(parseFloat(e.data.precio_unitario));
-      
+      $("#laboratorio").val(e.data.idlaboratorio).trigger("change");  
+      $("#presentacion").val(e.data.idpresentacion).trigger("change");  
       $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
-      
-      $("#categoria_producto").val(e.data.idcategoria_producto).trigger("change");
+      $("#precio_actual").val(e.data.precio_actual);  
+      $("#descripcion").val(e.data.descripcion);
+
+      // $('#precio_unitario').val(parseFloat(e.data.precio_unitario));
 
       if (e.data.imagen != "") {        
         $("#foto1_i").attr("src", "../dist/docs/producto/img_perfil/" + e.data.imagen);  
@@ -382,24 +381,6 @@ function eliminar(idproducto, nombre) {
   );
 }
 
-function cal_igv_subtotal() {
-
-  var precio_unit = $("#precio_unitario").val();
-  var igv, subtotal;
-
-  if (precio_unit ==null || precio_unit=='0') {
-    
-  }else{
-    
-    subtotal = precio_unit/1.18 ;
-    igv = precio_unit-subtotal;
-    $("#igv").val(redondearExp(igv));
-    $("#sub_total").val( redondearExp(subtotal) );
-
-  }
-  
-}
-
 
 init();
 
@@ -418,7 +399,7 @@ $(function () {
       presentacion:       { required: true },
       unidad_medida:      { required: true },
       // contenido_neto:     {  min: 1, number: true },
-      precio_unitario:    { required: true },
+      // precio_unitario:    { required: true },
       descripcion:        { minlength: 4 },
       
     },
@@ -428,7 +409,7 @@ $(function () {
       presentacion:       { required: "Campo requerido", },
       unidad_medida:      { required: "Campo requerido" },
       // contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },
-      precio_unitario:    { required: "Ingresar precio compra", },      
+      // precio_unitario:    { required: "Ingresar precio compra", },      
       descripcion:        { minlength: "Minimo 4 caracteres" },
     },
 

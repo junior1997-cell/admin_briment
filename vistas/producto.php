@@ -86,15 +86,13 @@
                                                 <th class="py-1">Acciones</th>
                                                 <th class="py-1">Code</th>
                                                 <th class="py-1">Nombre</th>
-                                                <th class="py-1">Categoria</th>
-                                                <th class="py-1" data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                                                <th class="py-1">Laboratorio</th>
+                                                <th class="py-1">Presentación</th>
                                                 <th class="py-1">Precio </th>
-                                                <th class="py-1">Stock</th>
-                                                <th class="py-1">Contenido Neto</th>
                                                 <th class="py-1">Descripción</th> 
 
                                                 <th>Nombre</th>
-                                                <th>Marca</th>
+                                                <th>Unidad medida</th>
                                               </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -104,15 +102,13 @@
                                               <th class="py-1">Acciones</th>
                                               <th class="py-1">Code</th>
                                               <th class="py-1">Nombre</th>
-                                              <th class="py-1">Categoria</th>
-                                              <th class="py-1" data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                                              <th class="py-1">Laboratorio</th>
+                                              <th class="py-1">Presentación</th>
                                               <th class="py-1">Precio </th>
-                                              <th class="py-1">Stock</th>
-                                              <th class="py-1">Contenido Neto</th>
                                               <th class="py-1">Descripción</th>
 
                                               <th>Nombre</th>
-                                              <th>Marca</th>
+                                              <th>Unidad medida</th>
                                               
                                               </tr>
                                             </tfoot>
@@ -196,53 +192,21 @@
                                 </div>
                               </div>
 
-                              <!-- Unnidad de medida-->
-                              <div class="col-12 col-sm-12 col-md-3 col-lg-3" >
+                              <!-- Unidad de medida-->
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-4" >
                                 <div class="form-group">
                                   <label for="Unidad_medida">Unidad medida <sup class="text-danger">(unico*)</sup></label>
                                   <select name="unidad_medida" id="unidad_medida" class="form-control select2" style="width: 100%;"> </select>
                                 </div>
                               </div>
-
-                              <!--sub-total-->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-3">
+                              <!-- Precio actual-->
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-4 " >
                                 <div class="form-group">
-                                  <label for="sub_total">Sub total</label>
-                                  <input type="text" name="sub_total" id="sub_total" value="0" class="form-control" readonly  />
+                                  <label for=""> <sup class="text-danger">(unico*)</sup></label>
+                                  <input type="text" name="precio_actual" class="form-control" id="precio_actual"/>
+
                                 </div>
                               </div>
-
-                              <!--I.G.V-->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-2">
-                                <div class="form-group">
-                                  <label for="igv">I.G.V</label>
-                                  <input type="text" name="igv" id="igv" value="0" class="form-control" readonly  />
-                                </div>
-                              </div>
-
-                              <!--Precio U-->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="precio_unitario">Precio <sup class="text-danger">*</sup></label>
-                                  <input type="text" name="precio_unitario" id="precio_unitario" class="form-control" onkeyup="cal_igv_subtotal();"/>
-                                </div>
-                              </div>
-
-                              <!-- lote -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                                <div class="form-group">
-                                  <label for="lote">Lote </label>
-                                  <input type="text" name="lote" class="form-control" id="lote" placeholder="lote." />
-                                </div>
-                              </div>
-                              <!-- fecha -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                                <div class="form-group">
-                                  <label for="fecha">Fecha </label>
-                                  <input type="date" name="fecha" class="form-control" id="fecha" placeholder="fecha." />
-                                </div>
-                              </div>
-
                               <!-- Descripcion-->
                               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">

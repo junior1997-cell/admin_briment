@@ -13,18 +13,17 @@ class Producto
   }
 
   //Implementamos un método para insertar registros
-  public function insertar( $idcategoria_producto, $idunidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen) {
-    $sql = "SELECT p.nombre, p.marca, p.contenido_neto, p.estado, p.descripcion,
-    p.imagen, p.estado, p.estado_delete, um.nombre as nombre_medida, cp.nombre as nombre_categoria
-		FROM producto p, unidad_medida as um, categoria_producto as cp
-    WHERE um.idunidad_medida=p.idunidad_medida AND cp.idcategoria_producto=p.idcategoria_producto AND  
-    p.idcategoria_producto = '$idcategoria_producto' AND p.idunidad_medida = '$idunidad_medida' AND 
-    p.nombre='$nombre'";
+  public function insertar( $codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$descripcion,$imagen) {
+    $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio, p.idpresentacion, p.codigo, p.nombre,um.nombre as unidad_medida, 
+    l.nombre as laboratorio, pre.nombre as presentacion
+    FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
+    WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
+    AND p.codigo = '$codigo' AND p.nombre = '$nombre_producto';";
     $buscando = ejecutarConsultaArray($sql);  if ($buscando['status'] == false) { return $buscando; }
 
     if ( empty($buscando['data']) ) {
-      $sql = "INSERT INTO producto (idcategoria_producto, idunidad_medida, nombre, marca, contenido_neto, descripcion, imagen, user_created) 
-      VALUES ( '$idcategoria_producto', '$idunidad_medida', '$nombre', '$marca', '$contenido_neto', '$descripcion', '$imagen','$this->id_usr_sesion')";
+      $sql = "INSERT INTO producto( idunidad_medida, idlaboratorio, idpresentacion, codigo, nombre, descripcion, imagen,user_created) 
+      VALUES ('$unidad_medida','$laboratorio','$presentacion','$codigo','$nombre_producto','$descripcion','$imagen','$this->id_usr_sesion')";
      
       $intertar =  ejecutarConsulta_retornarID($sql); if ($intertar['status'] == false) {  return $intertar; } 
 
@@ -40,8 +39,9 @@ class Producto
       foreach ($buscando['data'] as $key => $value) {
         $info_repetida .= '<li class="text-left font-size-13px">
           <b>Nombre: </b>'.$value['nombre'].'<br>
-          <b>Clasificaciòn: </b>'.$value['nombre_categoria'].'<br>
-          <b>UM: </b>'.$value['unidad_medida'].'<br>
+          <b>Codigo: </b>'.$value['codigo'].'<br>
+          <b>Laboratorio: </b>'.$value['laboratorio'].'<br>
+          <b>Presentacion: </b>'.$value['presentacion'].'<br>
           <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .'<br>
           <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
           <hr class="m-t-2px m-b-2px">
@@ -54,10 +54,18 @@ class Producto
   }
 
   //Implementamos un método para editar registros
-  public function editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil) {
+  public function editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$precio_actual,$descripcion,$imagen1) {
     // var_dump($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil);die();
-    $sql = "UPDATE producto SET idcategoria_producto = '$idcategoria_producto',	idunidad_medida = '$unidad_medida',	nombre = '$nombre',
-		marca = '$marca',	contenido_neto = '$contenido_neto',	descripcion = '$descripcion',	imagen = '$img_pefil', user_updated= '$this->id_usr_sesion'
+    $sql = "UPDATE producto SET 
+    idunidad_medida='$unidad_medida',
+    idlaboratorio='$laboratorio',
+    idpresentacion='$presentacion',
+    codigo='$codigo',
+    nombre='$nombre_producto',
+    precio_actual='$precio_actual',
+    descripcion='$descripcion',
+    imagen='$imagen1',
+    user_updated= '$this->id_usr_sesion'
 		WHERE idproducto='$idproducto'";
 
     $editar =  ejecutarConsulta($sql);
@@ -107,10 +115,11 @@ class Producto
   public function mostrar($idproducto) {
     $data = Array();
 
-    $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, p.descripcion, p.imagen, p.estado, p.created_at,
-    um.nombre as nombre_medida, cp.nombre AS categoria
-		FROM producto AS p, unidad_medida AS um, categoria_producto AS cp
-    WHERE p.idunidad_medida = um.idunidad_medida AND p.idcategoria_producto = cp.idcategoria_producto AND p.idproducto = '$idproducto'";
+    $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
+    p.descripcion, p.imagen,p.created_at, p.estado,um.nombre as unidad_medida, l.nombre as laboratorio, pre.nombre as presentacion
+    FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
+    WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
+    AND  p.idproducto='$idproducto'";
 
     $producto = ejecutarConsultaSimpleFila($sql);
 
@@ -118,15 +127,12 @@ class Producto
 
     $data = array(
       'idproducto'      => $producto['data']['idproducto'],
-      'idcategoria_producto' => $producto['data']['idcategoria_producto'],
+      'codigo'      => $producto['data']['codigo'],
+      'idlaboratorio' => $producto['data']['idlaboratorio'],
       'idunidad_medida' => $producto['data']['idunidad_medida'],
-      'nombre_medida'   => $producto['data']['nombre_medida'],
-      'categoria'       => $producto['data']['categoria'],           
+      'idpresentacion' => $producto['data']['idpresentacion'],          
       'nombre'          => decodeCadenaHtml($producto['data']['nombre']),
-      'marca'           => decodeCadenaHtml($producto['data']['marca']),
-      'contenido_neto'  => decodeCadenaHtml($producto['data']['contenido_neto']),
-      'precio_unitario' => (empty($producto['data']['precio_unitario']) ? 0 : $producto['data']['precio_unitario']),
-      'stock'           => $producto['data']['stock'],
+      'precio_actual' => (empty($producto['data']['precio_actual']) ? 0 : $producto['data']['precio_actual']), 
       'descripcion'     => decodeCadenaHtml($producto['data']['descripcion']),
       'imagen'          => $producto['data']['imagen'],
       'estado'          => $producto['data']['estado'],
@@ -138,22 +144,21 @@ class Producto
   }
 
   //Implementar un método para listar los registros
-  public function tbla_principal($idcategoria) {
+  public function tbla_principal($idpresentacion) {
 
-    $tipo_categoria = '';
+    $tipo_presentacion = '';
 
-    if ($idcategoria == 'todos') {
-      $tipo_categoria = "";
+    if ($idpresentacion == 'todos') {
+      $tipo_presentacion = "";
     } else{
-      $tipo_categoria = "AND p.idcategoria_producto = '$idcategoria'";
+      $tipo_presentacion = "AND p.idpresentacion = '$idpresentacion'";
     }
 
-    $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, 
-    p.descripcion, p.imagen, p.estado,  
-    um.nombre as nombre_medida, cp.nombre AS categoria
-    FROM producto as p, unidad_medida AS um, categoria_producto AS cp
-    WHERE p.idcategoria_producto = cp.idcategoria_producto and p.idunidad_medida = um.idunidad_medida 
-    $tipo_categoria and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
+    $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
+    p.descripcion, p.imagen, p.estado,um.nombre as unidad_medida, l.nombre as laboratorio, pre.nombre as presentacion
+    FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
+    WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
+    $tipo_presentacion and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
     return ejecutarConsulta($sql);
   }
   
@@ -165,8 +170,8 @@ class Producto
 
   // ══════════════════════════════════════  C A T E G O R I A S   P R O D U C T O  ══════════════════════════════════════
 
-  public function lista_de_categorias(  )  {
-    $sql = "SELECT * FROM categoria_producto WHERE estado = '1' AND estado_delete ='1';";
+  public function lista_de_presentacion(  )  {
+    $sql = "SELECT idpresentacion, nombre FROM presentacion WHERE estado=1 AND estado_delete=1;";
     return ejecutarConsultaArray($sql);
   }
 

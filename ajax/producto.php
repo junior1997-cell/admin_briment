@@ -27,12 +27,8 @@
       $laboratorio      = isset($_POST["laboratorio"]) ? limpiarCadena($_POST["laboratorio"]) : "" ;
       $presentacion     = isset($_POST["presentacion"]) ? encodeCadenaHtml($_POST["presentacion"]) : "" ;
       $unidad_medida    = isset($_POST["unidad_medida"]) ? encodeCadenaHtml($_POST["unidad_medida"]) : "" ;
-      $sub_total        = isset($_POST["sub_total"]) ? limpiarCadena($_POST["sub_total"]) : "" ;
-      $igv              = isset($_POST["igv"]) ? encodeCadenaHtml($_POST["igv"]) : "" ;
-      $precio_unitario  = isset($_POST["precio_unitario"]) ? encodeCadenaHtml($_POST["precio_unitario"]) : "" ;
-      $lote             = isset($_POST["lote"]) ? encodeCadenaHtml($_POST["lote"]) : "" ;
       $descripcion      = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
-
+      $precio_actual    = isset($_POST["precio_actual"]) ? encodeCadenaHtml($_POST["precio_actual"]) : "" ;
       $imagen1          = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
 ##$idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$sub_total,$igv,$precio_unitario,$lote,$descripcion,$imagen1
       switch ($_GET["op"]) {
@@ -51,7 +47,7 @@
 
           if (empty($idproducto)) {
            
-            $rspta = $producto->insertar($codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$sub_total,$igv,$precio_unitario,$lote,$descripcion,$imagen1 );            
+            $rspta = $producto->insertar($codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$descripcion,$imagen1 );            
             echo json_encode( $rspta, true);
 
           } else {
@@ -63,7 +59,7 @@
               if ( !empty( $img1_ant ) ) { unlink("../dist/docs/producto/img_perfil/" . $img1_ant); }
             }
             
-            $rspta = $producto->editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$sub_total,$igv,$precio_unitario,$lote,$descripcion,$imagen1 );            
+            $rspta = $producto->editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$precio_actual,$descripcion,$imagen1 );            
             echo json_encode( $rspta, true) ;
           }
         break;
@@ -93,7 +89,7 @@
         break;
     
         case 'tbla_principal':
-          $rspta = $producto->tbla_principal($_GET["idcategoria"]);
+          $rspta = $producto->tbla_principal($_GET["idpresentacion"]);
           //Vamos a declarar un array
           $data = []; $cont=1;
 
@@ -103,29 +99,25 @@
               $imagen = (empty($reg->imagen) ? 'producto-sin-foto.svg' : $reg->imagen );
               $clas_stok = "";
 
-              if ( $reg->stock <= 0) { $clas_stok = 'badge-danger'; }else if ($reg->stock > 0 && $reg->stock <= 10) { $clas_stok = 'badge-warning'; }else if ($reg->stock > 10) { $clas_stok = 'badge-success'; }
+              // if ( $reg->stock <= 0) { $clas_stok = 'badge-danger'; }else if ($reg->stock > 0 && $reg->stock <= 10) { $clas_stok = 'badge-warning'; }else if ($reg->stock > 10) { $clas_stok = 'badge-success'; }
               
               $data[] = [
                 "0"=>$cont++,
-                "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idproducto . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                ' <button class="btn btn-danger btn-sm" onclick="eliminar(' . $reg->idproducto .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'. 
-                ' <button class="btn btn-info btn-sm" onclick="verdatos('.$reg->idproducto.')" data-toggle="tooltip" data-original-title="Ver datos"><i class="far fa-eye"></i></button>' : 
-                '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idproducto . ')"><i class="fa fa-pencil-alt"></i></button>',
-                "2" => zero_fill($reg->idproducto, 6),
+                "1" => '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idproducto . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+                ' <button class="btn btn-danger btn-sm" onclick="eliminar(' . $reg->idproducto .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>',
+                "2" => $reg->codigo,
                 "3" => '<div class="user-block">'.
-                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/producto/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre_medida).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
+                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/producto/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->unidad_medida).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
                   <span class="username"><p class="mb-0">' . $reg->nombre . '</p></span>
-                  <span class="description"><b>Marca: </b>' . $reg->marca . '</span>
+                  <span class="description"><b>UM: </b>' . $reg->unidad_medida . '</span>
                 </div>' . $toltip,
-                "4" =>  $reg->categoria,
-                "5" => $reg->nombre_medida,     
-                "6" => $reg->precio_unitario,
-                "7" =>  '<span class="badge '.$clas_stok.' font-size-14px">'.$reg->stock.'</span>',
-                "8" => $reg->contenido_neto,
-                "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
+                "4" =>  $reg->laboratorio,
+                "5" => $reg->presentacion,     
+                "6" => $reg->precio_actual,
+                "7" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
 
-                "10" => $reg->nombre,
-                "11" => $reg->marca                  
+                "8" => $reg->nombre,
+                "9" => $reg->unidad_medida                  
               ];
             }
   
@@ -145,9 +137,9 @@
 
         // ══════════════════════════════════════  C A T E G O R I A S   P R O D U C T O  ══════════════════════════════════════
 
-        case 'lista_de_categorias':
+        case 'lista_de_presentacion':
 
-          $rspta = $producto->lista_de_categorias();
+          $rspta = $producto->lista_de_presentacion();
           //Codificar el resultado utilizando json
           echo json_encode( $rspta, true);
 
