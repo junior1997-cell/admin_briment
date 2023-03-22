@@ -55,8 +55,7 @@
                     <div class="col-12">
                       <div class="card card-primary card-outline">
                         <div class="card-header">
-                          <h3 class="card-title">
-                            
+                          <h3 class="card-title">                            
                             <button type="button" class="btn bg-gradient-warning" id="btn-regresar" style="display: none;" onclick="show_hide_table(1);"><i class="fas fa-arrow-left"></i> Regresar</button>
                             <button type="button" class="btn bg-gradient-primary" id="btn-agregar-mes"data-toggle="modal" style="display: none;" data-target="#modal-agregar-mes" ><i class="fa-solid fa-circle-plus"></i> Agregar Mes</button>
                           </h3>
@@ -211,51 +210,43 @@
                               <!-- id mes_pago_trabajador -->
                               <input type="hidden" name="idmes_pago_trabajador" id="idmes_pago_trabajador" />
                               <!-- id persona -->
-                              <input type="hidden" name="idpersona" id="idpersona" />
+                              <input type="hidden" name="idpersona" id="idpersona" />                              
 
-                              <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 "  style="display: none;">
-                                <div class="form-group">
-                                  <label for="nombre_trab">Nombre y Apellidos</label>
-                                  <input type="text" name="nombre_trabajador" class="form-control" id="nombre_trabajador" />                                  
-                                </div>
-                              </div>
-
-                              <!-- Sueldo(Mensual) -->
-                              <div class="col-12 col-sm-6 col-md-6"  style="display: none;">
-                                <div class="form-group">
-                                  <label for="extraer_cargo">Cargo Trabajador</label>
-                                  <input type="text" disabled step="any" name="extraer_cargo" class="form-control" id="extraer_cargo" />
-                                </div>
-                              </div>
-                              
-                              <!-- Sueldo(Mensual) -->
-                              <div class="col-12 col-sm-6 col-md-6" style="display: none;">
-                                <div class="form-group">
-                                  <label for="sueldo_mensual">Sueldo Mensual</label>
-                                  <input type="number" disabled step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual"/>
-                                </div>
-                              </div>
-                              <!-- input que muestra el mes -->
-                              <div class="col-6 col">
+                              <!-- Mes -->
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <label for="mes">Mes</label>
-                                  <input type="text"  name="mes" class="form-control" id="mes" readonly/>
+                                  <select name="mes" id="mes" class="form-control" placeholder="Tipo de documento">
+                                    <option value="Enero">Enero</option> 
+                                    <option value="Febrero">Febrero</option> 
+                                    <option value="Marzo">Marzo</option> 
+                                    <option value="Abril">Abril</option> 
+                                    <option value="Mayo">Mayo</option> 
+                                    <option value="Junio">Junio</option> 
+                                    <option value="Julio">Julio</option> 
+                                    <option value="Agosto">Agosto</option> 
+                                    <option value="Setiembre">Setiembre</option> 
+                                    <option value="Octubre">Octubre</option> 
+                                    <option value="Noviembre">Noviembre</option> 
+                                    <option value="Diciembre">Diciembre</option> 
+                                  </select>
                                 </div>
                               </div>
-                              <!-- input que muestra el mes -->
-                              <div class="col-6 col">
+
+                              <!-- Año -->
+                              <div class="col-6">
                                 <div class="form-group">
                                   <label for="anio">Año</label>
-                                  <input type="text"  name="anio" class="form-control" id="anio" readonly/>
+                                  <select name="anio" id="anio" class="form-control" placeholder="Seleccione">                                    
+                                  </select>
                                 </div>
                               </div>
                               
                               <!-- idpersona,mes,anio -->
                               <!-- Progress -->
-                              <div class="col-md-12">
+                              <div class="col-md-12" id="barra_progress_trabajador_div">
                                 <div class="form-group">
-                                  <div class="progress" id="div_barra_progress_trabajador" style="display: none !important;">
+                                  <div class="progress" style="display: none !important;">
                                     <div id="barra_progress_trabajador" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                   </div>
                                 </div>

@@ -40,16 +40,42 @@
     }
 
     public function tbla_principal() {
-      
+      $data = Array();
       $sql="SELECT p.idpersona, p.idtipo_persona, p.idcargo_trabajador, p.nombres, p.tipo_documento, p.numero_documento, p.fecha_nacimiento, 
       p.celular, p.direccion, p.correo, p.sueldo_mensual, p.sueldo_diario, p.foto_perfil, p.estado, cp.nombre as cargo
       FROM persona as p, cargo_trabajador as cp 
       WHERE p.idcargo_trabajador=cp.idcargo_trabajador AND p.idtipo_persona='2' AND p.estado='1' AND p.estado_delete ='1';";
-
       $trabajdor = ejecutarConsultaArray($sql); if ($trabajdor['status'] == false) { return  $trabajdor;}
 
-      return $trabajdor;
-      // var_dump($trabajdor);die();
+      foreach ($trabajdor['data'] as $key => $val) {
+        $sql_2 = "SELECT SUM(pg.monto) as pago_total
+        FROM mes_pago_trabajador as mpt, pago_trabajador as pg
+        WHERE pg.idmes_pago_trabajador = mpt.idmes_pago_trabajador AND mpt.idpersona = '".$val['idpersona']."' 
+        AND mpt.estado = '1' AND mpt.estado_delete = '1' AND pg.estado = '1' AND pg.estado_delete = '1';";
+        $pago = ejecutarConsultaSimpleFila($sql_2); if ($pago['status'] == false) { return  $pago;}
+
+        $data[] = array(
+          'idpersona'         => $val['idpersona'],
+          'idtipo_persona'    => $val['idtipo_persona'],
+          'idcargo_trabajador'=> $val['idcargo_trabajador'],
+          'nombres'           => $val['nombres'],
+          'tipo_documento'    => $val['tipo_documento'],          
+          'numero_documento'  => $val['numero_documento'],
+          'fecha_nacimiento'  => $val['fecha_nacimiento'], 
+          'celular'           => $val['celular'],
+          'direccion'         => $val['direccion'],
+          'correo'            => $val['correo'],
+          'sueldo_mensual'    => $val['sueldo_mensual'],
+          'sueldo_diario'     => $val['sueldo_diario'],
+          'foto_perfil'       => $val['foto_perfil'],
+          'estado'            => $val['estado'],
+          'cargo'             => $val['cargo'],
+
+          'pago'             => empty($pago['data'])? 0 :(empty($pago['data']['pago_total'])? 0 : floatval($pago['data']['pago_total']) )  ,
+        );
+      }
+
+      return $retorno = ['status'=> true, 'message' => 'Salió todo ok,', 'data' => $data ];   
 
     }
 

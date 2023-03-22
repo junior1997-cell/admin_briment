@@ -12,6 +12,7 @@ function init() {
   $("#lPagoTrabajador").addClass("active");
 
   tbla_trabajador();
+  anios_select();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   // lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
@@ -22,9 +23,10 @@ function init() {
   $("#guardar_registro_pagos").on("click", function (e) {  $("#submit-form-pagos").submit(); });  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════  
-  $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
-  $("#cargo_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
+  $("#mes").select2({theme:"bootstrap4", placeholder: "Selecione mes", allowClear: true, });
+  $("#anio").select2({theme:"bootstrap4", placeholder: "Selecione año", allowClear: true, });
 
+  no_select_tomorrow("#fecha_pago");
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
@@ -111,7 +113,7 @@ function tbla_trabajador() {
       // columna: 1
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
       // columna: pagar
-      if (data[6] != '') { $("td", row).eq(6).addClass('text-center'); }
+      if (data[6] != '') { $("td", row).eq(6).addClass('text-right'); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -123,115 +125,14 @@ function tbla_trabajador() {
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs: [
       { targets: [7,8, 9, 10, 11, 12, 13, 14], visible: false, searchable: false, }, 
-    ],
-  }).DataTable();
-
-}
-
-//Función Listar meses de pago
-function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
-  get_year_month();
-  $(".val_sueldo").html('S/ '+formato_miles(sueldo_mensual));
-  $(".nombre_trabajador_view").html(': '+nombres);
-  $("#nombre_trabajador").val(nombres);
-  // console.log(idpersona, sueldo_mensual, cargo);
-  limpiar_form_pago();
-  $("#idpersona").val(idpersona);
-  $("#sueldo_mensual").val(sueldo_mensual);
-  $("#extraer_cargo").val(cargo);
-
-  show_hide_table(2);
-
-  tabla_mes=$('#tabla-mes-pago').dataTable({
-    responsive: true,
-    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
-    aProcessing: true,//Activamos el procesamiento del datatables
-    aServerSide: true,//Paginación y filtrado realizados por el servidor
-    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
-    buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,1,2,4], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,1,2,4], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,1,2,4], } },
-    ],
-    ajax:{
-      url: `../ajax/pago_trabajador.php?op=tbla_mes_pago&idpersona=${idpersona}`,
-      type : "get",
-      dataType : "json",						
-      error: function(e){
-        console.log(e.responseText);  ver_errores(e);
-      }
-    },
-    createdRow: function (row, data, ixdex) {
-      // columna: #
-      if (data[0] != '') { $("td", row).eq(0).addClass('text-center'); } 
-      // columna: 1
-      if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
-    },    
-    footerCallback: function( tfoot, data, start, end, display ) {
-      var api1 = this.api(); var total1 = api1.column( 4 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api1.column( 4 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );      
-    },
-    bDestroy: true,
-    iDisplayLength: 10,//Paginación
-    order: [[ 0, "asc" ]],//Ordenar (columna,orden)
-    columnDefs: [
-      //{ targets: [], visible: false, searchable: false, }, 
-      { targets: [4], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },      
+      { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },      
 
     ],
   }).DataTable();
+
 }
 
-//Función para guardar o editar
-function guardar_y_editar_mes_pago(e) {
-  // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-mes")[0]);
 
-  $.ajax({
-    url: "../ajax/pago_trabajador.php?op=guardaryeditar_mes_pago",
-    type: "POST",
-    data: formData,
-    contentType: false,
-    processData: false,
-    success: function (e) {
-      try {
-        e = JSON.parse(e);  //console.log(e); 
-        if (e.status == true) {	
-          Swal.fire("Correcto!", "Guardado correctamente", "success");
-          tabla_mes.ajax.reload(null, false); 
-          $("#modal-agregar-trabajador").modal("hide"); 
-          
-        }else{
-          ver_errores(e);
-        }
-      } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }      
-
-      $("#guardar_registro_mes").html('Guardar Cambios').removeClass('disabled');
-    },
-    xhr: function () {
-      var xhr = new window.XMLHttpRequest();
-      xhr.upload.addEventListener("progress", function (evt) {
-        if (evt.lengthComputable) {
-          var percentComplete = (evt.loaded / evt.total)*100;
-          /*console.log(percentComplete + '%');*/
-          $("#barra_progress").css({"width": percentComplete+'%'});
-          $("#barra_progress").text(percentComplete.toFixed(2)+" %");
-        }
-      }, false);
-      return xhr;
-    },
-    beforeSend: function () {
-      $("#guardar_registro_mes").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress").css({ width: "0%",  });
-      $("#barra_progress").text("0%");
-    },
-    complete: function () {
-      $("#barra_progress").css({ width: "0%", });
-      $("#barra_progress").text("0%");
-    },
-    error: function (jqXhr) { ver_errores(jqXhr); },
-  });
-}
 
 function datos_trabajador(idtrabajador){
 
@@ -329,8 +230,114 @@ function datos_trabajador(idtrabajador){
 
   }).fail( function(e) { ver_errores(e); } );
 }
+/* :::::::::::::::::::::::: S E C C I O N   DE T A L L E   D E   P A G O S :::::::::::::::::::::::: */
+//Función Listar meses de pago
+function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
+  get_year_month();
+  $(".val_sueldo").html('S/ '+formato_miles(sueldo_mensual));
+  $(".nombre_trabajador_view").html(': '+nombres);
+  $("#nombre_trabajador").val(nombres);
+  // console.log(idpersona, sueldo_mensual, cargo);
+  limpiar_form_pago();
+  $("#idpersona").val(idpersona);
+  $("#sueldo_mensual").val(sueldo_mensual);
+  $("#extraer_cargo").val(cargo);
 
-/* =========================== S E C C I O N   DE T A L L E   D E   P A G O S =========================== */
+  show_hide_table(2);
+
+  tabla_mes=$('#tabla-mes-pago').dataTable({
+    responsive: true,
+    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
+    aProcessing: true,//Activamos el procesamiento del datatables
+    aServerSide: true,//Paginación y filtrado realizados por el servidor
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
+    buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,1,2,4], }, footer: true, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray",  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,1,2,4], }, footer: true, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,1,2,4], }, footer: false, orientation: 'landscape', pageSize: 'LEGAL', text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", },
+      { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
+    ],
+    ajax:{
+      url: `../ajax/pago_trabajador.php?op=tbla_mes_pago&idpersona=${idpersona}`,
+      type : "get",
+      dataType : "json",						
+      error: function(e){
+        console.log(e.responseText);  ver_errores(e);
+      }
+    },
+    createdRow: function (row, data, ixdex) {
+      // columna: #
+      if (data[0] != '') { $("td", row).eq(0).addClass('text-center'); } 
+      // columna: 1
+      if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
+    },    
+    footerCallback: function( tfoot, data, start, end, display ) {
+      var api1 = this.api(); var total1 = api1.column( 4 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api1.column( 4 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );      
+    },
+    bDestroy: true,
+    iDisplayLength: 10,//Paginación
+    order: [[ 0, "asc" ]],//Ordenar (columna,orden)
+    columnDefs: [
+      //{ targets: [], visible: false, searchable: false, }, 
+      { targets: [4], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },      
+
+    ],
+  }).DataTable();
+}
+
+//Función para guardar o editar
+function guardar_y_editar_mes_pago(e) {
+  // e.preventDefault(); //No se activará la acción predeterminada del evento
+  var formData = new FormData($("#form-mes")[0]);
+
+  $.ajax({
+    url: "../ajax/pago_trabajador.php?op=guardaryeditar_mes_pago",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (e) {
+      try {
+        e = JSON.parse(e);  //console.log(e); 
+        if (e.status == true) {	
+          Swal.fire("Correcto!", "Guardado correctamente", "success");
+          tabla_mes.ajax.reload(null, false); 
+          $("#modal-agregar-mes").modal("hide"); 
+          
+        }else{
+          ver_errores(e);
+        }
+      } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }      
+
+      $("#guardar_registro_mes").html('Guardar Cambios').removeClass('disabled');
+    },
+    xhr: function () {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = (evt.loaded / evt.total)*100;
+          /*console.log(percentComplete + '%');*/
+          $("#barra_progress").css({"width": percentComplete+'%'});
+          $("#barra_progress").text(percentComplete.toFixed(2)+" %");
+        }
+      }, false);
+      return xhr;
+    },
+    beforeSend: function () {
+      $("#guardar_registro_mes").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress").css({ width: "0%",  });
+      $("#barra_progress").text("0%");
+    },
+    complete: function () {
+      $("#barra_progress").css({ width: "0%", });
+      $("#barra_progress").text("0%");
+    },
+    error: function (jqXhr) { ver_errores(jqXhr); },
+  });
+}
+/* :::::::::::::::::::::::: S E C C I O N   DE T A L L E   D E   P A G O S :::::::::::::::::::::::: */
 //Función limpiar
 function limpiar_form_pago() {
        
@@ -362,11 +369,13 @@ function ver_desglose_de_pago(idmes_pago_trabajador,nombre_mes) {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
     aServerSide: true,//Paginación y filtrado realizados por el servidor
-    dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4], } }, 
-      { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3,4], } },
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,3,4], }, footer: true, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray",  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,3,4], }, footer: true, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,3,4], }, footer: false, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", },
+      { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax:{
       url: `../ajax/pago_trabajador.php?op=listar_pago&idmes_pago_trabajador=${idmes_pago_trabajador}`,
@@ -381,12 +390,7 @@ function ver_desglose_de_pago(idmes_pago_trabajador,nombre_mes) {
       if (data[0] != '') { $("td", row).eq(0).addClass('text-center'); } 
       // columna: 1
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
-    },
-    language: {
-      lengthMenu: "Mostrar: _MENU_ registros",
-      buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
-      sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
-    },
+    },    
     footerCallback: function( tfoot, data, start, end, display ) {
       var api1 = this.api(); var total1 = api1.column( 3 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
       $( api1.column( 3 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );       
@@ -396,7 +400,7 @@ function ver_desglose_de_pago(idmes_pago_trabajador,nombre_mes) {
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs: [
       //{ targets: [], visible: false, searchable: false, }, 
-      { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      // { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
       { targets: [3], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ],
   }).DataTable();
@@ -650,3 +654,13 @@ function ver_img_persona(file, nombre) {
   $('.jq_image_zoom').zoom({ on:'grab' });
 }
 
+function anios_select() {
+  var anio =parseFloat(moment().format('YYYY')) + (1);
+  var html = "";  
+  
+  for (let i = 1; i < 6; i++) {
+    anio--;
+    html = html.concat(`<option value="${anio}">${anio}</option> `);
+  }
+  $('#anio').html(html);
+}
