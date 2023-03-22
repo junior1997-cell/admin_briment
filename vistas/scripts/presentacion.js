@@ -1,4 +1,4 @@
-var tabla_unidades_m;
+var tabla_presentacion;
 
 //Función que se ejecuta al inicio
 function init() {
@@ -7,22 +7,21 @@ function init() {
 
   $("#mRecurso").addClass("active");
 
-  listar_unidades_m();
+  listar_presentacion();
 
-  $("#guardar_registro_unidad_m").on("click", function (e) { $("#submit-form-unidad-m").submit(); });
+  $("#guardar_registro_presentacion").on("click", function (e) { $("#submit-form-presentacion").submit(); });
 
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
 
 //Función limpiar
-function limpiar_unidades_m() {
-  $("#guardar_registro_unidad_m").html('Guardar Cambios').removeClass('disabled');
+function limpiar_presentacion() {
+  $("#guardar_registro_presentacion").html('Guardar Cambios').removeClass('disabled');
   //Mostramos los Materiales
-  $("#idunidad_medida").val("");
-  $("#nombre_medida").val(""); 
-  $("#abreviatura").val(""); 
-  $("#descripcion_m").val(""); 
+  $("#idpresentacion").val("");
+  $("#nombre_presentacion").val(""); 
+  $("#descripcion_p").val(""); 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -32,22 +31,22 @@ function limpiar_unidades_m() {
 }
 
 //Función Listar
-function listar_unidades_m() {
+function listar_presentacion() {
 
-  tabla_unidades_m=$('#tabla-unidades-m').dataTable({
+  tabla_presentacion=$('#tabla-presentacion').dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
     buttons: [
-      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_unidades_m.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_presentacion.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
       { extend: 'copyHtml5', exportOptions: { columns: [0,2,3,4], },footer: true, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray"  }, 
       { extend: 'excelHtml5', exportOptions: { columns: [0,2,3,4], }, footer: true, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", }, 
       { extend: 'pdfHtml5', exportOptions: { columns: [0,2,3,4], }, footer: false, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", } ,
     ],
     ajax:{
-      url: '../ajax/unidades_m.php?op=tbla_unidad_medida',
+      url: '../ajax/presentacion.php?op=tbla_presentacion',
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -81,12 +80,12 @@ function listar_unidades_m() {
 
 //Función para guardar o editar
 
-function guardaryeditar_unidades_m(e) {
+function guardaryeditar_presentacion(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-unidad-m")[0]);
+  var formData = new FormData($("#form-presentacion")[0]);
  
   $.ajax({
-    url: "../ajax/unidades_m.php?op=guardaryeditar_unidades_m",
+    url: "../ajax/presentacion.php?op=guardaryeditar_presentacion",
     type: "POST",
     data: formData,
     contentType: false,
@@ -95,14 +94,14 @@ function guardaryeditar_unidades_m(e) {
       e = JSON.parse(e);  console.log(e);  
       if (e.status == true) {
 
-				Swal.fire("Correcto!", "Unidad de Medida registrado correctamente.", "success");
+				Swal.fire("Correcto!", "Presentación registrado correctamente.", "success");
 
-	      tabla_unidades_m.ajax.reload(null, false);
+	      tabla_presentacion.ajax.reload(null, false);
          
-				limpiar_unidades_m();
+				limpiar_presentacion();
 
-        $("#modal-agregar-unidad-m").modal("hide");
-        $("#guardar_registro_unidad_m").html('Guardar Cambios').removeClass('disabled');
+        $("#modal-agregar-presentacion").modal("hide");
+        $("#guardar_registro_presentacion").html('Guardar Cambios').removeClass('disabled');
 
 			}else{
         ver_errores(e);				 
@@ -126,7 +125,7 @@ function guardaryeditar_unidades_m(e) {
       return xhr;
     },
     beforeSend: function () {
-      $("#guardar_registro_unidad_m").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#guardar_registro_presentacion").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
       $("#barra_progress_um").css({ width: "0%",  });
       $("#barra_progress_um").text("0%");
     },
@@ -138,24 +137,23 @@ function guardaryeditar_unidades_m(e) {
   });
 }
 
-function mostrar_unidades_m(idunidad_medida) {
+function mostrar_presentacion(idpresentacion) {
   $(".tooltip").removeClass("show").addClass("hidde");
   $("#cargando-3-fomulario").hide();
   $("#cargando-4-fomulario").show();
 
-  limpiar_unidades_m();
+  limpiar_presentacion();
 
-  $("#modal-agregar-unidad-m").modal("show")
+  $("#modal-agregar-presentacion").modal("show")
 
-  $.post("../ajax/unidades_m.php?op=mostrar_unidades_m", { idunidad_medida: idunidad_medida }, function (e, status) {
+  $.post("../ajax/presentacion.php?op=mostrar_presentacion", { idpresentacion: idpresentacion }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);  
 
     if (e.status) {
-      $("#idunidad_medida").val(e.data.idunidad_medida);
-      $("#nombre_medida").val(e.data.nombre); 
-      $("#abreviatura").val(e.data.abreviatura);
-      $("#descripcion_m").val(e.data.descripcion); 
+      $("#idpresentacion").val(e.data.idpresentacion);
+      $("#nombre_presentacion").val(e.data.nombre); 
+      $("#descripcion_p").val(e.data.descripcion); 
 
       $("#cargando-3-fomulario").show();
       $("#cargando-4-fomulario").hide();
@@ -166,16 +164,16 @@ function mostrar_unidades_m(idunidad_medida) {
 }
 
 //Función para desactivar registros
-function eliminar_unidades_m(idunidad_medida, nombre_medida) {
+function eliminar_presentacion(idpresentacion, nombre_presentacion) {
   crud_eliminar_papelera(
-    "../ajax/unidades_m.php?op=desactivar_unidades_m",
-    "../ajax/unidades_m.php?op=eliminar_unidades_m", 
-    idunidad_medida, 
+    "../ajax/presentacion.php?op=desactivar_presentacion",
+    "../ajax/presentacion.php?op=eliminar_presentacion", 
+    idpresentacion, 
     "!Elija una opción¡", 
-    `<b class="text-danger"><del>${nombre_medida}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
+    `<b class="text-danger"><del>${nombre_presentacion}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu registro ha sido Eliminado.' ) }, 
-    function(){  tabla_unidades_m.ajax.reload(null, false); },
+    function(){  tabla_presentacion.ajax.reload(null, false); },
     false, 
     false, 
     false,
@@ -188,12 +186,12 @@ init();
 
 $(function () {
 
-  $("#form-unidad-m").validate({
+  $("#form-presentacion").validate({
     rules: {
-      nombre_medida: { required: true }      // terms: { required: true },
+      nombre_presentacion: { required: true }      // terms: { required: true },
     },
     messages: {
-      nombre_medida: { required: "Campo requerido.", },
+      nombre_presentacion: { required: "Campo requerido.", },
     },
         
     errorElement: "span",
@@ -212,7 +210,7 @@ $(function () {
     },
     submitHandler: function (e) {
       $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
-      guardaryeditar_unidades_m(e);      
+      guardaryeditar_presentacion(e);      
     },
 
   });

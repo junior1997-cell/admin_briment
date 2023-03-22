@@ -1,4 +1,4 @@
-var tabla_categorias_af;
+var tabla_laboratorio_af;
 
 //Función que se ejecuta al inicio
 function init() {
@@ -12,7 +12,7 @@ function init() {
 }
 
 //Función limpiar 
-function limpiar_c_af() {
+function limpiar_l_af() {
   $("#guardar_registro_marca").html('Guardar Cambios').removeClass('disabled');
   $("#idlaboratorio").val("");
   $("#nombre_laboratorio").val(""); 
@@ -26,7 +26,7 @@ function limpiar_c_af() {
 //Función listar_c_insumos_af 
 function listar_c_insumos_af () {
 
-  tabla_categorias_af=$('#tabla-categorias-af').dataTable({
+  tabla_laboratorio_af=$('#tabla-laboratorio-af').dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
@@ -88,11 +88,11 @@ function guardaryeditar_c_insumos_af(e) {
 
 				Swal.fire("Correcto!", "Clasificación registrado correctamente.", "success");	 	 
 
-	      tabla_categorias_af.ajax.reload(null, false);
+	      tabla_laboratorio_af.ajax.reload(null, false);
          
-				limpiar_c_af();
+				limpiar_l_af();
 
-        $("#modal-agregar-categorias-af").modal("hide");
+        $("#modal-agregar-laboratorio-af").modal("hide");
 
         $("#guardar_registro_categoria_af").html('Guardar Cambios').removeClass('disabled');
 
@@ -137,9 +137,9 @@ function mostrar_c_insumos_af (idlaboratorio ) {
   $("#cargando-11-fomulario").hide();
   $("#cargando-12-fomulario").show();
 
-  limpiar_c_af();
+  limpiar_l_af();
 
-  $("#modal-agregar-categorias-af").modal("show")
+  $("#modal-agregar-laboratorio-af").modal("show")
 
   $.post("../ajax/laboratorio.php?op=mostrar", {idlaboratorio : idlaboratorio }, function (e, status) {
 
@@ -169,7 +169,7 @@ function eliminar_c_insumos_af(idlaboratorio, nombre ) {
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu registro ha sido Eliminado.' ) }, 
-    function(){  tabla_categorias_af.ajax.reload(null, false); },
+    function(){  tabla_laboratorio_af.ajax.reload(null, false); },
     false, 
     false, 
     false,

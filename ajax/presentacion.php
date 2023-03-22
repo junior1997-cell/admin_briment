@@ -9,46 +9,45 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
     
-    require_once "../modelos/Unidades_m.php";
+    require_once "../modelos/presentacion.php";
 
-    $unidades_m = new Unidades_m();
+    $presentacion = new presentacion();
 
-    $idunidad_medida = isset($_POST["idunidad_medida"]) ? limpiarCadena($_POST["idunidad_medida"]) : "";
-    $nombre = isset($_POST["nombre_medida"]) ? limpiarCadena($_POST["nombre_medida"]) : "";
-    $abreviatura = isset($_POST["abreviatura"]) ? limpiarCadena($_POST["abreviatura"]) : "";
-    $descripcion = isset($_POST["descripcion_m"]) ? limpiarCadena($_POST["descripcion_m"]) : "";
+    $idpresentacion = isset($_POST["idpresentacion"]) ? limpiarCadena($_POST["idpresentacion"]) : "";
+    $nombre = isset($_POST["nombre_presentacion"]) ? limpiarCadena($_POST["nombre_presentacion"]) : "";
+    $descripcion = isset($_POST["descripcion_p"]) ? limpiarCadena($_POST["descripcion_p"]) : "";
 
     switch ($_GET["op"]) {
 
-      case 'guardaryeditar_unidades_m':
+      case 'guardaryeditar_presentacion':
 
-        if (empty($idunidad_medida)) {
-          $rspta = $unidades_m->insertar($nombre, $abreviatura,$descripcion);
+        if (empty($idpresentacion)) {
+          $rspta = $presentacion->insertar($nombre, $descripcion);
           echo json_encode( $rspta, true) ;
         } else {
-          $rspta = $unidades_m->editar($idunidad_medida, $nombre, $abreviatura,$descripcion);
+          $rspta = $presentacion->editar($idpresentacion, $nombre, $descripcion);
           echo json_encode( $rspta, true) ;
         }
       break;
 
-      case 'desactivar_unidades_m':
-        $rspta = $unidades_m->desactivar($_GET["id_tabla"]);
+      case 'desactivar_presentacion':
+        $rspta = $presentacion->desactivar($_GET["id_tabla"]);
         echo json_encode( $rspta, true) ;
       break;
       
-      case 'eliminar_unidades_m':
-        $rspta = $unidades_m->eliminar($_GET["id_tabla"]);
+      case 'eliminar_presentacion':
+        $rspta = $presentacion->eliminar($_GET["id_tabla"]);
         echo json_encode( $rspta, true) ;
       break;
 
-      case 'mostrar_unidades_m':
-        $rspta = $unidades_m->mostrar($idunidad_medida);
+      case 'mostrar_presentacion':
+        $rspta = $presentacion->mostrar($idpresentacion);
         //Codificar el resultado utilizando json
         echo json_encode( $rspta, true) ;
       break;    
 
-      case 'tbla_unidad_medida':
-        $rspta = $unidades_m->tbla_unidad_medida();
+      case 'tbla_presentacion':
+        $rspta = $presentacion->tbla_presentacion();
         //Vamos a declarar un array
         $data = []; $cont = 1;
 
@@ -58,16 +57,15 @@
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
-              "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_unidades_m(' . $reg->idunidad_medida . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_unidades_m(' . $reg->idunidad_medida .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
-                : '<button class="btn btn-warning btn-sm" onclick="mostrar_unidades_m(' . $reg->idunidad_medida . ')"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-primary btn-sm" onclick="activar_unidades_m(' . $reg->idunidad_medida . ')"><i class="fa fa-check"></i></button>',
+              "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_presentacion(' . $reg->idpresentacion . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_presentacion(' . $reg->idpresentacion .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
+                : '<button class="btn btn-warning btn-sm" onclick="mostrar_presentacion(' . $reg->idpresentacion . ')"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-primary btn-sm" onclick="activar_presentacion(' . $reg->idpresentacion . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
-              "3" => $reg->abreviatura,
-              "4" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
+              "3" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
                 $reg->descripcion,
               '</div>',
-              "5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+              "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }
           $results = [
