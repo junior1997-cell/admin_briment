@@ -221,7 +221,6 @@
                                     <th class="text-center">#</th>
                                     <th class="">Acciones</th>
                                     <th>Nombre</th>
-                                    <th>Descripcion</th>
                                     <th>Estado</th>
                                   </tr>
                                 </thead>
@@ -231,7 +230,6 @@
                                     <th class="text-center">#</th>
                                     <th class="">Acciones</th>
                                     <th>Nombre</th>
-                                    <th>Descripcion</th>
                                     <th>Estado</th>
                                   </tr>
                                 </tfoot>
@@ -516,7 +514,7 @@
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Agregar categoría Producto</h4>
+                      <h4 class="modal-title">Agregar Marcas</h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-danger" aria-hidden="true">&times;</span>
                       </button>
@@ -528,23 +526,16 @@
                         <div class="card-body">
                           <div class="row" id="cargando-11-fomulario">
                             <!-- id categoria_insumos_af -->
-                            <input type="hidden" name="idcategoria_producto" id="idcategoria_producto" />
+                            <input type="hidden" name="idlaboratorio" id="idlaboratorio" />
 
                             <!-- nombre categoria -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="nombre_categoria">Nombre categoría</label>
-                                <input type="text" name="nombre_categoria" id="nombre_categoria" class="form-control" placeholder="Nombre categoría" />
+                                <label for="nombre_laboratorio">Nombre Marca</label>
+                                <input type="text" name="nombre_laboratorio" id="nombre_laboratorio" class="form-control" placeholder="Nombre Marca" />
                               </div>
                             </div>
-                            <!-- descripcion_cat categoria -->
-                            <div class="col-lg-12 class_pading">
-                              <div class="form-group">
-                                <label for="descripcion_cat">Descripcion Categoria</label>
-                                <textarea name="descripcion_cat" id="descripcion_cat" class="form-control" rows="2"></textarea>                                
-                              </div>
-                            </div>
-
+                            
                             <!-- barprogress -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
                               <div class="progress" id="div_barra_progress_categoria_af">
@@ -565,12 +556,12 @@
                           </div>
                         </div>
                         <!-- /.card-body -->
-                        <button type="submit" style="display: none;" id="submit-form-cateogrias-af">Submit</button>
+                        <button type="submit" style="display: none;" id="submit-form-marca">Submit</button>
                       </form>
                     </div>
                     <div class="modal-footer justify-content-between">
                       <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_c_af();">Close</button>
-                      <button type="submit" class="btn btn-success" id="guardar_registro_categoria_af">Guardar Cambios</button>
+                      <button type="submit" class="btn btn-success" id="guardar_registro_marca">Guardar Cambios</button>
                     </div>
                   </div>
                 </div>
