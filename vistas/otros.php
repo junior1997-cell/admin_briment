@@ -301,34 +301,34 @@
                     </div>
 
                     <div class="col-sm-12 col-md-12 col-lg-6g col-xl-6">
-                      <!-- TBLA - UNIDAD DE MEDIDA-->
+                      <!-- TBLA - LOTE-->
                       <div class="row">
                         <div class="col-sm-6">
-                          <h2>Unidades de Medida</h2>
+                          <h2>Lote</h2>
                         </div>
                         <div class="col-sm-6">
                           <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Unidad de Medida</li>
+                            <li class="breadcrumb-item active">Lote</li>
                           </ol>
                         </div>
                         <div class="col-12">
                           <div class="card card-primary card-outline">
                             <div class="card-header">
                               <h3 class="card-title">
-                                <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-unidad-m" onclick="limpiar_unidades_m();"><i class="fas fa-plus-circle"></i> Agregar</button>
-                                Admnistrar Unidad de medidas.
+                                <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-lote" onclick="limpiar_lote();"><i class="fas fa-plus-circle"></i> Agregar</button>
+                                Admnistrar Lote.
                               </h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                              <table id="tabla-unidades-m" class="table table-bordered table-striped display" style="width: 100% !important;">
+                              <table id="tabla-lote" class="table table-bordered table-striped display" style="width: 100% !important;">
                                 <thead>
                                   <tr>
                                     <th class="text-center">#</th>
                                     <th class="">Acciones</th>
                                     <th>Nombre</th>
-                                    <th>Abreviación</th>
+                                    <th>Fecha de Vencimiento</th>
                                     <th>Descripciòn</th>
                                     <th>Estado</th>
                                     
@@ -340,7 +340,7 @@
                                     <th class="text-center">#</th>
                                     <th class="">Acciones</th>
                                     <th>Nombre</th>
-                                    <th>Abreviación</th>
+                                    <th>Fecha de Vencimiento</th>
                                     <th>Descripciòn</th>
                                     <th>Estado</th>
                                   </tr>
@@ -745,12 +745,12 @@
                 </div>
               </div>
 
-              <!-- MODAL - UNIDAD DE MEDIDA-->
-              <div class="modal fade" id="modal-agregar-unidad-m">
+              <!-- MODAL - LOTE-->
+              <div class="modal fade" id="modal-agregar-lote">
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Agregar Unidad de Medida</h4>
+                      <h4 class="modal-title">Agregar Lote</h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-danger" aria-hidden="true">&times;</span>
                       </button>
@@ -758,33 +758,41 @@
 
                     <div class="modal-body">
                       <!-- form start -->
-                      <form id="form-unidad-m" name="form-unidad-m" method="POST" autocomplete="off">
+                      <form id="form-lote" name="form-lote" method="POST" autocomplete="off">
                         <div class="card-body">
                           <div class="row" id="cargando-3-fomulario">
                             <!-- id idunidad_medida -->
-                            <input type="hidden" name="idunidad_medida" id="idunidad_medida" />
+                            <input type="hidden" name="idlote" id="idlote" />
 
                             <!-- nombre_medida -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" name="nombre_medida" class="form-control" id="nombre_medida" placeholder="Nombre de la medida" />
+                                <label for="nombre_lote">Nombre</label>
+                                <input type="text" name="nombre_lote" class="form-control" id="nombre_lote" placeholder="Nombre del Lote" />
                               </div>
                             </div>
 
-                            <!-- abreviacion -->
+                            <!-- Fecha de deposito -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="abreviatura">Abreviación</label>
-                                <input type="text" name="abreviatura" class="form-control" id="abreviatura" placeholder="abreviatura." />
+                                <label for="fecha_pago">Fecha de Vencimiento </label>
+                                <input class="form-control" type="date" id="fecha_vencimiento" name="fecha_vencimiento" min=<?php $hoy=date("Y-m-d"); echo $hoy;?> />
                               </div>
                             </div>
+
+                            <!-- Fecha de vencimiento -->
+                            <!-- <div class="col-lg-12 class_pading">
+                              <div class="form-group">
+                                <label for="abreviatura">Fecha de Vencimiento</label>
+                                <input type="text" name="abreviatura" class="form-control" id="abreviatura" placeholder="abreviatura." />
+                              </div>
+                            </div>-->
 
                             <!-- Descripciòn -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="descripcion_m">Descripciòn</label>
-                                <textarea name="descripcion_m" id="descripcion_m" class="form-control" rows="2"></textarea>                              
+                                <label for="descripcion_lot">Descripción</label>
+                                <textarea name="descripcion_lot" id="descripcion_lot" class="form-control" rows="2"></textarea>                              
                               </div>
                             </div>
 
@@ -808,12 +816,12 @@
                           </div>
                         </div>
                         <!-- /.card-body -->
-                        <button type="submit" style="display: none;" id="submit-form-unidad-m">Submit</button>
+                        <button type="submit" style="display: none;" id="submit-form-lote">Submit</button>
                       </form>
                     </div>
                     <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_unidades_m();">Close</button>
-                      <button type="submit" class="btn btn-success" id="guardar_registro_unidad_m">Guardar Cambios</button>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_lote();">Close</button>
+                      <button type="submit" class="btn btn-success" id="guardar_registro_lote">Guardar Cambios</button>
                     </div>
                   </div>
                 </div>
@@ -857,6 +865,7 @@
         <script type="text/javascript" src="scripts/cargo.js"></script>
         <script type="text/javascript" src="scripts/laboratorio.js"></script>
         <script type="text/javascript" src="scripts/presentacion.js"></script>
+        <script type="text/javascript" src="scripts/lote.js"></script>
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         
