@@ -84,7 +84,7 @@
                 </div>',
                 "4"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['celular'] . '</a>',
                 "5"=> '<button class="btn btn-warning " onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" data-toggle="tooltip" data-original-title="Agregar mes de pago"><i class="fas fa-hand-holding-usd fa-lg"></i></button>',
-                "6"=>  $value['sueldo_diario'],
+                "6"=>  $value['pago'],
                 
                 "7"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
                 "8"=> $value['nombres'],
