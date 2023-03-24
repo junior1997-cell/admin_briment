@@ -175,6 +175,7 @@ class Producto
     return ejecutarConsultaArray($sql);
   }
 
+
   
 }
 

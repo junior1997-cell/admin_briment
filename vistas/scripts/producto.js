@@ -147,6 +147,7 @@ function tbla_principal(idpresentacion = 'todos') {
       // columna: precio sin igv
       if (data[8] != '') { $("td", row).eq(8).addClass("text-nowrap text-center"); }
       // columna: monto igv
+      
       if (data[9] != '') { $("td", row).eq(9).addClass("text-nowrap"); }
       // columna: precio total
       // if (data[10] != '') { $("td", row).eq(10).addClass("text-nowrap"); }
