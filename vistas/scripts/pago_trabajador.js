@@ -132,8 +132,6 @@ function tbla_trabajador() {
 
 }
 
-
-
 function datos_trabajador(idtrabajador){
 
   $(".tooltip").removeClass("show").addClass("hidde");
@@ -230,7 +228,16 @@ function datos_trabajador(idtrabajador){
 
   }).fail( function(e) { ver_errores(e); } );
 }
-/* :::::::::::::::::::::::: S E C C I O N   DE T A L L E   D E   P A G O S :::::::::::::::::::::::: */
+
+/* :::::::::::::::::::::::: S E C C I O N   M E S :::::::::::::::::::::::: */
+
+function limpiar_form_mes() {
+  $("#idmes_pago_trabajador").val('');      
+  $("#mes").val(null).trigger("change");     
+  $("#anio").val(null).trigger("change");
+}
+  
+
 //Función Listar meses de pago
 function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
   get_year_month();
@@ -273,15 +280,15 @@ function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
     },    
     footerCallback: function( tfoot, data, start, end, display ) {
-      var api1 = this.api(); var total1 = api1.column( 4 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api1.column( 4 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );      
+      var api1 = this.api(); var total1 = api1.column( 5 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api1.column( 5 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );      
     },
     bDestroy: true,
     iDisplayLength: 10,//Paginación
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs: [
       //{ targets: [], visible: false, searchable: false, }, 
-      { targets: [4], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },      
+      { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },      
 
     ],
   }).DataTable();
@@ -337,6 +344,36 @@ function guardar_y_editar_mes_pago(e) {
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
 }
+
+// mostramos los datos para editar
+function ver_datos_mes(id) {
+
+  limpiar_form_pago();  
+
+  $("#cargando-1-fomulario").hide();
+  $("#cargando-2-fomulario").show();
+
+  $("#modal-agregar-mes").modal("show")
+
+  $.post("../ajax/pago_trabajador.php?op=ver_datos_mes", { id_mes: id }, function (e, status) {
+
+    e = JSON.parse(e);  console.log(e);   
+
+    if (e.status == true) {         
+      
+      $("#idmes_pago_trabajador").val(e.data.idmes_pago_trabajador);      
+      $("#mes").val(e.data.mes_nombre).trigger("change");     
+      $("#anio").val(e.data.anio).trigger("change");
+
+      $("#cargando-1-fomulario").show();
+      $("#cargando-2-fomulario").hide();
+
+    } else {
+      ver_errores(e);
+    }    
+  }).fail( function(e) { ver_errores(e); } );
+}
+
 /* :::::::::::::::::::::::: S E C C I O N   DE T A L L E   D E   P A G O S :::::::::::::::::::::::: */
 //Función limpiar
 function limpiar_form_pago() {
@@ -400,7 +437,7 @@ function ver_desglose_de_pago(idmes_pago_trabajador,nombre_mes) {
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs: [
       //{ targets: [], visible: false, searchable: false, }, 
-      // { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
       { targets: [3], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ],
   }).DataTable();

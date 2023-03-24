@@ -4,40 +4,14 @@
   // global $total;
   class PagoTrabajador
   {
-
+    //Implementamos nuestro variable global
+    public $id_usr_sesion;
     //Implementamos nuestro constructor
-    public function __construct()
+    public function __construct($id_usr_sesion = 0)
     {
+      $this->id_usr_sesion = $id_usr_sesion;
     }
-    public function insertar_mes_pago($idpersona,$nombres,$mes,$anio)
-    {
-
-      $sql="SELECT idmes_pago_trabajador, idpersona, mes_nombre, anio,estado,estado_delete 
-      FROM mes_pago_trabajador 
-      WHERE idpersona='$idpersona' AND mes_nombre='$mes' AND anio='$anio' ";
-
-      $buscando = ejecutarConsultaArray($sql); if ($buscando['status'] == false) { return $buscando; }
-  
-      if ( empty($buscando['data']) ) {
-        $sql="INSERT INTO mes_pago_trabajador (idpersona,mes_nombre,anio)
-        VALUES ('$idpersona','$mes','$anio')";
-        return ejecutarConsulta($sql);
-      } else {
-        $info_repetida = ''; 
-  
-        foreach ($buscando['data'] as $key => $value) {
-          $info_repetida .= '<li class="text-left font-size-13px">
-            <b>Nombre: </b>'.$nombres.'<br>
-            <b>Descripción: </b>'. $value['mes_nombre'] . ' del '.$value['anio'].'<br>
-            <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .'<br>
-            <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
-            <hr class="m-t-2px m-b-2px">
-          </li>'; 
-        }
-        $sw = array( 'status' => 'duplicado', 'message' => 'duplicado', 'data' => '<ul>'.$info_repetida.'</ul>', 'id_tabla' => '' );
-        return $sw;
-      }   
-    }
+   
 
     public function tbla_principal() {
       $data = Array();
@@ -80,17 +54,123 @@
     }
 
     // =====================================================================================================
+    //================================== S E C C I O N   M E S ========================================= 
+    // =====================================================================================================
+
+    public function insertar_mes_pago($idpersona,$mes,$anio) {
+
+      $sql="SELECT idmes_pago_trabajador, idpersona, mes_nombre, anio,estado,estado_delete 
+      FROM mes_pago_trabajador 
+      WHERE idpersona='$idpersona' AND mes_nombre='$mes' AND anio='$anio' ";
+      $buscando = ejecutarConsultaArray($sql); if ($buscando['status'] == false) { return $buscando; }
+  
+      if ( empty($buscando['data']) ) {
+        $sql="INSERT INTO mes_pago_trabajador (idpersona,mes_nombre,anio, user_created) VALUES ('$idpersona','$mes','$anio', '$this->id_usr_sesion')";
+        $new_mes = ejecutarConsulta_retornarID($sql); if ( $new_mes['status'] == false) {return $new_mes; } 
+
+        //add registro en nuestra bitacora
+        $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('mes_pago_trabajador','".$new_mes['data']."','Registro creado', 'created_at', '$this->id_usr_sesion')";
+        $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; } 
+
+        return $new_mes;
+      } else {
+        $info_repetida = ''; 
+  
+        foreach ($buscando['data'] as $key => $value) {
+          $info_repetida .= '<li class="text-left font-size-13px">
+            <b>Mes: </b>'.$value['mes_nombre'].'<br>
+            <b>Anio: </b>'.$value['anio'].'<br>
+            <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .'<br>
+            <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
+            <hr class="m-t-2px m-b-2px">
+          </li>'; 
+        }
+        $sw = array( 'status' => 'duplicado', 'message' => 'duplicado', 'data' => '<ul>'.$info_repetida.'</ul>', 'id_tabla' => '' );
+        return $sw;
+      }   
+    }
+
+    public function actualizar_mes_pago($idmes_pago_trabajador, $idpersona, $mes, $anio) {
+
+      $sql = "SELECT * FROM mes_pago_trabajador 
+      WHERE idmes_pago_trabajador != '$idmes_pago_trabajador' AND mes_nombre = '$mes' AND anio='$anio' AND idpersona = '$idpersona';";      
+      $buscando = ejecutarConsultaArray($sql); if ($buscando['status'] == false) { return $buscando; }
+  
+      if ( empty($buscando['data']) ) {
+        $sql="UPDATE mes_pago_trabajador SET mes_nombre='$mes',anio='$anio', user_updated='$this->id_usr_sesion'
+        WHERE idmes_pago_trabajador='$idmes_pago_trabajador'";
+        $new_mes = ejecutarConsulta($sql); if ( $new_mes['status'] == false) {return $new_mes; } 
+
+        //add registro en nuestra bitacora
+        $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('mes_pago_trabajador','$idmes_pago_trabajador','Registro actualizado', 'updated_at', '$this->id_usr_sesion')";
+        $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; } 
+
+        return $new_mes; 
+      } else {
+        $info_repetida = ''; 
+  
+        foreach ($buscando['data'] as $key => $value) {
+          $info_repetida .= '<li class="text-left font-size-13px">
+            <b>Mes: </b>'.$value['mes_nombre'].'<br>
+            <b>Anio: </b>'.$value['anio'].'<br>
+            <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .'<br>
+            <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
+            <hr class="m-t-2px m-b-2px">
+          </li>'; 
+        }
+        $sw = array( 'status' => 'duplicado', 'message' => 'duplicado', 'data' => '<ul>'.$info_repetida.'</ul>', 'id_tabla' => '' );
+        return $sw;
+      }       
+    }
+
+    public function tbla_mes_pago($idpersona) {
+      $data = Array();
+      $sql="SELECT idmes_pago_trabajador, mes_nombre, anio FROM mes_pago_trabajador WHERE idpersona='$idpersona'  AND estado=1 AND estado_delete =1";
+
+      $pagos_meses = ejecutarConsultaArray($sql); if ($pagos_meses['status'] == false) { return  $pagos_meses;}
+
+      // actualizamos el stock
+      foreach ($pagos_meses['data'] as $key => $value) { 
+           
+        $slq2 = "SELECT SUM(monto) as total FROM pago_trabajador WHERE estado =1 AND estado_delete=1 AND idmes_pago_trabajador='".$value['idmes_pago_trabajador']."';";
+        $total_por_meses = ejecutarConsultaSimpleFila($slq2); if ($total_por_meses['status'] == false) { return  $total_por_meses;}
+
+        $pago_total_por_meses =(empty($total_por_meses['data']) ? 0 : (empty($total_por_meses['data']['total']) ? 0 : floatval($total_por_meses['data']['total']) ) );        
+
+        $data[] = [
+          'idmes_pago_trabajador'   => $value['idmes_pago_trabajador'],
+          'anio'  => $value['anio'],
+          'mes_nombre'        => $value['mes_nombre'],
+          'pago_total_por_meses'   => $pago_total_por_meses,
+        ];
+        
+      }	
+      return $retorno = ['status' => true, 'message' => 'todo ok pe.', 'data' =>$data, 'affected_rows' =>$pagos_meses['affected_rows'],  ] ;
+
+    }
+
+    public function ver_datos_mes($id) {
+      $sql="SELECT idmes_pago_trabajador, idpersona, mes_nombre, anio FROM mes_pago_trabajador WHERE idmes_pago_trabajador = '$id' AND estado = '1' AND estado_delete = '1'";
+      $mes = ejecutarConsultaSimpleFila($sql); 
+      return $mes; 
+    }
+
     // =====================================================================================================
     //================================== S E C C I O N   P A G O S ========================================= 
     // =====================================================================================================
-    // =====================================================================================================
 
     //Implementamos un método para insertar registros
-    public function insertar_pago($idmes_pago_trabajador_p,$nombre_mes,$monto,$fecha_pago,$descripcion,$comprobante)
+    public function insertar_pago($idmes_pago_trabajador,$nombre_mes,$monto,$fecha_pago,$descripcion,$comprobante)
     {
-      $sql ="INSERT INTO pago_trabajador(idmes_pago_trabajador, fecha_pago, nombre_mes, monto, descripcion, comprobante)
-      VALUES ('$idmes_pago_trabajador_p','$fecha_pago','$nombre_mes','$monto','$descripcion','$comprobante')";
-      return ejecutarConsulta($sql);
+      $sql ="INSERT INTO pago_trabajador(idmes_pago_trabajador, fecha_pago, nombre_mes, monto, descripcion, comprobante, user_created)
+      VALUES ('$idmes_pago_trabajador','$fecha_pago','$nombre_mes','$monto','$descripcion','$comprobante', '$this->id_usr_sesion')";
+      $new_pago = ejecutarConsulta_retornarID($sql); if ( $new_pago['status'] == false) {return $new_pago; } 
+
+      //add registro en nuestra bitacora
+      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('pago_trabajador','".$new_pago['data']."','Registro creado', 'created_at', '$this->id_usr_sesion')";
+      $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; } 
+
+      return $new_pago;
     }
 
     //implementamos un metodo para editar registros
@@ -103,21 +183,25 @@
       nombre_mes='$nombre_mes',
       monto='$monto',
       descripcion='$descripcion',
-      comprobante='$comprobante' 
+      comprobante='$comprobante' , user_updated='$this->id_usr_sesion'
       WHERE idpago_trabajador='$idpago_trabajador'";
-      return ejecutarConsulta($sql);
+      $edit_pago = ejecutarConsulta($sql); if ( $edit_pago['status'] == false) {return $edit_pago; } 
+
+      //add registro en nuestra bitacora
+      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('pago_trabajador','".$idpago_trabajador."','Registro actualizado', 'updated_at', '$this->id_usr_sesion')";
+      $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; } 
+
+      return $edit_pago;
     }
 
     //Implementamos un método para desactivar registros
     public function desactivar_pago($idpago_trabajador)
     {
-      $sql="UPDATE pago_trabajador SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idpago_trabajador='$idpago_trabajador'";
-      $desactivar =  ejecutarConsulta($sql);
-
-      if ( $desactivar['status'] == false) {return $desactivar; }  
+      $sql="UPDATE pago_trabajador SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idpago_trabajador='$idpago_trabajador'";
+      $desactivar =  ejecutarConsulta($sql);  if ( $desactivar['status'] == false) {return $desactivar; }  
 
       //add registro en nuestra bitacora
-      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_trabajador','.$idpago_trabajador.','Desativar el registro Trabajador','" . $_SESSION['idusuario'] . "')";
+      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('pago_trabajador','.$idpago_trabajador.','Registro enviado a papelera', 'estado_0', '$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 
       return $desactivar;
@@ -125,17 +209,16 @@
     
     //Implementamos un método para activar registros
     public function eliminar_pago($idpago_trabajador) {
-      $sql="UPDATE pago_trabajador SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idpago_trabajador='$idpago_trabajador'";
-      $eliminar =  ejecutarConsulta($sql);
-      
-      if ( $eliminar['status'] == false) {return $eliminar; }  
+      $sql="UPDATE pago_trabajador SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idpago_trabajador='$idpago_trabajador'";
+      $eliminar =  ejecutarConsulta($sql);  if ( $eliminar['status'] == false) {return $eliminar; }  
 
       //add registro en nuestra bitacora
-      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_trabajador','.$idpago_trabajador.','Eliminar registro Trabajador','" . $_SESSION['idusuario'] . "')";
+      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('pago_trabajador','.$idpago_trabajador.','Registro eliminado permanentemente', 'estado_delete_0', '$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 
       return $eliminar;
     }
+
     //Implementamos un método para mostrar los datos de un registro a modificar
     public function mostrar_pago($idpago_trabajador)
     {
@@ -182,32 +265,7 @@
 
     }
 
-    public function tbla_mes_pago($idpersona) {
-      $data = Array();
-      $sql="SELECT idmes_pago_trabajador, mes_nombre, anio FROM mes_pago_trabajador WHERE idpersona='$idpersona'  AND estado=1 AND estado_delete =1";
-
-      $pagos_meses = ejecutarConsultaArray($sql); if ($pagos_meses['status'] == false) { return  $pagos_meses;}
-
-          // actualizamos el stock
-      foreach ($pagos_meses['data'] as $key => $value) { 
-           
-        $slq2 = "SELECT SUM(monto) as total FROM pago_trabajador WHERE estado =1 AND estado_delete=1 AND idmes_pago_trabajador='".$value['idmes_pago_trabajador']."';";
-        $total_por_meses = ejecutarConsultaSimpleFila($slq2); if ($total_por_meses['status'] == false) { return  $total_por_meses;}
-
-        $pago_total_por_meses =(empty($total_por_meses['data']) ? 0 : (empty($total_por_meses['data']['total']) ? 0 : floatval($total_por_meses['data']['total']) ) );
-        
-
-        $data[] = [
-          'idmes_pago_trabajador'   => $value['idmes_pago_trabajador'],
-          'anio'  => $value['anio'],
-          'mes_nombre'        => $value['mes_nombre'],
-          'pago_total_por_meses'   => $pago_total_por_meses,
-        ];
-        
-      }	
-      return $retorno = ['status' => true, 'message' => 'todo ok pe.', 'data' =>$data, 'affected_rows' =>$pagos_meses['affected_rows'],  ] ;
-
-    }
+   
 
     public function obtenerImg($idtrabajador) {
 

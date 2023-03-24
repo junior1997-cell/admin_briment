@@ -17,7 +17,7 @@
 
       require_once "../modelos/pago_trabajador.php";
 
-      $pago_trabajador = new PagoTrabajador;
+      $pago_trabajador = new PagoTrabajador($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
 
@@ -27,7 +27,6 @@
       // ::::::::::::::::: MES TRABAJADOR :::::::::::::::::
       $idmes_pago_trabajador= isset($_POST["idmes_pago_trabajador"])? limpiarCadena($_POST["idmes_pago_trabajador"]):"";
       $idpersona            = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
-      $nombres              = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
       $mes                  = isset($_POST["mes"])? limpiarCadena($_POST["mes"]):"";
       $anio                 = isset($_POST["anio"])? limpiarCadena($_POST["anio"]):"";
 
@@ -40,22 +39,7 @@
       $descripcion		        = isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
       $comprobante			      = isset($_POST["doc1"])? limpiarCadena($_POST["doc1"]):"";
 
-      switch ($_GET["op"]) {
-
-        case 'guardaryeditar_mes_pago':
-          
-          if (empty($idmes_pago_trabajador)){
-            
-            $rspta=$pago_trabajador->insertar_mes_pago($idpersona,$nombres,$mes,$anio);
-            
-            echo json_encode($rspta, true);
-  
-          }else {
-            
-            echo "Error al editar";
-          }            
-
-        break;
+      switch ($_GET["op"]) {     
 
         case 'tbla_trabajador':          
 
@@ -107,7 +91,41 @@
           } else {
             echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
           }
+        break;         
+
+        case 'verdatos':
+          $rspta=$pago_trabajador->verdatos($idtrabajador);
+          //Codificar el resultado utilizando json
+          echo json_encode($rspta, true);
+        break; 
+
+        case 'datos_trabajador':
+          $rspta=$pago_trabajador->datos_trabajador($_POST["idtrabajador"]);
+          //Codificar el resultado utilizando json
+          echo json_encode($rspta, true);
+        break;  
+
+        /* :::::::::::::::::::::::::::::: S E C C I O N   M E S :::::::::::::::::::::::::::::: */
+        case 'guardaryeditar_mes_pago':
+          
+          if (empty($idmes_pago_trabajador)){
+            
+            $rspta=$pago_trabajador->insertar_mes_pago($idpersona,$mes,$anio);            
+            echo json_encode($rspta, true);
+  
+          }else {
+            
+            $rspta=$pago_trabajador->actualizar_mes_pago($idmes_pago_trabajador, $idpersona,$mes,$anio);            
+            echo json_encode($rspta, true);
+          }            
+
         break;
+
+        case 'ver_datos_mes':
+          $rspta=$pago_trabajador->ver_datos_mes($_POST["id_mes"]);
+          //Codificar el resultado utilizando json
+          echo json_encode($rspta, true);
+        break; 
 
         case 'tbla_mes_pago':          
 
@@ -122,10 +140,11 @@
           
               $data[]=array(
                 "0"=> $cont++,
-                "1"=> $value['anio'],
-                "2"=> $value['mes_nombre'],
-                "3"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['idmes_pago_trabajador'].',\''.$value['mes_nombre'].'\');" >Pagos</button>',
-                "4"=> $value['pago_total_por_meses'],
+                "1"=> '<button class="btn btn-warning btn-sm" onclick="ver_datos_mes(' . $value['idmes_pago_trabajador'] . ')"><i class="fas fa-pencil-alt"></i></button>',
+                "2"=> $value['anio'],
+                "3"=> $value['mes_nombre'],
+                "4"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['idmes_pago_trabajador'].',\''.$value['mes_nombre'].'\');" >Pagos</button>',
+                "5"=> $value['pago_total_por_meses'],
               );
             }
             $results = array(
@@ -138,21 +157,9 @@
           } else {
             echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
           }
-        break;   
-
-        case 'verdatos':
-          $rspta=$pago_trabajador->verdatos($idtrabajador);
-          //Codificar el resultado utilizando json
-          echo json_encode($rspta, true);
         break; 
 
-        case 'datos_trabajador':
-          $rspta=$pago_trabajador->datos_trabajador($_POST["idtrabajador"]);
-          //Codificar el resultado utilizando json
-          echo json_encode($rspta, true);
-        break;  
-
-        /* =========================== S E C C I O N   P A G O S =========================== */
+        /* :::::::::::::::::::::::::::::: S E C C I O N   P A G O S :::::::::::::::::::::::::::::: */
         case 'guardar_editar_pago':
           // Comprobante
           if (!file_exists($_FILES['doc1']['tmp_name']) || !is_uploaded_file($_FILES['doc1']['tmp_name'])) {
@@ -204,8 +211,8 @@
         break;
 
         case 'eliminar_pago':
-         $rspta=$pago_trabajador->eliminar_pago($_GET["id_tabla"]);
-        echo json_encode($rspta, true);
+          $rspta=$pago_trabajador->eliminar_pago($_GET["id_tabla"]);
+          echo json_encode($rspta, true);
         break;
 
         case 'mostrar_pago':

@@ -52,11 +52,9 @@ function listar_c_insumos_af () {
       // columna: #
       if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap text-center"); }
       // columna: #
-      if (data[2] != '') { $("td", row).eq(2).addClass("text-center"); }
+      if (data[2] != '') { $("td", row).eq(2).addClass("text-left"); }
       // columna: #
       if (data[3] != '') { $("td", row).eq(3).addClass("text-center"); }
-      // columna: #
-      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
 
     },
     language: {

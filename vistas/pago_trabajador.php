@@ -57,7 +57,7 @@
                         <div class="card-header">
                           <h3 class="card-title">                            
                             <button type="button" class="btn bg-gradient-warning" id="btn-regresar" style="display: none;" onclick="show_hide_table(1);"><i class="fas fa-arrow-left"></i> Regresar</button>
-                            <button type="button" class="btn bg-gradient-primary" id="btn-agregar-mes"data-toggle="modal" style="display: none;" data-target="#modal-agregar-mes" ><i class="fa-solid fa-circle-plus"></i> Agregar Mes</button>
+                            <button type="button" class="btn bg-gradient-primary" id="btn-agregar-mes"data-toggle="modal" onclick="limpiar_form_mes();" style="display: none;" data-target="#modal-agregar-mes" ><i class="fa-solid fa-circle-plus"></i> Agregar Mes</button>
                           </h3>
                           <!--Regresar a la tabla principal  -->
                           <h3 class="card-title mr-3"  style="padding-left: 2px;"  data-toggle="tooltip" data-original-title="Regresar a la tabla principal">
@@ -65,7 +65,7 @@
                           </h3>
                           <!--Regresar a la tabla mes-->
                           <h3 class="card-title mr-3"  style="padding-left: 2px;"  data-toggle="tooltip" data-original-title="Regresar a la tabla mes">
-                            <button type="button" class="btn bg-gradient-warning" id="btn-regresar-meses" style="display: none;" onclick="show_hide_table(2);"><i class="fas fa-arrow-left"></i> Regresar a meses</button>
+                            <button type="button" class="btn bg-gradient-warning" id="btn-regresar-meses" style="display: none;" onclick="show_hide_table(2); "><i class="fas fa-arrow-left"></i> Regresar a meses</button>
                           </h3>
                           <!--Agregar pago -->
                           <h3 class="card-title mr-3"  style="padding-left: 2px;"  data-toggle="tooltip" data-original-title="Agregar pago">
@@ -129,7 +129,8 @@
                             <table id="tabla-mes-pago" class="table table-bordered table-striped display" style="width: 100% !important; ">
                               <thead>
                                 <tr>
-                                  <th class="text-center">#</th>                                  
+                                  <th class="text-center">#</th>   
+                                  <th>Op</th>                               
                                   <th>Año</th>
                                   <th>Mes</th>
                                   <th>Ver Detalle</th>
@@ -139,7 +140,8 @@
                               <tbody></tbody>
                               <tfoot>
                                 <tr>
-                                  <th class="text-center">#</th>                                  
+                                  <th class="text-center">#</th>     
+                                  <th>Op</th>                             
                                   <th>Año</th>
                                   <th>Mes</th>
                                   <th>Ver Detalle</th>
@@ -216,7 +218,7 @@
                               <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <label for="mes">Mes</label>
-                                  <select name="mes" id="mes" class="form-control" placeholder="Tipo de documento">
+                                  <select name="mes" id="mes" class="form-control select2" placeholder="Tipo de documento">
                                     <option value="Enero">Enero</option> 
                                     <option value="Febrero">Febrero</option> 
                                     <option value="Marzo">Marzo</option> 

@@ -64,6 +64,7 @@
 <script src="../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="../plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="../plugins/datatables/datetime.js"></script>
  
 <!-- sweetalert2 -->
 <script src="../plugins/sweetalert2/sweetalert2.all.min.js"></script>

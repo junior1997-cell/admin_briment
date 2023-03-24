@@ -79,7 +79,7 @@
                         <div class="small-box bg-success">
                           <div class="inner">
                             <h3 id="cantidad_box_agricultor"> <i class="fas fa-spinner fa-pulse "></i>   </h3>
-                            <p>Total de Agricultores</p>
+                            <p>Total de Proveedores</p>
                           </div>
                           <div class="icon"><i class="fas fa-users"></i> </div>
                           <a href="persona.php" data-toggle="tooltip" data-original-title="Click para visitar" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
@@ -181,7 +181,7 @@
                                   <div class="col-md-12 ">
                                     <div class="d-flex">
                                       <p class="d-flex flex-column">
-                                        <span class="text-bold text-lg">Compras de Café</span> <span>por mes</span>
+                                        <span class="text-bold text-lg">Compras de productos</span> <span>por mes</span>
                                       </p>
                                       <p class="ml-auto d-flex flex-column text-right">
                                         <span class="text-success cursor-pointer" id="btn-download-chart-barra" data-toggle="tooltip" data-original-title="Descargar gráfico"><i class="fas fa-download fa-xl"></i></span>

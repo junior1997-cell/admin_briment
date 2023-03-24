@@ -1,0 +1,8 @@
+CODIGO		|	MENSAJE
+================|=======================================
+estado_1: 	| Registro recuperado de papelera
+estado_0: 	| Registro enviado a papelera
+estado_delete_1:| Registro recuperado de permanentemente
+estado_delete_0:| Registro eliminado permanentemente
+created_at: 	| Registro creado
+updated_at:	| Registro actualizado
