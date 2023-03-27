@@ -134,8 +134,8 @@ function guardaryeditar_tipo(e) {
 
 function mostrar_tipo(idtipo_persona) {
   $(".tooltip").removeClass("show").addClass("hidde");
-  $("#cargando-7-fomulario").hide();
-  $("#cargando-8-fomulario").show();
+  $("#cargando-3-fomulario").hide();
+  $("#cargando-4-fomulario").show();
 
   limpiar_tipo();
 
@@ -150,8 +150,8 @@ function mostrar_tipo(idtipo_persona) {
       $("#nombre_tipo").val(e.data.nombre);
       $("#descripcion_t").val(e.data.descripcion);
 
-      $("#cargando-7-fomulario").show();
-      $("#cargando-8-fomulario").hide();
+      $("#cargando-3-fomulario").show();
+      $("#cargando-4-fomulario").hide();
     } else {
       ver_errores(e);
     }

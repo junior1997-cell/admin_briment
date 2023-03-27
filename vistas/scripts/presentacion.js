@@ -139,8 +139,8 @@ function guardaryeditar_presentacion(e) {
 
 function mostrar_presentacion(idpresentacion) {
   $(".tooltip").removeClass("show").addClass("hidde");
-  $("#cargando-3-fomulario").hide();
-  $("#cargando-4-fomulario").show();
+  $("#cargando-9-fomulario").hide();
+  $("#cargando-10-fomulario").show();
 
   limpiar_presentacion();
 
@@ -155,8 +155,8 @@ function mostrar_presentacion(idpresentacion) {
       $("#nombre_presentacion").val(e.data.nombre); 
       $("#descripcion_p").val(e.data.descripcion); 
 
-      $("#cargando-3-fomulario").show();
-      $("#cargando-4-fomulario").hide();
+      $("#cargando-9-fomulario").show();
+      $("#cargando-10-fomulario").hide();
     } else {
       ver_errores(e);
     }

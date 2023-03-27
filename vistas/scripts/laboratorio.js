@@ -5,15 +5,15 @@ function init() {
   listar_c_insumos_af();
 
   //Guardar  
-  $("#guardar_registro_marca").on("click", function (e) { $("#submit-form-marca").submit(); });
+  $("#guardar_registro_laboratorio").on("click", function (e) { $("#submit-form-laboratorio").submit(); });
 
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
 
 //Función limpiar 
-function limpiar_l_af() {
-  $("#guardar_registro_marca").html('Guardar Cambios').removeClass('disabled');
+function limpiar_form_laboratorio() {
+  $("#guardar_registro_laboratorio").html('Guardar Cambios').removeClass('disabled');
   $("#idlaboratorio").val("");
   $("#nombre_laboratorio").val(""); 
 
@@ -72,7 +72,7 @@ function listar_c_insumos_af () {
 
 function guardaryeditar_c_insumos_af(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-categoria-af")[0]);
+  var formData = new FormData($("#form-laboratorio")[0]);
  
   $.ajax({
     url: "../ajax/laboratorio.php?op=guardaryeditar_c_insumos_af",
@@ -90,9 +90,9 @@ function guardaryeditar_c_insumos_af(e) {
          
 				limpiar_l_af();
 
-        $("#modal-agregar-laboratorio-af").modal("hide");
+        $("#modal-agregar-laboratorio").modal("hide");
 
-        $("#guardar_registro_categoria_af").html('Guardar Cambios').removeClass('disabled');
+        $("#guardar_registro_laboratorio").html('Guardar Cambios').removeClass('disabled');
 
 			}else{
 				ver_errores(e);
@@ -108,21 +108,21 @@ function guardaryeditar_c_insumos_af(e) {
 
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress_categoria_af").css({"width": percentComplete+'%'});
+          $("#barra_progress_laboratorio").css({"width": percentComplete+'%'});
 
-          $("#barra_progress_categoria_af").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_laboratorio").text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
     },
     beforeSend: function () {
-      $("#guardar_registro_categoria_af").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress_categoria_af").css({ width: "0%",  });
-      $("#barra_progress_categoria_af").text("0%");
+      $("#guardar_registro_laboratorio").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress_laboratorio").css({ width: "0%",  });
+      $("#barra_progress_laboratorio").text("0%");
     },
     complete: function () {
-      $("#barra_progress_categoria_af").css({ width: "0%", });
-      $("#barra_progress_categoria_af").text("0%");
+      $("#barra_progress_laboratorio").css({ width: "0%", });
+      $("#barra_progress_laboratorio").text("0%");
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
@@ -132,12 +132,12 @@ function mostrar_c_insumos_af (idlaboratorio ) {
 
   console.log(idlaboratorio);
 
-  $("#cargando-11-fomulario").hide();
-  $("#cargando-12-fomulario").show();
+  $("#cargando-7-fomulario").hide();
+  $("#cargando-8-fomulario").show();
 
   limpiar_l_af();
 
-  $("#modal-agregar-laboratorio-af").modal("show")
+  $("#modal-agregar-laboratorio").modal("show")
 
   $.post("../ajax/laboratorio.php?op=mostrar", {idlaboratorio : idlaboratorio }, function (e, status) {
 
@@ -147,8 +147,8 @@ function mostrar_c_insumos_af (idlaboratorio ) {
       $("#idlaboratorio").val(e.data.idlaboratorio );
       $("#nombre_laboratorio").val(e.data.nombre);
 
-      $("#cargando-11-fomulario").show();
-      $("#cargando-12-fomulario").hide();
+      $("#cargando-7-fomulario").show();
+      $("#cargando-8-fomulario").hide();
     } else {
       ver_errores(e);
     }
@@ -181,7 +181,7 @@ init();
 
 $(function () {
 
-  $("#form-categoria-af").validate({
+  $("#form-laboratorio").validate({
     rules: { 
       nombre_laboratorio: { required: true } 
     },

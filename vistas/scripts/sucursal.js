@@ -20,8 +20,8 @@ function limpiar_sucursal() {
   //Mostramos los Materiales
   $("#idsucursal").val("");
   $("#nombre_sucursal").val(""); 
-  $("#fecha_vencimiento").val(""); 
-  $("#descripcion_m").val(""); 
+  $("#codigo_sucursal").val(""); 
+  $("#direccion_sucursal").val(""); 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -63,7 +63,7 @@ function listar_sucursal() {
       // columna: #
       if (data[3] != '') { $("td", row).eq(3).addClass("text-center"); }
       // columna: #
-      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
+      if (data[4] != '') { $("td", row).eq(4).addClass("text-left"); }
       // columna: #
       if (data[5] != '') { $("td", row).eq(5).addClass("text-center"); }
     },
@@ -76,7 +76,7 @@ function listar_sucursal() {
     iDisplayLength: 5,//Paginación
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs:[
-      { targets: [3], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD-MM-YYYY'), },
+      // { targets: [3], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD-MM-YYYY'), },
     ]
   }).DataTable();
 }
@@ -88,7 +88,7 @@ function guardaryeditar_sucursal(e) {
   var formData = new FormData($("#form-sucursal")[0]);
  
   $.ajax({
-    url: "../ajax/sucursal.php?op=guardaryeditar_sucursal",
+    url: "../ajax/sucursal.php?op=guardar_y_editar_sucursal",
     type: "POST",
     data: formData,
     contentType: false,
@@ -97,60 +97,48 @@ function guardaryeditar_sucursal(e) {
       e = JSON.parse(e);  console.log(e);  
       if (e.status == true) {
 
-				Swal.fire("Correcto!", "sucursal registrado correctamente.", "success");
+				Swal.fire("Correcto!", "Sucursal registrado correctamente.", "success");
 
 	      tabla_sucursal.ajax.reload(null, false);
          
 				limpiar_sucursal();
-
-        $("#modal-agregar-sucursal").modal("hide");
-        $("#guardar_registro_sucursal").html('Guardar Cambios').removeClass('disabled');
+        $("#modal-agregar-sucursal").modal("hide");        
 
 			}else{
         ver_errores(e);				 
 			}
+
+      $("#guardar_registro_sucursal").html('Guardar Cambios').removeClass('disabled');
     },
     xhr: function () {
-
       var xhr = new window.XMLHttpRequest();
-
       xhr.upload.addEventListener("progress", function (evt) {
-
         if (evt.lengthComputable) {
-
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress_um").css({"width": percentComplete+'%'});
-
-          $("#barra_progress_um").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_sucursal").css({"width": percentComplete+'%'});
+          $("#barra_progress_sucursal").text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
     },
     beforeSend: function () {
       $("#guardar_registro_sucursal").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress_um").css({ width: "0%",  });
-      $("#barra_progress_um").text("0%");
+      $("#barra_progress_sucursal").css({ width: "0%",  });
+      $("#barra_progress_sucursal").text("0%");
     },
     complete: function () {
-      $("#barra_progress_um").css({ width: "0%", });
-      $("#barra_progress_um").text("0%");
+      $("#barra_progress_sucursal").css({ width: "0%", });
+      $("#barra_progress_sucursal").text("0%");
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
 }
 
-function extraer_nombre_mes() {
-  var fecha = $('#fecha_vencimiento').val(); 
-  if (fecha == '' || fecha == null) { } else {
-    $('#nombre_mes').val();
-  }    
-}
-
 function mostrar_sucursal(idsucursal) {
   $(".tooltip").removeClass("show").addClass("hidde");
-  $("#cargando-3-fomulario").hide();
-  $("#cargando-4-fomulario").show();
+  $("#cargando-13-fomulario").hide();
+  $("#cargando-14-fomulario").show();
 
   limpiar_sucursal();
 
@@ -163,11 +151,11 @@ function mostrar_sucursal(idsucursal) {
     if (e.status) {
       $("#idsucursal").val(e.data.idsucursal);
       $("#nombre_sucursal").val(e.data.nombre); 
-      $("#fecha_vencimiento").val(e.data.fecha_vencimiento);
-      $("#descripcion_lot").val(e.data.descripcion); 
+      $("#codigo_sucursal").val(e.data.codigo);
+      $("#direccion_sucursal").val(e.data.direccion); 
 
-      $("#cargando-3-fomulario").show();
-      $("#cargando-4-fomulario").hide();
+      $("#cargando-13-fomulario").show();
+      $("#cargando-14-fomulario").hide();
     } else {
       ver_errores(e);
     }
@@ -199,10 +187,14 @@ $(function () {
 
   $("#form-sucursal").validate({
     rules: {
-      nombre_sucursal: { required: true }      // terms: { required: true },
+      nombre_sucursal:    { required: true },
+      codigo_sucursal:    { required: true },
+      direccion_sucursal: { required: true },
     },
     messages: {
-      nombre_sucursal: { required: "Campo requerido.", },
+      nombre_sucursal:    { required: "Campo requerido.", },
+      codigo_sucursal:    { required: "Campo requerido.", },
+      direccion_sucursal: { required: "Campo requerido.", },
     },
         
     errorElement: "span",

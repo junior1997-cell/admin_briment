@@ -30,7 +30,7 @@
       $descripcion      = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
       $precio_actual    = isset($_POST["precio_actual"]) ? encodeCadenaHtml($_POST["precio_actual"]) : "" ;
       $imagen1          = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
-##$idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$sub_total,$igv,$precio_unitario,$lote,$descripcion,$imagen1
+      
       switch ($_GET["op"]) {
 
         case 'guardaryeditar':

@@ -154,8 +154,8 @@ function extraer_nombre_mes() {
 
 function mostrar_lote(idlote) {
   $(".tooltip").removeClass("show").addClass("hidde");
-  $("#cargando-3-fomulario").hide();
-  $("#cargando-4-fomulario").show();
+  $("#cargando-11-fomulario").hide();
+  $("#cargando-12-fomulario").show();
 
   limpiar_lote();
 
@@ -171,8 +171,8 @@ function mostrar_lote(idlote) {
       $("#fecha_vencimiento").val(e.data.fecha_vencimiento);
       $("#descripcion_lot").val(e.data.descripcion); 
 
-      $("#cargando-3-fomulario").show();
-      $("#cargando-4-fomulario").hide();
+      $("#cargando-11-fomulario").show();
+      $("#cargando-12-fomulario").hide();
     } else {
       ver_errores(e);
     }

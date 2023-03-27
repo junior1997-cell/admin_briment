@@ -9,63 +9,63 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
     
-    require_once "../modelos/Lote.php";
+    require_once "../modelos/Sucursal.php";
 
-    $lote = new Lote();
+    $sucursal = new Sucursal($_SESSION['idusuario']);
 
-    $idlote = isset($_POST["idlote"]) ? limpiarCadena($_POST["idlote"]) : "";
-    $nombre_lote = isset($_POST["nombre_lote"]) ? limpiarCadena($_POST["nombre_lote"]) : "";
-    $fecha_vencimiento = isset($_POST["fecha_vencimiento"]) ? limpiarCadena($_POST["fecha_vencimiento"]) : "";
-    $descripcion = isset($_POST["descripcion_lot"]) ? limpiarCadena($_POST["descripcion_lot"]) : "";
+    $toltip = '<script> $(function() { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
+
+    $idsucursal         = isset($_POST["idsucursal"]) ? limpiarCadena($_POST["idsucursal"]) : "";
+    $nombre_sucursal    = isset($_POST["nombre_sucursal"]) ? limpiarCadena($_POST["nombre_sucursal"]) : "";
+    $codigo_sucursal    = isset($_POST["codigo_sucursal"]) ? limpiarCadena($_POST["codigo_sucursal"]) : "";
+    $direccion_sucursal = isset($_POST["direccion_sucursal"]) ? limpiarCadena($_POST["direccion_sucursal"]) : "";
 
     switch ($_GET["op"]) {
 
-      case 'guardaryeditar_lote':
+      case 'guardar_y_editar_sucursal':
 
-        if (empty($idlote)) {
-          $rspta = $lote->insertar($nombre_lote, $fecha_vencimiento,$descripcion);
+        if (empty($idsucursal)) {
+          $rspta = $sucursal->insertar($nombre_sucursal, $codigo_sucursal,$direccion_sucursal);
           echo json_encode( $rspta, true) ;
         } else {
-          $rspta = $lote->editar($idlote, $nombre_lote, $fecha_vencimiento,$descripcion);
+          $rspta = $sucursal->editar($idsucursal, $nombre_sucursal, $codigo_sucursal,$direccion_sucursal);
           echo json_encode( $rspta, true) ;
         }
       break;
 
-      case 'desactivar_lote':
-        $rspta = $lote->desactivar($_GET["id_tabla"]);
+      case 'desactivar_sucursal':
+        $rspta = $sucursal->desactivar($_GET["id_tabla"]);
         echo json_encode( $rspta, true) ;
       break;
       
-      case 'eliminar_lote':
-        $rspta = $lote->eliminar($_GET["id_tabla"]);
+      case 'eliminar_sucursal':
+        $rspta = $sucursal->eliminar($_GET["id_tabla"]);
         echo json_encode( $rspta, true) ;
       break;
 
-      case 'mostrar_lote':
-        $rspta = $lote->mostrar($idlote);
+      case 'mostrar_sucursal':
+        $rspta = $sucursal->mostrar($idsucursal);
         //Codificar el resultado utilizando json
         echo json_encode( $rspta, true) ;
       break;    
 
-      case 'tbla_lote':
-        $rspta = $lote->tbla_lote();
+      case 'tbla_sucursal':
+        $rspta = $sucursal->tbla_sucursal();
         //Vamos a declarar un array
-        $data = []; $cont = 1;
-
-        $toltip = '<script> $(function() { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
+        $data = []; $cont = 1;        
 
         if ($rspta['status']) {
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
-              "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_lote(' . $reg->idlote . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_lote(' . $reg->idlote .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
-                : '<button class="btn btn-warning btn-sm" onclick="mostrar_lote(' . $reg->idlote . ')"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-primary btn-sm" onclick="activar_lote(' . $reg->idlote . ')"><i class="fa fa-check"></i></button>',
+              "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_sucursal(' . $reg->idsucursal . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_sucursal(' . $reg->idsucursal .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
+                : '<button class="btn btn-warning btn-sm" onclick="mostrar_sucursal(' . $reg->idsucursal . ')"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-primary btn-sm" onclick="activar_sucursal(' . $reg->idsucursal . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
-              "3" => $reg->fecha_vencimiento,
+              "3" => $reg->codigo,
               "4" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
-                $reg->descripcion,
+                $reg->direccion,
               '</div>',
               "5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
@@ -81,15 +81,6 @@
           echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
         }  
 
-      break;
-
-      case 'salir':
-        //Limpiamos las variables de sesión
-        session_unset();
-        //Destruìmos la sesión
-        session_destroy();
-        //Redireccionamos al login
-        header("Location: ../index.php");
       break;
 
       default: 

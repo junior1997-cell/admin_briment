@@ -140,7 +140,7 @@
                                   <div class="card card-primary card-outline">
                                     <div class="card-header">
                                       <h3 class="card-title">
-                                        <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-laboratorio-af" onclick="limpiar_l_af();"><i class="fas fa-plus-circle"></i> Agregar</button>
+                                        <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-agregar-laboratorio" onclick="limpiar_form_laboratorio();"><i class="fas fa-plus-circle"></i> Agregar</button>
                                         Lista de Laboratorio.
                                       </h3>
                                     </div>
@@ -435,8 +435,8 @@
                                             <th class="text-center">#</th>
                                             <th class="">Acciones</th>
                                             <th>Nombre</th>
-                                            <th>Expira</th>
-                                            <th>Descripciòn</th>
+                                            <th>Codigo</th>
+                                            <th>Direccion</th>
                                             <th>Estado</th>                                            
                                           </tr>
                                         </thead>
@@ -446,8 +446,8 @@
                                             <th class="text-center">#</th>
                                             <th class="">Acciones</th>
                                             <th>Nombre</th>
-                                            <th>Expira</th>
-                                            <th>Descripciòn</th>
+                                            <th>Codigo</th>
+                                            <th>Direccion</th>
                                             <th>Estado</th>
                                           </tr>
                                         </tfoot>
@@ -479,7 +479,7 @@
               <!-- MODAL - COLOR -->
               
 
-              <!-- MODAL - UNIDAD DE MEDIDA-->
+              <!-- MODAL - UNIDAD DE MEDIDA - chargue 1 -->
               <div class="modal fade" id="modal-agregar-unidad-m">
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
@@ -494,7 +494,7 @@
                       <!-- form start -->
                       <form id="form-unidad-m" name="form-unidad-m" method="POST" autocomplete="off">
                         <div class="card-body">
-                          <div class="row" id="cargando-3-fomulario">
+                          <div class="row" id="cargando-1-fomulario">
                             <!-- id idunidad_medida -->
                             <input type="hidden" name="idunidad_medida" id="idunidad_medida" />
 
@@ -533,7 +533,7 @@
 
                           </div>
 
-                          <div class="row" id="cargando-4-fomulario" style="display: none;">
+                          <div class="row" id="cargando-2-fomulario" style="display: none;">
                             <div class="col-lg-12 text-center">
                               <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
                               <br />
@@ -551,66 +551,9 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>             
 
-              <!-- MODAL - OCUPACION-->
-              <div class="modal fade" id="modal-agregar-ocupacion">
-                <div class="modal-dialog modal-dialog-scrollable modal-md">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title">Agregar Ocupación</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span class="text-danger" aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    <div class="modal-body">
-                      <!-- form start -->
-                      <form id="form-ocupacion" name="form-ocupacion" method="POST" autocomplete="off">
-                        <div class="card-body">
-                          <div class="row" id="cargando-5-fomulario">
-                            <!-- id idunidad_medida -->
-                            <input type="hidden" name="idocupacion" id="idocupacion" />
-                            <!-- nombre_medida -->
-                            <div class="col-lg-12 class_pading">
-                              <div class="form-group">
-                                <label for="nombre">Nombre Ocupación</label>
-                                <input type="text" name="nombre_ocupacion" id="nombre_ocupacion" class="form-control" placeholder="Nombre de la Ocupación" />
-                              </div>
-                            </div>
-
-                            <!-- barprogress -->
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-                              <div class="progress" id="div_barra_progress_ocupacion">
-                                <div id="barra_progress_ocupacion" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
-                                  0%
-                                </div>
-                              </div>
-                            </div>
-
-                          </div>
-
-                          <div class="row" id="cargando-6-fomulario" style="display: none;">
-                            <div class="col-lg-12 text-center">
-                              <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
-                              <br />
-                              <h4>Cargando...</h4>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- /.card-body -->
-                        <button type="submit" style="display: none;" id="submit-form-ocupacion">Submit</button>
-                      </form>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_ocupacion();">Close</button>
-                      <button type="submit" class="btn btn-success" id="guardar_registro_ocupacion">Guardar Cambios</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- MODAL - TIPO DE TRABAJDOR -->
+              <!-- MODAL - TIPO DE PERSONA - chargue 3 -->
               <div class="modal fade" id="modal-agregar-tipo">
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
@@ -625,7 +568,7 @@
                       <!-- form start -->
                       <form id="form-tipo" name="form-tipo" method="POST" autocomplete="off">
                         <div class="card-body">
-                          <div class="row" id="cargando-7-fomulario">
+                          <div class="row" id="cargando-3-fomulario">
                             <!-- id idunidad_medida -->
                             <input type="hidden" name="idtipo_persona" id="idtipo_persona" />
 
@@ -656,7 +599,7 @@
 
                           </div>
 
-                          <div class="row" id="cargando-8-fomulario" style="display: none;">
+                          <div class="row" id="cargando-4-fomulario" style="display: none;">
                             <div class="col-lg-12 text-center">
                               <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
                               <br />
@@ -676,12 +619,12 @@
                 </div>
               </div>
 
-              <!-- MODAL - CARGO TRABAJDOR-->
+              <!-- MODAL - CARGO TRABAJDOR - chargue 5 -->
               <div class="modal fade" id="modal-agregar-cargo">
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Cargo</h4>
+                      <h4 class="modal-title">Cargo Trabajdor</h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-danger" aria-hidden="true">&times;</span>
                       </button>
@@ -691,7 +634,7 @@
                       <!-- form start -->
                       <form id="form-cargo" name="form-cargo" method="POST" autocomplete="off">
                         <div class="card-body">
-                          <div class="row" id="cargando-9-fomulario">
+                          <div class="row" id="cargando-5-fomulario">
                             <!-- id idunidad_medida -->
                             <input type="hidden" name="idcargo_trabajador" id="idcargo_trabajador" />
 
@@ -715,7 +658,7 @@
 
                           </div>
 
-                          <div class="row" id="cargando-10-fomulario" style="display: none;">
+                          <div class="row" id="cargando-6-fomulario" style="display: none;">
                             <div class="col-lg-12 text-center">
                               <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
                               <br />
@@ -735,12 +678,12 @@
                 </div>
               </div>
 
-              <!-- MODAL - LABORATORIO - ACTIVO FIJO-->
-              <div class="modal fade" id="modal-agregar-laboratorio-af">
+              <!-- MODAL - LABORATORIO - chargue 7 -->
+              <div class="modal fade" id="modal-agregar-laboratorio">
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Agregar Marcas</h4>
+                      <h4 class="modal-title">Agregar Laboratorio</h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-danger" aria-hidden="true">&times;</span>
                       </button>
@@ -748,9 +691,9 @@
 
                     <div class="modal-body">
                       <!-- form start -->
-                      <form id="form-categoria-af" name="form-categoria-af" method="POST" autocomplete="off">
+                      <form id="form-laboratorio" name="form-laboratorio" method="POST" autocomplete="off">
                         <div class="card-body">
-                          <div class="row" id="cargando-11-fomulario">
+                          <div class="row" id="cargando-7-fomulario">
                             <!-- id categoria_insumos_af -->
                             <input type="hidden" name="idlaboratorio" id="idlaboratorio" />
 
@@ -764,8 +707,8 @@
                             
                             <!-- barprogress -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-                              <div class="progress" id="div_barra_progress_categoria_af">
-                                <div id="barra_progress_categoria_af" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
+                              <div class="progress" id="div_barra_progress_laboratorio">
+                                <div id="barra_progress_laboratorio" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
                                   0%
                                 </div>
                               </div>
@@ -773,7 +716,7 @@
 
                           </div>
 
-                          <div class="row" id="cargando-12-fomulario" style="display: none;">
+                          <div class="row" id="cargando-8-fomulario" style="display: none;">
                             <div class="col-lg-12 text-center">
                               <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
                               <br />
@@ -782,18 +725,18 @@
                           </div>
                         </div>
                         <!-- /.card-body -->
-                        <button type="submit" style="display: none;" id="submit-form-marca">Submit</button>
+                        <button type="submit" style="display: none;" id="submit-form-laboratorio">Submit</button>
                       </form>
                     </div>
                     <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_l_af();">Close</button>
-                      <button type="submit" class="btn btn-success" id="guardar_registro_marca">Guardar Cambios</button>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_form_laboratorio();">Close</button>
+                      <button type="submit" class="btn btn-success" id="guardar_registro_laboratorio">Guardar Cambios</button>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- MODAL - PRESENTACIÓN-->
+              <!-- MODAL - PRESENTACIÓN - chargue 9 -->
               <div class="modal fade" id="modal-agregar-presentacion">
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
@@ -808,7 +751,7 @@
                       <!-- form start -->
                       <form id="form-presentacion" name="form-presentacion" method="POST" autocomplete="off">
                         <div class="card-body">
-                          <div class="row" id="cargando-3-fomulario">
+                          <div class="row" id="cargando-9-fomulario">
                             <!-- id idpresentacion -->
                             <input type="hidden" name="idpresentacion" id="idpresentacion" />
 
@@ -839,7 +782,7 @@
 
                           </div>
 
-                          <div class="row" id="cargando-4-fomulario" style="display: none;">
+                          <div class="row" id="cargando-10-fomulario" style="display: none;">
                             <div class="col-lg-12 text-center">
                               <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
                               <br />
@@ -859,7 +802,7 @@
                 </div>
               </div>
 
-              <!-- MODAL - LOTE-->
+              <!-- MODAL - LOTE - chargue 11 -->
               <div class="modal fade" id="modal-agregar-lote">
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
@@ -874,7 +817,7 @@
                       <!-- form start -->
                       <form id="form-lote" name="form-lote" method="POST" autocomplete="off">
                         <div class="card-body">
-                          <div class="row" id="cargando-3-fomulario">
+                          <div class="row" id="cargando-11-fomulario">
                             <!-- id idunidad_medida -->
                             <input type="hidden" name="idlote" id="idlote" />
 
@@ -913,7 +856,7 @@
 
                           </div>
 
-                          <div class="row" id="cargando-4-fomulario" style="display: none;">
+                          <div class="row" id="cargando-12-fomulario" style="display: none;">
                             <div class="col-lg-12 text-center">
                               <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
                               <br />
@@ -928,6 +871,80 @@
                     <div class="modal-footer justify-content-between">
                       <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_lote();">Close</button>
                       <button type="submit" class="btn btn-success" id="guardar_registro_lote">Guardar Cambios</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MODAL - SUCURSAL - chargue 13 -->
+              <div class="modal fade" id="modal-agregar-sucursal">
+                <div class="modal-dialog modal-dialog-scrollable modal-md">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Agregar Sucursal</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span class="text-danger" aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+
+                    <div class="modal-body">
+                      <!-- form start -->
+                      <form id="form-sucursal" name="form-sucursal" method="POST" autocomplete="off">
+                        <div class="card-body">
+                          <div class="row" id="cargando-13-fomulario">
+                            <!-- id idunidad_medida -->
+                            <input type="hidden" name="idsucursal" id="idsucursal" />
+
+                            <!-- nombre_medida -->
+                            <div class="col-lg-12 class_pading">
+                              <div class="form-group">
+                                <label for="nombre_sucursal">Nombre</label>
+                                <input type="text" name="nombre_sucursal" class="form-control" id="nombre_sucursal" placeholder="Nombre del sucursal" />
+                              </div>
+                            </div>
+
+                            <!-- Codigo -->
+                            <div class="col-lg-12 class_pading">
+                              <div class="form-group">
+                                <label for="codigo_sucursal">Codigo</label>
+                                <input type="text" name="codigo_sucursal" class="form-control" id="codigo_sucursal" placeholder="Codigo del sucursal" />
+                              </div>
+                            </div>                         
+
+                            <!-- Direccion -->
+                            <div class="col-lg-12 class_pading">
+                              <div class="form-group">
+                                <label for="direccion_sucursal">Direccion</label>
+                                <textarea name="direccion_sucursal" id="direccion_sucursal" class="form-control" rows="2"></textarea>                              
+                              </div>
+                            </div>
+
+                            <!-- barprogress -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="barra_progress_sucursal_div">
+                              <div class="progress" >
+                                <div id="barra_progress_sucursal" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
+                                  0%
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row" id="cargando-14-fomulario" style="display: none;">
+                            <div class="col-lg-12 text-center">
+                              <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
+                              <br />
+                              <h4>Cargando...</h4>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <button type="submit" style="display: none;" id="submit-form-sucursal">Submit</button>
+                      </form>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_sucursal();">Close</button>
+                      <button type="submit" class="btn btn-success" id="guardar_registro_sucursal">Guardar Cambios</button>
                     </div>
                   </div>
                 </div>
