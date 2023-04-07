@@ -4,10 +4,14 @@ require "../config/Conexion_v2.php";
 
 class Papelera
 {
-  //Implementamos nuestro constructor
-  public function __construct()
-  {
-  }
+  //Implementamos nuestro variable global
+	public $id_usr_sesion;
+
+	//Implementamos nuestro constructor
+	public function __construct($id_usr_sesion = 0)
+	{
+		$this->id_usr_sesion = $id_usr_sesion;
+	}
 
 
   public function tabla_principal($nube_idproyecto) {
@@ -341,14 +345,14 @@ class Papelera
   //Desactivar 
   public function recuperar($nombre_tabla, $nombre_id_tabla, $id_tabla)
   {
-    $sql = "UPDATE $nombre_tabla SET estado='1',user_updated= '" . $_SESSION['idusuario'] . "' WHERE $nombre_id_tabla ='$id_tabla'";
+    $sql = "UPDATE $nombre_tabla SET estado='1',user_updated= '$this->id_usr_sesion' WHERE $nombre_id_tabla ='$id_tabla'";
 
 		$recuperar= ejecutarConsulta($sql);
 
 		if ($recuperar['status'] == false) {  return $recuperar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('$nombre_tabla','".$id_tabla."','Factura recuperada desde papelera','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('$nombre_tabla','".$id_tabla."','Factura recuperada desde papelera','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $recuperar;
@@ -357,12 +361,12 @@ class Papelera
   //eliminar
   public function eliminar_permanente($nombre_tabla, $nombre_id_tabla, $id_tabla)
   {
-    $sql = "UPDATE $nombre_tabla SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE $nombre_id_tabla ='$id_tabla'";
+    $sql = "UPDATE $nombre_tabla SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE $nombre_id_tabla ='$id_tabla'";
 		$eliminar =  ejecutarConsulta($sql);
 		if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('$nombre_tabla','$id_tabla','Factura eliminada desde papelera','" . $_SESSION['idusuario'] . "')";
+		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('$nombre_tabla','$id_tabla','Factura eliminada desde papelera','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;

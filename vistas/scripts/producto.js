@@ -20,11 +20,11 @@ function init() {
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro").on("click", function (e) { $("#submit-form-producto").submit(); });
 
-   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
+  // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   $("#unidad_medida").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
   $("#laboratorio").select2({ theme: "bootstrap4", placeholder: "Seleccinar laboratorio", allowClear: true, });
   $("#presentacion").select2({ theme: "bootstrap4", placeholder: "Seleccinar presentacion", allowClear: true, });
-// ══════════════════════════════════════ I N I T I A L I Z E   N U M B E R   F O R M A T ══════════════════════════════════════
+  // ══════════════════════════════════════ I N I T I A L I Z E   N U M B E R   F O R M A T ══════════════════════════════════════
   //$('#precio_unitario').number( true, 2 );
   //$('#precio_unitario').number( true, 2 );
   //formato_miles_input('#precio_unitario');
@@ -32,13 +32,7 @@ function init() {
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
-//presentacion,laboratorio
-function templateColor (state) {
-  if (!state.id) { return state.text; }
-  var color_bg = state.title != '' ? `${state.title}`: '#ffffff00';   
-  var $state = $(`<span ><b style="background-color: ${color_bg}; color: ${color_bg};" class="mr-2"><i class="fas fa-square"></i><i class="fas fa-square"></i></b>${state.text}</span>`);
-  return $state;
-}
+
 // abrimos el navegador de archivos
 $("#foto1_i").click(function () { $("#foto1").trigger("click"); });
 $("#foto1").change(function (e) { addImage(e, $("#foto1").attr("id"), "../dist/img/default/img_defecto_producto.jpg"); });
@@ -62,10 +56,7 @@ function limpiar_form_producto() {
   $("#laboratorio").val("null").trigger("change");
   $("#presentacion").val("null").trigger("change");
   $("#unidad_medida").val("null").trigger("change");
-  // $("#sub_total").val(""); 
-  // $("#igv").val(""); 
   $("#precio_actual").val('0.00');
-  // $("#lote").val("");
   $("#descripcion").val(""); 
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto_producto.jpg");
@@ -110,21 +101,19 @@ function lista_de_items() {
 }
 
 //Función Listar
-function tbla_principal(idpresentacion = 'todos') {
-  
+function tbla_principal(idpresentacion = 'todos') {  
 
   tabla = $("#tabla-producto").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
-    // dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
     buttons: [
       { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
-      { extend: 'copyHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
-      { extend: 'excelHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
-      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7,8], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7,8], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,8,9,4,5,6,7,8], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
       { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax: {
@@ -142,12 +131,12 @@ function tbla_principal(idpresentacion = 'todos') {
       if (data[1] != '') { $("td", row).eq(1).addClass("text-center text-nowrap"); }
       // columna: code
       if (data[2] != '') { $("td", row).eq(2).addClass("text-center"); }
-      // columna: precio unitario
-      if (data[7] != '') { $("td", row).eq(7).addClass("text-nowrap text-center"); }
-      // columna: precio sin igv
+      // columna:stock
+      if (data[6] != '') { $("td", row).eq(6).addClass("text-nowrap text-center"); }
+      // columna: descripcion
       if (data[8] != '') { $("td", row).eq(8).addClass("text-nowrap text-center"); }
-      // columna: monto igv
-      
+
+      // columna: monto igv      
       if (data[9] != '') { $("td", row).eq(9).addClass("text-nowrap"); }
       // columna: precio total
       // if (data[10] != '') { $("td", row).eq(10).addClass("text-nowrap"); }
@@ -161,8 +150,8 @@ function tbla_principal(idpresentacion = 'todos') {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [8,9], visible: false, searchable: true, },   
-      { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [9,10], visible: false, searchable: true, },   
+      { targets: [7], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ],
   }).DataTable();
 }
@@ -382,6 +371,52 @@ function eliminar(idproducto, nombre) {
   );
 }
 
+// ══════════════════════════════════════  L O T E   P R O D U C T O  ══════════════════════════════════════
+function tbla_lote(idproducto, nombre ) {  
+
+  $("#modal-tabla-lote").modal('show');
+  $(".nombre-modal-title-lote").html(`Lote: ${nombre}`);
+
+  tabla_lote = $("#tabla-lote").dataTable({
+    responsive: true,
+    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
+    aProcessing: true, //Activamos el procesamiento del datatables
+    aServerSide: true, //Paginación y filtrado realizados por el servidor
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
+    buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_lote.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,1,2,4,5], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,1,2,4,5], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,1,2,4,5], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      // { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
+    ],
+    ajax: {
+      url: `../ajax/producto.php?op=tbla_lote&idproducto=${idproducto}`,
+      type: "get",
+      dataType: "json",
+      error: function (e) {
+        console.log(e.responseText); ver_errores(e);
+      },
+    },
+    createdRow: function (row, data, ixdex) {    
+      // columna: #
+      if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
+    },
+    language: {
+      lengthMenu: "Mostrar: _MENU_ registros",
+      buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
+      sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
+    },
+    bDestroy: true,
+    iDisplayLength: 10, //Paginación
+    order: [[0, "asc"]], //Ordenar (columna,orden)
+    columnDefs: [
+      // { targets: [9,10], visible: false, searchable: true, },   
+      // { targets: [7], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+    ],
+  }).DataTable();
+}
+
 
 init();
 
@@ -399,8 +434,6 @@ $(function () {
       laboratorio:        { required: true },
       presentacion:       { required: true },
       unidad_medida:      { required: true },
-      // contenido_neto:     {  min: 1, number: true },
-      // precio_unitario:    { required: true },
       descripcion:        { minlength: 4 },
       
     },
@@ -408,9 +441,7 @@ $(function () {
       nombre_producto:    { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
       laboratorio:        { required: "Campo requerido" },
       presentacion:       { required: "Campo requerido", },
-      unidad_medida:      { required: "Campo requerido" },
-      // contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },
-      // precio_unitario:    { required: "Ingresar precio compra", },      
+      unidad_medida:      { required: "Campo requerido" },    
       descripcion:        { minlength: "Minimo 4 caracteres" },
     },
 

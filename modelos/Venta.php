@@ -4,10 +4,13 @@ require "../config/Conexion.php";
 
 Class Venta
 {
-	//Implementamos nuestro constructor
-	public function __construct()
-	{
+	//Implementamos nuestro variable global
+	public $id_usr_sesion;
 
+	//Implementamos nuestro constructor
+	public function __construct($id_usr_sesion = 0)
+	{
+		$this->id_usr_sesion = $id_usr_sesion;
 	}
 
 	//Implementamos un método para insertar registros

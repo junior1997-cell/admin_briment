@@ -4,8 +4,14 @@ require "../config/Conexion_v2.php";
 
 class ChartCompraGrano
 {
+  //Implementamos nuestro variable global
+  public $id_usr_sesion;
+
   //Implementamos nuestro constructor
-  public function __construct() { }  
+  public function __construct($id_usr_sesion = 0)
+  {
+    $this->id_usr_sesion = $id_usr_sesion;
+  }
 
   //Implementar un método para mostrar los datos de un registro a modificar
   public function box_content_reporte() {

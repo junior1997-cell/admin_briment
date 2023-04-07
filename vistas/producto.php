@@ -88,6 +88,7 @@
                                                 <th class="py-1">Nombre</th>
                                                 <th class="py-1">Laboratorio</th>
                                                 <th class="py-1">Presentación</th>
+                                                <th class="py-1">Stock </th>
                                                 <th class="py-1">Precio </th>
                                                 <th class="py-1">Descripción</th> 
 
@@ -104,6 +105,7 @@
                                               <th class="py-1">Nombre</th>
                                               <th class="py-1">Laboratorio</th>
                                               <th class="py-1">Presentación</th>
+                                              <th class="py-1">Stock </th>
                                               <th class="py-1">Precio </th>
                                               <th class="py-1">Descripción</th>
 
@@ -297,6 +299,48 @@
                   </div>
                 </div>
 
+                <!-- MODAL - LOTE  -->
+                <div class="modal fade" id="modal-tabla-lote">
+                  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title nombre-modal-title-lote">Lote</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span class="text-danger" aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+
+                      <div class="modal-body">
+                        <table id="tabla-lote" class="table table-bordered table-striped display" style="width: 100% !important;">
+                          <thead>
+                            <tr>
+                              <th class="py-1text-center">#</th>
+                              <th class="py-1">Nombre</th>
+                              <th class="py-1">Stock</th>
+                              <th class="py-1">F. V.</th>
+                              <th class="py-1">Descripción</th> 
+                              <th>Estado</th>
+                            </tr>
+                          </thead>
+                          <tbody></tbody>
+                          <tfoot>
+                            <tr>
+                              <th class="py-1text-center">#</th>
+                              <th class="py-1">Nombre</th>
+                              <th class="py-1">Stock</th>
+                              <th class="py-1">F. V.</th>
+                              <th class="py-1">Descripción</th> 
+                              <th>Estado</th>                            
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" >Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>    
               </section>
               <!-- /.content -->
             </div>

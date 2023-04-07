@@ -4,22 +4,25 @@ require "../config/Conexion_v2.php";
 
 Class laboratorio
 {
-	//Implementamos nuestro constructor
-	public function __construct()
-	{
+	//Implementamos nuestro variable global
+	public $id_usr_sesion;
 
+	//Implementamos nuestro constructor
+	public function __construct($id_usr_sesion = 0)
+	{
+		$this->id_usr_sesion = $id_usr_sesion;
 	}
 
 	//Implementamos un método para insertar registros
 	public function insertar($nombre_laboratorio)
 	{
 		//var_dump($nombre);die();
-		$sql="INSERT INTO `laboratorio`(`nombre`, user_created) VALUES ('$nombre_laboratorio','" . $_SESSION['idusuario'] . "')";
+		$sql="INSERT INTO `laboratorio`(`nombre`, user_created) VALUES ('$nombre_laboratorio','$this->id_usr_sesion')";
 		$insertar =  ejecutarConsulta_retornarID($sql); 
 		if ($insertar['status'] == false) {  return $insertar; } 
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('laboratorio','".$insertar['data']."','Nueva laboratorio (Marca) registrada','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('laboratorio','".$insertar['data']."','Nueva laboratorio (Marca) registrada','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $insertar;
@@ -28,12 +31,12 @@ Class laboratorio
 	//Implementamos un método para editar registros
 	public function editar($idlaboratorio,$nombre_laboratorio)
 	{
-		$sql="UPDATE laboratorio SET nombre='$nombre_laboratorio',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idlaboratorio='$idlaboratorio'";
+		$sql="UPDATE laboratorio SET nombre='$nombre_laboratorio',user_updated= '$this->id_usr_sesion' WHERE idlaboratorio='$idlaboratorio'";
 		$editar =  ejecutarConsulta($sql);
 		if ( $editar['status'] == false) {return $editar; } 
 	
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('laboratorio','$idlaboratorio','Marca editada','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('laboratorio','$idlaboratorio','Marca editada','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
 	
 		return $editar;
@@ -42,13 +45,13 @@ Class laboratorio
 	//Implementamos un método para desactivar laboratorio
 	public function desactivar($idlaboratorio)
 	{
-		$sql="UPDATE laboratorio SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idlaboratorio='$idlaboratorio'";
+		$sql="UPDATE laboratorio SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idlaboratorio='$idlaboratorio'";
 		$desactivar= ejecutarConsulta($sql);
 
 		if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('laboratorio','".$idlaboratorio."','Marca desactivado','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('laboratorio','".$idlaboratorio."','Marca desactivado','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $desactivar;
@@ -64,12 +67,12 @@ Class laboratorio
 	//Implementamos un método para eliminar
 	public function delete($idlaboratorio)
 	{
-		$sql="UPDATE laboratorio SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idlaboratorio='$idlaboratorio'";
+		$sql="UPDATE laboratorio SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idlaboratorio='$idlaboratorio'";
 		$eliminar =  ejecutarConsulta($sql);
 		if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','$idlaboratorio','Marca Eliminado','" . $_SESSION['idusuario'] . "')";
+		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','$idlaboratorio','Marca Eliminado','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;

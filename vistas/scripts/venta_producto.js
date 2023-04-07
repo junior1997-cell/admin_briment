@@ -1730,7 +1730,7 @@ function listarmateriales() {
       { text: '<i class="fa-solid fa-arrows-rotate"></i>', action: function ( e, dt, node, config ) { tablamateriales.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } }
     ],
     ajax: {
-      url: "../ajax/ajax_general.php?op=tblaProductos",
+      url: "../ajax/ajax_general.php?op=tblaProductosVenta",
       type: "get",
       dataType: "json",
       error: function (e) {

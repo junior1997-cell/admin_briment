@@ -1,4 +1,4 @@
-var tabla;  
+var tabla, tbla_sucursal;  
 
 //Función que se ejecuta al inicio
 function init() {
@@ -14,16 +14,18 @@ function init() {
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════  
   lista_select2("../ajax/usuario.php?op=select2Trabajador", '#trabajador', null);
   lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador_per', null);
-
+  lista_select2("../ajax/ajax_general.php?op=select2Sucursal", '#sucursal', null);
   
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro_trabajador").on("click", function (e) {  $("#submit-form-trabajador").submit(); });
+  $("#guardar_registro_sucursal").on("click", function (e) {  $("#submit-form-sucursal").submit(); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   $("#trabajador").select2({ templateResult: formatStateTrabajador, theme: "bootstrap4",  placeholder: "Selecione trabajador", allowClear: true, });  
 
   $("#tipo_documento_per").select2({theme:"bootstrap4", placeholder: "Selecione tipo Doc.", allowClear: true, });
   $("#cargo_trabajador_per").select2({theme:"bootstrap4", placeholder: "Selecione tipo Doc.", allowClear: true, });
+  $("#sucursal").select2({theme:"bootstrap4", placeholder: "Selecione Sucursal.", allowClear: true, });
 
   // restringimos la fecha para no elegir mañana
   no_select_tomorrow('#nacimiento_trab');
@@ -123,9 +125,9 @@ function tbla_principal() {
     dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
     buttons: [
       { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", }, 
-      { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3,4,5], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", } ,
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", }, 
+      { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3,4,5,6], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", } ,
       { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax:{
@@ -379,6 +381,200 @@ function guardar_y_editar_trabajador(e) {
 
 }
 
+// :::::::::::::::::::::::::::::::::::::::::::::::::::: S E C C I O N   S U C U R S A L  ::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+function show_hide_form_sucursal(flag) {
+  if (flag == 1) {
+    $('.div_tabla_sucursal').show();
+    $('#form-sucursal').hide();
+
+    $('.btn-agregar-sucursal').show();
+    $('.btn-regresar-sucursal').hide();
+    $('#guardar_registro_sucursal').hide();
+
+    $('#modal-agregar-sucursal .modal-dialog').addClass('modal-xl').removeClass('modal-md');
+  } else if( flag == 2) {
+    $('.div_tabla_sucursal').hide();
+    $('#form-sucursal').show();
+
+    $('.btn-agregar-sucursal').hide();
+    $('.btn-regresar-sucursal').show();
+    $('#guardar_registro_sucursal').show();
+
+    $('#modal-agregar-sucursal .modal-dialog').addClass('modal-md').removeClass('modal-xl');
+  }
+}
+
+function limpiar_form_sucursal() {
+  $("#sucursal").val("").trigger('change');
+  
+  // Limpiamos las validaciones
+  $(".form-control").removeClass('is-valid');
+  $(".form-control").removeClass('is-invalid');
+  $(".error.invalid-feedback").remove();
+}
+
+function tabla_sucursal(id, nombre) {
+
+  $('#modal-agregar-sucursal').modal('show');
+  $('.titulo-modal-sucursal').html(`Sucursal: ${nombre}`);
+  $('#idpersona_suc').val(id);
+ 
+
+  tbla_sucursal = $('#tabla-sucursal').dataTable({
+    responsive: true,
+    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
+    aProcessing: true,//Activamos el procesamiento del datatables
+    aServerSide: true,//Paginación y filtrado realizados por el servidor
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
+    buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tbla_sucursal.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", }, 
+      { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3,4], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", } ,
+      // { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
+    ],
+    ajax:{
+      url: `../ajax/usuario.php?op=tbla_principal_sucursal&id_persona=${id}`,
+      type : "get",
+      dataType : "json",						
+      error: function(e){        
+        console.log(e.responseText); ver_errores(e);
+      }
+    },
+    createdRow: function (row, data, ixdex) {
+      // columna: 0
+      if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
+      // columna: 1
+      if (data[1] != '') { $("td", row).eq(1).addClass("text-center"); }
+    },    
+    bDestroy: true,
+    iDisplayLength: 10,//Paginación
+    order: [[ 0, "asc" ]],//Ordenar (columna,orden)
+    columnDefs: [ 
+      //{ targets: [6], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      //{ targets: [12], visible: false, searchable: false },
+    ],
+  }).DataTable();
+}
+
+//Función para guardar o editar
+function guardar_y_editar_sucursal(e) {
+  // e.preventDefault(); //No se activará la acción predeterminada del evento
+  var formData = new FormData($("#form-sucursal")[0]);
+
+  $.ajax({
+    url: "../ajax/usuario.php?op=guardar_y_editar_sucursal",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (e) { 
+      try {
+        e = JSON.parse(e); console.log(e);
+        if (e.status == true) {        
+          sw_success('Correcto!', "Sucursal guardado correctamente." ); 
+          tbla_sucursal.ajax.reload(null, false);
+          limpiar_form_sucursal();
+          show_hide_form_sucursal(1)
+        } else {
+          ver_errores(e);
+        }
+      } catch (err) { console.log('Error: ', err.message); toastr.error('<h5 class="font-size-16px">Error temporal!!</h5> puede intentalo mas tarde, o comuniquese con <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>'); }             
+      $("#guardar_registro_sucursal").html('Guardar Cambios').removeClass('disabled');
+    },
+    xhr: function () {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = (evt.loaded / evt.total)*100;
+          /*console.log(percentComplete + '%');*/
+          $("#barra_progress_sucursal").css({"width": percentComplete+'%'}).text(percentComplete.toFixed(2)+" %");
+        }
+      }, false);
+      return xhr;
+    },
+    beforeSend: function () {
+      $("#guardar_registro_sucursal").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress_sucursal_div").show();
+      $("#barra_progress_sucursal").css({ width: "0%",  }).text("0%");
+    },
+    complete: function () {
+      $("#barra_progress_sucursal_div").hide();
+      $("#barra_progress_sucursal").css({ width: "0%", }).text("0%");
+    },
+    error: function (jqXhr) { ver_errores(jqXhr); },
+  });
+
+}
+
+//Función para desactivar registros
+function eliminar_sucursal(idpersona_sucursal, idusuario, nombre, codigo, direccion) {
+
+  
+
+  crud_eliminar_papelera(
+    "../ajax/usuario.php?op=desactivar_sucursal",
+    "../ajax/usuario.php?op=eliminar_sucursal", 
+    idpersona_sucursal, 
+    "!Elija una opción¡", 
+    `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
+    function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
+    function(){ sw_success('Eliminado!', 'Tu registro ha sido Eliminado.' ) }, 
+    function(){ tbla_sucursal.ajax.reload(null, false) },
+    function(){ 
+      if (localStorage.getItem('nube_id_usuario') == id_usuario ) {
+        localStorage.setItem('nube_id_sucursal', idpersona_sucursal);
+        localStorage.setItem('nube_nombre_sucursal', nombre);
+        localStorage.setItem('nube_codigo_sucusal', codigo);
+        localStorage.setItem('nube_direcion_sucursal', direccion);        
+    
+        // mostramos el nombre en el NAV
+        $("#ver-proyecto").html(`<i class="fas fa-store-alt"></i> ${nombre}`);
+      } 
+    }, 
+    false, 
+    false,
+    false
+  );
+}
+
+//Función para activar registros
+function activar_sucursal(idpersona_sucursal, id_usuario, nombre, codigo, direccion) {
+  Swal.fire({
+    title: "¿Está Seguro de  Activar esta sucursal?",
+    html: `<b class="text-success">${nombre}</b> <br> Los datos que realice el usuario estara sujeto a esta sucursal.`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#28a745",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, activar!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.get("../ajax/usuario.php?op=activar_sucursal", { idpersona_sucursal: idpersona_sucursal, id_usuario: id_usuario  }, function (e) {
+        e = JSON.parse(e);  //console.log(e); 
+    
+        if (e.status == true) {
+          Swal.fire("Activado!", "Tu sucursal ha sido activado.", "success");
+          tbla_sucursal.ajax.reload(null, false);
+
+          if (localStorage.getItem('nube_id_usuario') == id_usuario ) {
+            localStorage.setItem('nube_id_sucursal', idpersona_sucursal);
+            localStorage.setItem('nube_nombre_sucursal', nombre);
+            localStorage.setItem('nube_codigo_sucusal', codigo);
+            localStorage.setItem('nube_direcion_sucursal', direccion);        
+
+            // mostramos el nombre en el NAV
+            $("#ver-proyecto").html(`<i class="fas fa-store-alt"></i> ${nombre}`);
+          }
+        } else {
+          ver_errores(e);
+        }
+        
+      }).fail( function(e) { ver_errores(e); } );      
+    }
+  });      
+}
 
 init();
 
@@ -387,9 +583,10 @@ init();
 $(function () {
 
   $("#trabajador").on('change', function() { $(this).trigger('blur'); });
-  
+  $("#sucursal").on('change', function() { $(this).trigger('blur'); });
+
   $("#tipo_documento_per").on('change', function() { $(this).trigger('blur'); });
-  $("#cargo_trabajador_per").on('change', function() { $(this).trigger('blur'); });
+  $("#cargo_trabajador_per").on('change', function() { $(this).trigger('blur'); });  
 
   $("#form-usuario").validate({
     ignore: '.select2-input, .select2-focusser',
@@ -405,13 +602,15 @@ $(function () {
           }
         }
       },
-      password:         { required: true, minlength: 4, maxlength: 20 },
-      confirm_password: { required:true, equalTo:"#password" }      
+      password:         { required: true, minlength: 4, maxlength: 20 },      
+      confirm_password: { required:true, equalTo:"#password" },      
+      
     },
     messages: {
       login:            { required: "Este campo es requerido.", minlength: "MÍNIMO 4 caracteres.", maxlength: "MÁXIMO 20 caracteres.", remote:"Usuario en uso." },
       password:         { equired: "Campo requerido.", minlength: "MÍNIMO 4 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
       confirm_password: { required: "Campo requerido.", equalTo: "Repita la misma contraseña porfavor.", success:'darara'},
+      
     },
     
     errorElement: "span",
@@ -475,7 +674,38 @@ $(function () {
     },
   });
 
+  $("#form-sucursal").validate({
+    ignore: '.select2-input, .select2-focusser',
+    rules: {
+      sucursal : {required: true,},
+      
+    },
+    messages: {
+      sucursal: {required: "Este campo es requerido.",},
+    },
+        
+    errorElement: "span",
+
+    errorPlacement: function (error, element) {
+      error.addClass("invalid-feedback");
+      element.closest(".form-group").append(error);
+    },
+
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass("is-invalid").removeClass("is-valid");
+    },
+
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass("is-invalid").addClass("is-valid");
+    },
+
+    submitHandler: function (e) {
+      guardar_y_editar_sucursal(e);
+    },
+  });
+
   $("#trabajador").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#sucursal").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
   $("#tipo_documento_per").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#cargo_trabajador_per").rules('add', { required: true, messages: {  required: "Campo requerido" } });

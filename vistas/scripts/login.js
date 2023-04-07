@@ -4,10 +4,10 @@
 // localStorage.removeItem("nube_fecha_final_proyecto");
 // localStorage.removeItem("nube_nombre_proyecto");
 
-localStorage.setItem('nube_idproyecto', 0);
-localStorage.setItem('nube_fecha_inicial_proyecto', '');
-localStorage.setItem('nube_fecha_final_proyecto', '');
-localStorage.setItem('nube_nombre_proyecto', '');
+// localStorage.setItem('nube_idproyecto', 0);
+// localStorage.setItem('nube_fecha_inicial_proyecto', '');
+// localStorage.setItem('nube_fecha_final_proyecto', '');
+// localStorage.setItem('nube_nombre_proyecto', '');
 
 $("#frmAcceso").on('submit',function(e) {
     $('.login-btn').html('<i class="fas fa-spinner fa-pulse fa-lg"></i> Comprobando...').removeClass('btn-outline-warning').addClass('btn-info disabled');
@@ -18,7 +18,7 @@ $("#frmAcceso").on('submit',function(e) {
 
     $.post("../ajax/usuario.php?op=verificar",{"logina":logina,"clavea":clavea}, function(e){
         try {
-            e = JSON.parse(e); //console.log(e);
+            e = JSON.parse(e); console.log(e);
 
             setTimeout(validar_response(e), 1000);
             
@@ -31,7 +31,7 @@ $("#frmAcceso").on('submit',function(e) {
 
 function validar_response(e) {
     if (e.status == true){
-        if (e.data == null ) {
+        if (e.data.usuario == null ) {
             $(document).Toasts('create', {
                 class: 'bg-danger',
                 title: 'Usuario y/o Password incorrectos',
@@ -46,19 +46,32 @@ function validar_response(e) {
                 subtitle: 'cerrar',
                 body: 'Se inicio sesion correctamente. Te hemos extrañado, estamos muy contentos de tenerte de vuelta.'
             });
-            var redirecinando = varaibles_get();
 
-            if (redirecinando.file == '' || redirecinando.file == null ) {
-                //console.log('vacio perrro');
+            var redirecinando = varaibles_get();
+            $('.login-btn').html('Ingresar').removeClass('disabled btn-info').addClass('btn-outline-warning');
+            localStorage.setItem('nube_id_usuario', e.data.usuario.idusuario);
+
+            if (e.data.sucursal == null) {                
+                localStorage.setItem('nube_id_sucursal', 0);
+                localStorage.setItem('nube_nombre_sucursal', '');
+                localStorage.setItem('nube_codigo_sucusal', '');
+                localStorage.setItem('nube_direcion_sucursal', '');
+            } else {                
+                localStorage.setItem('nube_id_sucursal', e.data.sucursal.idpersona_sucursal);
+                localStorage.setItem('nube_nombre_sucursal', e.data.sucursal.nombre);
+                localStorage.setItem('nube_codigo_sucusal', e.data.sucursal.codigo);
+                localStorage.setItem('nube_direcion_sucursal', e.data.sucursal.direccion);
+            }
+            
+
+            if (redirecinando.file == '' || redirecinando.file == null ) {                
                 $(location).attr("href","escritorio.php");
             } else {
                 //console.log(redirecinando.file);
-                //$(location).attr("href",redirecinando.file);  
-                $(location).attr("href","escritorio.php");                              
-            }
-            //console.log(redirecinando);            
-        }
-        
+                $(location).attr("href",redirecinando.file);  
+                // $(location).attr("href","escritorio.php");                              
+            }        
+        }        
     } else {
         $('.login-btn').html('Ingresar').removeClass('disabled btn-info').addClass('btn-outline-warning');
         ver_errores(e); 

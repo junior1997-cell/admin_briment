@@ -94,30 +94,33 @@
           $data = []; $cont=1;
 
           if ($rspta['status'] == true) {
-            while ($reg = $rspta['data']->fetch_object()) {
-
-              $imagen = (empty($reg->imagen) ? 'producto-sin-foto.svg' : $reg->imagen );
+            
+            foreach ( $rspta['data'] as $key => $reg) {   
+              $imagen = (empty($reg['imagen']) ? 'producto-sin-foto.svg' : $reg['imagen'] );
               $clas_stok = "";
 
-              // if ( $reg->stock <= 0) { $clas_stok = 'badge-danger'; }else if ($reg->stock > 0 && $reg->stock <= 10) { $clas_stok = 'badge-warning'; }else if ($reg->stock > 10) { $clas_stok = 'badge-success'; }
+              if ( $reg['stock'] <= 0) { $clas_stok = 'badge-danger'; }
+              else if ($reg['stock'] > 0 && $reg['stock'] <= 10) { $clas_stok = 'badge-warning'; }
+              else if ($reg['stock'] > 10) { $clas_stok = 'badge-success'; }
               
               $data[] = [
                 "0"=>$cont++,
-                "1" => '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idproducto . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                ' <button class="btn btn-danger btn-sm" onclick="eliminar(' . $reg->idproducto .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>',
-                "2" => $reg->codigo,
+                "1" => '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg['idproducto'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+                ' <button class="btn btn-danger btn-sm" onclick="eliminar(' . $reg['idproducto'] .', \''.encodeCadenaHtml($reg['nombre']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>',
+                "2" => $reg['codigo'],
                 "3" => '<div class="user-block">'.
-                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/producto/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->unidad_medida).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
-                  <span class="username"><p class="mb-0">' . $reg->nombre . '</p></span>
-                  <span class="description"><b>UM: </b>' . $reg->unidad_medida . '</span>
+                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/producto/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg['unidad_medida']).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
+                  <span class="username"><p class="mb-0">' . $reg['nombre'] . '</p></span>
+                  <span class="description"><b>UM: </b>' . $reg['unidad_medida'] . '</span>
                 </div>' . $toltip,
-                "4" =>  $reg->laboratorio,
-                "5" => $reg->presentacion,     
-                "6" => $reg->precio_actual,
-                "7" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
+                "4" =>  $reg['laboratorio'],
+                "5" => $reg['presentacion'],     
+                "6" => '<span class="badge '.$clas_stok.' font-size-14px cursor-pointer" onclick="tbla_lote(' . $reg['idproducto'] .', \''.encodeCadenaHtml($reg['nombre']).'\')" data-toggle="tooltip" data-original-title="Ver stock">'.$reg['stock'].'</span>',
+                "7" => $reg['precio_actual'],
+                "8" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg['descripcion'] . '</textarea>',
 
-                "8" => $reg->nombre,
-                "9" => $reg->unidad_medida                  
+                "9" => $reg['nombre'],
+                "10" => $reg['unidad_medida']                  
               ];
             }
   
@@ -135,7 +138,7 @@
           
         break;
 
-        // ══════════════════════════════════════  C A T E G O R I A S   P R O D U C T O  ══════════════════════════════════════
+        // ══════════════════════════════════════  P R E S E N T A C I O N   P R O D U C T O  ══════════════════════════════════════
 
         case 'lista_de_presentacion':
 
@@ -144,7 +147,41 @@
           echo json_encode( $rspta, true);
 
         break;
-    
+
+        // ══════════════════════════════════════  L O T E   P R O D U C T O  ══════════════════════════════════════
+        case 'tbla_lote':
+          $rspta = $producto->tbla_lote($_GET["idproducto"]);
+          //Vamos a declarar un array
+          $data = []; $cont=1;
+
+          if ($rspta['status'] == true) {
+            
+            foreach ( $rspta['data'] as $key => $reg) {                 
+              
+              $data[] = [
+                "0"=>$cont++,
+                "1" => $reg['nombre'],
+                "2" => $reg['stock'],
+                "3" => $reg['fecha_vencimiento'],
+                "4" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg['descripcion'] . '</textarea>',
+                "5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,                
+              ];
+            }
+  
+            $results = [
+              "sEcho" => 1, //Información para el datatables
+              "iTotalRecords" => count($data), //enviamos el total registros al datatable
+              "iTotalDisplayRecords" => 1, //enviamos el total registros a visualizar
+              "data" => $data,
+            ];
+  
+            echo json_encode( $results, true) ;
+          } else {
+            echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
+          }
+          
+        break;
+
         case 'salir':
           //Limpiamos las variables de sesión
           session_unset();

@@ -473,6 +473,15 @@ function ver_errores(e) {
       html: `<h5>${e.message}</h5> Contacte al <b>Ing. de Sistemas</b> 📞 <br> <i><a href="tel:+51921305769" data-toggle="tooltip" data-original-title="Llamar al Ing. de Sistemas.">921-305-769</a></i> ─ <i><a href="tel:+51921487276" data-toggle="tooltip" data-original-title="Llamar al Ing. de Sistemas.">921-487-276</a></i>`, 
       iconHtml: '<img src="../dist/svg/Jesus-Christ.svg" width="100">',
     });
+  
+  }else if (e.status == 'no_sucursal') {
+    console.group("Error"); console.warn('No tiene sucursal -------------'); console.log(e); console.groupEnd();
+    //sw_error('Es Sábado!', `${e.message} <br> Contacte al <b>Ing. de Sistemas</b> 📞 <br> <i><a href="tel:+51921305769" data-toggle="tooltip" data-original-title="Llamar al Ing. de Sistemas.">921-305-769</a></i> ─ <i><a href="tel:+51921487276" data-toggle="tooltip" data-original-title="Llamar al Ing. de Sistemas.">921-487-276</a></i>`, 5000);
+    Swal.fire({
+      title: `No tiene sucursal!`, 
+      html: `<h5>${e.message}</h5> Contacte al <b>Ing. de Sistemas</b> 📞 <br> <i><a href="tel:+51921305769" data-toggle="tooltip" data-original-title="Llamar al Ing. de Sistemas.">921-305-769</a></i> ─ <i><a href="tel:+51921487276" data-toggle="tooltip" data-original-title="Llamar al Ing. de Sistemas.">921-487-276</a></i>`, 
+      iconHtml: '<img src="../dist/svg/no_sucursal.svg" width="100">',
+    });
 
   }else if (e.status == 'duplicado') {
     console.group("Error"); console.warn('Duplicado Error BD -------------'); console.log(e); console.groupEnd();

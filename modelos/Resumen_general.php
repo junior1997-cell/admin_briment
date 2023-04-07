@@ -4,8 +4,14 @@ require "../config/Conexion_v2.php";
 
 class Resumen_general
 {
-  //Implementamos nuestro constructor
-  public function __construct() { }
+  //Implementamos nuestro variable global
+	public $id_usr_sesion;
+
+	//Implementamos nuestro constructor
+	public function __construct($id_usr_sesion = 0)
+	{
+		$this->id_usr_sesion = $id_usr_sesion;
+	}
 
   // TABLA
   public function tabla_compras($idproyecto, $fecha_filtro_1, $fecha_filtro_2, $id_proveedor) {

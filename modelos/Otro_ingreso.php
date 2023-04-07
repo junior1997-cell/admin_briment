@@ -4,10 +4,15 @@ require "../config/Conexion_v2.php";
 
 class Otro_ingreso
 {
-  //Implementamos nuestro constructor
-  public function __construct()
-  {
-  }
+  //Implementamos nuestro variable global
+	public $id_usr_sesion;
+
+	//Implementamos nuestro constructor
+	public function __construct($id_usr_sesion = 0)
+	{
+		$this->id_usr_sesion = $id_usr_sesion;
+	}
+
   //$idotro_ingreso,$idproyecto,$fecha_viaje,$tipo_viajero,$tipo_ruta,$cantidad,$precio_unitario,$precio_parcial,$ruta,$descripcion,$foto2
   //Implementamos un método para insertar registros
   public function insertar($idpersona, $fecha_i, $forma_pago, $tipo_comprobante, $nro_comprobante, $subtotal, $igv, $val_igv, $tipo_gravada, $precio_parcial, $descripcion, $comprobante)

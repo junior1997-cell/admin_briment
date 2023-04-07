@@ -4,10 +4,14 @@ require "../config/Conexion_v2.php";
 
 class Compra_grano
 {
-  //Implementamos nuestro constructor
-  public function __construct()
-  {
-  }
+  //Implementamos nuestro variable global
+	public $id_usr_sesion;
+
+	//Implementamos nuestro constructor
+	public function __construct($id_usr_sesion = 0)
+	{
+		$this->id_usr_sesion = $id_usr_sesion;
+	}
 
   // ::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C O M P R A  ::::::::::::::::::::::::::::::::::::::::: 
 
@@ -32,7 +36,7 @@ class Compra_grano
       $id = $id_compra['data']; 
 
       //add registro en nuestra bitacora
-      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','".$id_compra['data']."','Agregar compra cafe','" . $_SESSION['idusuario'] . "')";
+      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','".$id_compra['data']."','Agregar compra cafe','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; } 
 
       // creamos un pago de compra
@@ -41,7 +45,7 @@ class Compra_grano
       $new_pago = ejecutarConsulta_retornarID($insert_pago); if ($new_pago['status'] == false) { return  $new_pago;}
 
       //add registro en nuestra bitacora
-      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_compra_grano','".$new_pago['data']."','Agregar pago cafe','" . $_SESSION['idusuario'] . "')";
+      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_compra_grano','".$new_pago['data']."','Agregar pago cafe','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; } 
 
       $indice = 0;  $det_compra_new = "";
@@ -59,7 +63,7 @@ class Compra_grano
           $det_compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($det_compra_new['status'] == false) { return  $det_compra_new;}
 
           //add registro en nuestra bitacora.
-          $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_grano','".$det_compra_new['data']."','Agregar detalle compra cafe','" . $_SESSION['idusuario'] . "')";
+          $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_grano','".$det_compra_new['data']."','Agregar detalle compra cafe','$this->id_usr_sesion')";
           $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
 
           $indice ++;
@@ -103,11 +107,11 @@ class Compra_grano
       $sql = "UPDATE compra_grano SET idpersona='$idcliente',fecha_compra='$fecha_compra', tipo_comprobante='$tipo_comprobante',
       numero_comprobante='$numero_comprobante',val_igv='$val_igv',subtotal_compra='$subtotal_compra', igv_compra='$igv_compra',
       total_compra='$total_compra', tipo_gravada='$tipo_gravada', descripcion='$descripcion', metodo_pago='$metodo_pago', 
-      fecha_proximo_pago='$fecha_proximo_pago', user_updated= '" . $_SESSION['idusuario'] . "' WHERE idcompra_grano = '$idcompra_grano'";
+      fecha_proximo_pago='$fecha_proximo_pago', user_updated= '$this->id_usr_sesion' WHERE idcompra_grano = '$idcompra_grano'";
       $update_compra = ejecutarConsulta($sql); if ($update_compra['status'] == false) { return $update_compra; }
 
       //add registro en nuestra bitacora
-      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','$idcompra_grano','Editar compra cafe','" . $_SESSION['idusuario'] . "')";
+      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','$idcompra_grano','Editar compra cafe','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }
 
       $indice = 0;  $det_compra_new = "";
@@ -123,7 +127,7 @@ class Compra_grano
         $det_compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($det_compra_new['status'] == false) { return  $det_compra_new;}
 
         //add registro en nuestra bitacora.
-        $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_grano','".$det_compra_new['data']."','Agregar Detalle compra cafe','" . $_SESSION['idusuario'] . "')";
+        $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_grano','".$det_compra_new['data']."','Agregar Detalle compra cafe','$this->id_usr_sesion')";
         $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
 
         $indice ++;
@@ -184,11 +188,11 @@ class Compra_grano
 
   //Implementamos un método para desactivar categorías
   public function desactivar($idcompra_grano) {
-    $sql = "UPDATE compra_grano SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idcompra_grano='$idcompra_grano'";
+    $sql = "UPDATE compra_grano SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idcompra_grano='$idcompra_grano'";
 		$desactivar= ejecutarConsulta($sql); if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','".$idcompra_grano."','Compra desactivada','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','".$idcompra_grano."','Compra desactivada','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $desactivar;
@@ -202,11 +206,11 @@ class Compra_grano
 
   //Implementamos un método para activar categorías
   public function eliminar($idcompra_grano) {
-    $sql = "UPDATE compra_grano SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idcompra_grano='$idcompra_grano'";
+    $sql = "UPDATE compra_grano SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idcompra_grano='$idcompra_grano'";
 		$eliminar =  ejecutarConsulta($sql);if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','$idcompra_grano','Compra Eliminada','" . $_SESSION['idusuario'] . "')";
+		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','$idcompra_grano','Compra Eliminada','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;
@@ -363,11 +367,11 @@ class Compra_grano
 
   //Implementamos un método para desactivar categorías
   public function papelera_pago_compra($idpago_compra_grano) {
-    $sql = "UPDATE pago_compra_grano SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idpago_compra_grano='$idpago_compra_grano'";
+    $sql = "UPDATE pago_compra_grano SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idpago_compra_grano='$idpago_compra_grano'";
 		$desactivar= ejecutarConsulta($sql); if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_compra_grano','".$idpago_compra_grano."','Pago compra papelera','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_compra_grano','".$idpago_compra_grano."','Pago compra papelera','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $desactivar;
@@ -375,11 +379,11 @@ class Compra_grano
 
   //Implementamos un método para activar categorías
   public function eliminar_pago_compra($idpago_compra_grano) {
-    $sql = "UPDATE pago_compra_grano SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idpago_compra_grano='$idpago_compra_grano'";
+    $sql = "UPDATE pago_compra_grano SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idpago_compra_grano='$idpago_compra_grano'";
 		$eliminar =  ejecutarConsulta($sql);if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_compra_grano','$idpago_compra_grano','Pago compra Eliminada','" . $_SESSION['idusuario'] . "')";
+		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('pago_compra_grano','$idpago_compra_grano','Pago compra Eliminada','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;

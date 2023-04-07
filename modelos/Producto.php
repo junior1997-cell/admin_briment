@@ -146,7 +146,7 @@ class Producto
   //Implementar un método para listar los registros
   public function tbla_principal($idpresentacion) {
 
-    $tipo_presentacion = '';
+    $tipo_presentacion = ''; $data = [];
 
     if ($idpresentacion == 'todos') {
       $tipo_presentacion = "";
@@ -154,12 +154,46 @@ class Producto
       $tipo_presentacion = "AND p.idpresentacion = '$idpresentacion'";
     }
 
-    $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
+    $sql_0 = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
     p.descripcion, p.imagen, p.estado,um.nombre as unidad_medida, l.nombre as laboratorio, pre.nombre as presentacion
     FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
     WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
     $tipo_presentacion and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
-    return ejecutarConsulta($sql);
+    $producto = ejecutarConsulta($sql_0); if ( $producto['status'] == false) {return $producto; }  
+
+    foreach ($producto['data'] as $key => $val) {
+      $sql_1 = "SELECT SUM(dcp.cantidad) as cant_compra FROM detalle_compra_producto as dcp
+      WHERE dcp.idproducto = 1 AND dcp.estado = '1' AND dcp.estado_delete = '1';";
+      $compra = ejecutarConsultaSimpleFila($sql_1); if ( $compra['status'] == false) {return $compra; }  
+
+      $sql_1 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp
+      WHERE dvp.idproducto = 1 AND dvp.estado = '1' AND dvp.estado_delete = '1';";
+      $venta = ejecutarConsultaSimpleFila($sql_1); if ( $venta['status'] == false) {return $venta; }  
+
+      $n_compra = empty($compra['data']) ? 0 : (empty($compra['data']['cant_compra']) ? 0 : floatval($compra['data']['cant_compra']) ) ;
+      $n_venta  = empty($venta['data']) ? 0 : (empty($venta['data']['cant_venta']) ? 0 : floatval($venta['data']['cant_venta']) ) ;
+
+      $stock = $n_compra - $n_venta;
+      $data[] = [
+        "idproducto"      => $val['idproducto'],
+        "idunidad_medida" => $val['idunidad_medida'],
+        "idlaboratorio"   => $val['idlaboratorio'],
+        "idpresentacion"  => $val['idpresentacion'],
+        "nombre"          => $val['nombre'],
+        "descripcion"     => $val['descripcion'],
+        "codigo"          => $val['codigo'],
+        "precio_actual"   => $val['precio_actual'],
+        "descripcion"     => $val['descripcion'],
+        "imagen"          => $val['imagen'],
+        "estado"          => $val['estado'],
+        "unidad_medida"   => $val['unidad_medida'],
+        "laboratorio"     => $val['laboratorio'],
+        "presentacion"    => $val['presentacion'],
+        "stock"            => $stock,
+      ];
+    }
+
+    return $retorno = ['status'=> true, 'message' => 'Salió todo ok,', 'data' => $data ]; 
   }
   
   //OBTENEMOS LA IMAGEN PARA REEMPLAZARLO
@@ -168,10 +202,21 @@ class Producto
     return ejecutarConsulta($sql);
   }
 
-  // ══════════════════════════════════════  C A T E G O R I A S   P R O D U C T O  ══════════════════════════════════════
+  // ══════════════════════════════════════  P R E S E N T A C I O N   P R O D U C T O  ══════════════════════════════════════
 
   public function lista_de_presentacion(  )  {
     $sql = "SELECT idpresentacion, nombre FROM presentacion WHERE estado=1 AND estado_delete=1;";
+    return ejecutarConsultaArray($sql);
+  }
+
+  // ══════════════════════════════════════  L O T E   P R O D U C T O  ══════════════════════════════════════
+
+  public function tbla_lote($id_producto) {
+    $sql = "SELECT  dcp.idlote, l.nombre, l.stock, l.fecha_vencimiento, l.descripcion, l.estado
+    FROM detalle_compra_producto as dcp, lote as l
+    WHERE dcp.idlote = l.idlote AND dcp.estado = '1' AND dcp.estado_delete = '0' AND 
+    l.estado = '1' AND l.estado_delete AND dcp.idproducto  = '$id_producto'
+    GROUP BY dcp.idlote;";
     return ejecutarConsultaArray($sql);
   }
 

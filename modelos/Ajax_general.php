@@ -4,11 +4,14 @@
 
   Class Ajax_general
   {
-    //Implementamos nuestro constructor
-    public function __construct()
-    {
+    //Implementamos nuestro variable global
+    public $id_usr_sesion;
 
-    }	 
+    //Implementamos nuestro constructor
+    public function __construct($id_usr_sesion = 0)
+    {
+      $this->id_usr_sesion = $id_usr_sesion;
+    }
 
     //CAPTURAR PERSONA  DE RENIEC 
     public function datos_reniec($dni) { 
@@ -135,8 +138,17 @@
     /* ══════════════════════════════════════ P R O V E E D O R -- C L I E N T E S  ══════════════════════════════════════ */
 
     public function select2_proveedor_cliente($tipo) {
-      $sql = "SELECT idpersona, nombres, tipo_documento, numero_documento, es_socio, foto_perfil FROM persona 
+      $sql = "SELECT idpersona, nombres, tipo_documento, numero_documento, foto_perfil FROM persona 
       WHERE idtipo_persona ='$tipo' AND estado='1' AND estado_delete ='1'";
+
+      return ejecutarConsulta($sql);
+      // var_dump($return);die();
+    }
+
+    /* ══════════════════════════════════════ S U C U R S A L  ══════════════════════════════════════ */
+
+    public function select2_sucursal() {
+      $sql = "SELECT * FROM sucursal WHERE estado='1' AND estado_delete ='1'";
 
       return ejecutarConsulta($sql);
       // var_dump($return);die();
@@ -190,12 +202,46 @@
 
     //funcion para mostrar registros de prosuctos
     public function tblaProductos() {
-      $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.precio_compra_actual,
-      p.stock, p.descripcion, p.imagen, p.estado,  
-      um.nombre as nombre_medida, cp.nombre AS categoria
-      FROM producto as p, unidad_medida AS um, categoria_producto AS cp
-      WHERE p.idcategoria_producto = cp.idcategoria_producto and p.idunidad_medida = um.idunidad_medida and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
-      return ejecutarConsulta($sql);
+      $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
+      p.descripcion, p.imagen, p.estado,um.nombre as unidad_medida, l.nombre as laboratorio, pre.nombre as presentacion
+      FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
+      WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
+      and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
+      $producto = ejecutarConsultaArray($sql); if ( $producto['status'] == false) {return $producto; }  
+
+      foreach ($producto['data'] as $key => $val) {
+        $sql_1 = "SELECT SUM(dcp.cantidad) as cant_compra FROM detalle_compra_producto as dcp
+        WHERE dcp.idproducto = 1 AND dcp.estado = '1' AND dcp.estado_delete = '1';";
+        $compra = ejecutarConsultaSimpleFila($sql_1); if ( $compra['status'] == false) {return $compra; }  
+  
+        $sql_1 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp
+        WHERE dvp.idproducto = 1 AND dvp.estado = '1' AND dvp.estado_delete = '1';";
+        $venta = ejecutarConsultaSimpleFila($sql_1); if ( $venta['status'] == false) {return $venta; }  
+  
+        $n_compra = empty($compra['data']) ? 0 : (empty($compra['data']['cant_compra']) ? 0 : floatval($compra['data']['cant_compra']) ) ;
+        $n_venta  = empty($venta['data']) ? 0 : (empty($venta['data']['cant_venta']) ? 0 : floatval($venta['data']['cant_venta']) ) ;
+  
+        $stock = $n_compra - $n_venta;
+        $data[] = [
+          "idproducto"      => $val['idproducto'],
+          "idunidad_medida" => $val['idunidad_medida'],
+          "idlaboratorio"   => $val['idlaboratorio'],
+          "idpresentacion"  => $val['idpresentacion'],
+          "nombre"          => $val['nombre'],
+          "descripcion"     => $val['descripcion'],
+          "codigo"          => $val['codigo'],
+          "precio_actual"   => $val['precio_actual'],
+          "descripcion"     => $val['descripcion'],
+          "imagen"          => $val['imagen'],
+          "estado"          => $val['estado'],
+          "unidad_medida"   => $val['unidad_medida'],
+          "laboratorio"     => $val['laboratorio'],
+          "presentacion"    => $val['presentacion'],
+          "stock"            => $stock,
+        ];
+      }
+  
+      return $retorno = ['status'=> true, 'message' => 'Salió todo ok,', 'data' => $data ]; 
     }
     /* ══════════════════════════════════════ S E R V i C I O S  M A Q U I N A RI A ════════════════════════════ */
 
@@ -218,12 +264,23 @@
       return ejecutarConsulta($sql);
     }
 
+    /* ══════════════════════════════════════ P R E S E N T A C I O N ════════════════════════════ */
+
     public function presentacion(){
       $sql = "SELECT idpresentacion, nombre FROM presentacion WHERE estado=1 AND estado_delete=1;";
       return ejecutarConsulta($sql);
     }
+
+    /* ══════════════════════════════════════  L A B O R A T O R I O  ════════════════════════════ */
     public function laboratorio(){
       $sql = "SELECT idlaboratorio, nombre FROM laboratorio WHERE estado=1 AND estado_delete=1;";
+      return ejecutarConsulta($sql);
+    }
+
+    /* ══════════════════════════════════════  L O T E  ════════════════════════════ */
+    public function select2_lote(){
+      $sql = "SELECT idlote, nombre, stock, fecha_vencimiento, descripcion 
+      FROM lote WHERE estado = '1' AND estado_delete = '1'";
       return ejecutarConsulta($sql);
     }
 

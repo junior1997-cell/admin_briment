@@ -4,21 +4,25 @@ require "../config/Conexion_v2.php";
 
 Class Lote
 {
-	//Implementamos nuestro constructor
-	public function __construct()
-	{
+	//Implementamos nuestro variable global
+	public $id_usr_sesion;
 
+	//Implementamos nuestro constructor
+	public function __construct($id_usr_sesion = 0)
+	{
+		$this->id_usr_sesion = $id_usr_sesion;
 	}
 
 	//Implementamos un método para insertar registros
 	public function insertar($nombre_lote,$fecha_vencimiento,$descripcion)
 	{
-		$sql="INSERT INTO lote (nombre,fecha_vencimiento, descripcion, user_created)VALUES ('$nombre_lote','$fecha_vencimiento', '$descripcion','" . $_SESSION['idusuario'] . "')";
+		$sql="INSERT INTO lote (nombre,fecha_vencimiento, descripcion, user_created)VALUES ('$nombre_lote','$fecha_vencimiento', '$descripcion','$this->id_usr_sesion')";
 		$intertar =  ejecutarConsulta_retornarID($sql); 
 		if ($intertar['status'] == false) {  return $intertar; } 
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('lote','".$intertar['data']."','Nuevo Lote registrado','" . $_SESSION['idusuario'] . "')";
+		$sql_d = $nombre_lote.', '.$fecha_vencimiento.', '.$descripcion;
+		$sql_bit = "INSERT INTO bitacora_bd(idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5, 'lote','".$intertar['data']."','$sql_d','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $intertar;
@@ -27,12 +31,13 @@ Class Lote
 	//Implementamos un método para editar registros
 	public function editar($idlote,$nombre_lote,$fecha_vencimiento,$descripcion)
 	{
-		$sql="UPDATE lote SET nombre='$nombre_lote',fecha_vencimiento='$fecha_vencimiento', descripcion = '$descripcion',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idlote='$idlote'";
+		$sql="UPDATE lote SET nombre='$nombre_lote',fecha_vencimiento='$fecha_vencimiento', descripcion = '$descripcion',user_updated= '$this->id_usr_sesion' WHERE idlote='$idlote'";
 		$editar =  ejecutarConsulta($sql);
 		if ( $editar['status'] == false) {return $editar; } 
 	
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('lote','$idlote','Lote editada','" . $_SESSION['idusuario'] . "')";
+		$sql_d = $idlote.', '.$nombre_lote.', '.$fecha_vencimiento.', '.$descripcion;
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6,'lote','$idlote','$sql_d','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
 	
 		return $editar;
@@ -41,13 +46,12 @@ Class Lote
 	//Implementamos un método para desactivar lote
 	public function desactivar($idlote)
 	{
-		$sql="UPDATE lote SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idlote='$idlote'";
+		$sql="UPDATE lote SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idlote='$idlote'";
 		$desactivar= ejecutarConsulta($sql);
-
 		if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('lote','".$idlote."','Unidad de medida desactivada','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (2,'lote','$idlote','$idlote','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $desactivar;
@@ -63,12 +67,12 @@ Class Lote
 	//Implementamos un método para eliminar lote
 	public function eliminar($idlote)
 	{
-		$sql="UPDATE lote SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idlote='$idlote'";
+		$sql="UPDATE lote SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idlote='$idlote'";
 		$eliminar =  ejecutarConsulta($sql);
 		if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('lote','$idlote','Unidad de medida Eliminaao','" . $_SESSION['idusuario'] . "')";
+		$sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (4, 'lote','$idlote','$idlote','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;

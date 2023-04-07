@@ -339,9 +339,10 @@
                                   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive row-horizon disenio-scroll">
                                     <br />
                                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
-                                      <thead style="background-color: #28a745b5;">
+                                      <thead class="bg-color-0037a4 text-white" >
                                         <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
                                         <th>Producto</th>
+                                        <th>Lote</th>
                                         <th>Unidad</th>
                                         <th>Cantidad</th>
                                         <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U </th>
@@ -809,7 +810,7 @@
                               <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
                               <th>Nombre Producto</th>
                               <th>Stock</th>
-                              <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U.</th>
+                              <th data-toggle="tooltip" data-original-title="Precio Unitario">Presentacion.</th>
                               <th>Descripción</th>
                             </thead>
                             <tbody></tbody>
@@ -822,7 +823,7 @@
                     </div>
                   </div>                  
 
-                  <!-- MDOAL - agregar Pagos - charge-3 -->
+                  <!-- MODAL - agregar Pagos - charge-3 -->
                   <div class="modal fade" id="modal-agregar-pago">
                     <div class="modal-dialog modal-dialog-scrollable modal-lg">
                       <div class="modal-content">

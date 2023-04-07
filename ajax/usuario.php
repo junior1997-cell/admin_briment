@@ -20,53 +20,66 @@
       $rspta = $usuario->verificar($logina, $clavehash);   //$fetch = $rspta->fetch_object();
 
       if ( $rspta['status'] == true ) {
-        if ( !empty($rspta['data']) ) {
+        // valdiamos si existe el usuario
+        if ( !empty($rspta['data']['usuario'] ) ) {
 
-          // ultima sesion
-          $ultima_sesion = $usuario->ultima_sesion($rspta['data']['idusuario']);
-
-          //Declaramos las variables de sesión
-          $_SESSION['idusuario'] = $rspta['data']['idusuario'];
-          $_SESSION['nombre'] = $rspta['data']['nombres'];
-          $_SESSION['imagen'] = $rspta['data']['foto_perfil'];
-          $_SESSION['login'] = $rspta['data']['login'];
-          $_SESSION['cargo'] = $rspta['data']['cargo'];
-          $_SESSION['tipo_documento'] = $rspta['data']['tipo_documento'];
-          $_SESSION['num_documento'] = $rspta['data']['numero_documento'];
-          $_SESSION['telefono'] = $rspta['data']['celular'];
-          $_SESSION['email'] = $rspta['data']['correo'];
-
-          //Obtenemos los permisos del usuario
-          $marcados = $usuario->listarmarcados($rspta['data']['idusuario']);
+          // validamos si esta vacio la "sucursal"
+          if (empty($rspta['data']['sucursal']) && $rspta['data']['usuario']['cargo'] != 'Administrador' ) {
+            $sucursal = [
+              'status'  => 'no_sucursal', 
+              'message' => 'Este usuario no tiene asigando una <b>sucursal</b>, pida a su admintrador que le asigne alguno.', 
+              'data'    => [
+                'usuario'   => $rspta['data']['usuario'],
+                'sucursal'  => $rspta['data']['sucursal']
+              ]
+            ]; 
+            echo json_encode($sucursal, true);
+          } else {  
           
-          //Declaramos el array para almacenar todos los permisos marcados
-          $valores = [];
+            // registramos ultima sesion
+            $ultima_sesion = $usuario->ultima_sesion($rspta['data']['usuario']['idusuario']);
 
-          if ($rspta['status']) {
-            //Almacenamos los permisos marcados en el array
-            foreach ($marcados['data'] as $key => $value) {
-              array_push($valores, $value['idpermiso']);
-            }
-            echo json_encode($rspta);
-          }else{
-            echo json_encode($marcados);
-          }       
+            //Declaramos las variables de sesión
+            $_SESSION['idusuario']      = $rspta['data']['usuario']['idusuario'];
+            $_SESSION['nombre']         = $rspta['data']['usuario']['nombres'];
+            $_SESSION['imagen']         = $rspta['data']['usuario']['foto_perfil'];
+            $_SESSION['login']          = $rspta['data']['usuario']['login'];
+            $_SESSION['cargo']          = $rspta['data']['usuario']['cargo'];
+            $_SESSION['tipo_documento'] = $rspta['data']['usuario']['tipo_documento'];
+            $_SESSION['num_documento']  = $rspta['data']['usuario']['numero_documento'];
+            $_SESSION['telefono']       = $rspta['data']['usuario']['celular'];
+            $_SESSION['email']          = $rspta['data']['usuario']['correo'];
 
-          //Determinamos los accesos del usuario
-          in_array(1, $valores) ? ($_SESSION['escritorio'] = 1)     : ($_SESSION['escritorio'] = 0);
-          in_array(2, $valores) ? ($_SESSION['acceso'] = 1)         : ($_SESSION['acceso'] = 0);
-          in_array(3, $valores) ? ($_SESSION['recurso'] = 1)        : ($_SESSION['recurso'] = 0);   
-          in_array(4, $valores) ? ($_SESSION['papelera'] = 1)       : ($_SESSION['papelera'] = 0);
-          
-          // LOGISTICA Y ADQUISICIONES
-          in_array(5, $valores) ? ($_SESSION['almacen_abono'] = 1) : ($_SESSION['almacen_abono'] = 0);
-          in_array(6, $valores) ? ($_SESSION['venta_abono'] = 1)   : ($_SESSION['venta_abono'] = 0);
-          in_array(7, $valores) ? ($_SESSION['compra_grano'] = 1)  : ($_SESSION['compra_grano'] = 0);
-          
-          // CONTABLE Y FINANCIERO
-          in_array(8, $valores) ? ($_SESSION['pago_trabajador'] = 1): ($_SESSION['pago_trabajador'] = 0);         
-          in_array(9, $valores) ? ($_SESSION['otro_ingreso'] = 1)   : ($_SESSION['otro_ingreso'] = 0);
+            //Obtenemos los permisos del usuario
+            $marcados = $usuario->listarmarcados($rspta['data']['usuario']['idusuario']);
+            
+            //Declaramos el array para almacenar todos los permisos marcados
+            $valores = [];
 
+            if ($rspta['status']) {
+              //Almacenamos los permisos marcados en el array
+              foreach ($marcados['data'] as $key => $value) { array_push($valores, $value['idpermiso']);   }
+              
+              echo json_encode($rspta, true); #retornamos los datos del usuario
+            }else{
+              echo json_encode($marcados, true);
+            }       
+
+            //Determinamos los accesos del usuario
+            in_array(1, $valores) ? ($_SESSION['escritorio'] = 1)     : ($_SESSION['escritorio'] = 0);
+            in_array(2, $valores) ? ($_SESSION['acceso'] = 1)         : ($_SESSION['acceso'] = 0);
+            in_array(3, $valores) ? ($_SESSION['recurso'] = 1)        : ($_SESSION['recurso'] = 0);   
+            in_array(4, $valores) ? ($_SESSION['papelera'] = 1)       : ($_SESSION['papelera'] = 0);
+            
+            // LOGISTICA Y ADQUISICIONES
+            in_array(5, $valores) ? ($_SESSION['almacen_abono'] = 1) : ($_SESSION['almacen_abono'] = 0);
+            in_array(6, $valores) ? ($_SESSION['venta_abono'] = 1)   : ($_SESSION['venta_abono'] = 0);
+            in_array(7, $valores) ? ($_SESSION['compra_grano'] = 1)  : ($_SESSION['compra_grano'] = 0);
+            
+            // CONTABLE Y FINANCIERO
+            in_array(8, $valores) ? ($_SESSION['pago_trabajador'] = 1): ($_SESSION['pago_trabajador'] = 0);         
+            in_array(9, $valores) ? ($_SESSION['otro_ingreso'] = 1)   : ($_SESSION['otro_ingreso'] = 0);
+          }
         } else {
           echo json_encode($rspta, true);
         }
@@ -113,6 +126,7 @@
   $login            = isset($_POST["login"]) ? limpiarCadena($_POST["login"]) : "";
   $clave            = isset($_POST["password"]) ? limpiarCadena($_POST["password"]) : "";
   $clave_old        = isset($_POST["password-old"]) ? limpiarCadena($_POST["password-old"]) : "";
+  $sucursal         = isset($_POST["sucursal"]) ? limpiarCadena($_POST["sucursal"]) : "";
   $permiso          = isset($_POST['permiso']) ? $_POST['permiso'] : "";
 
   // ::::::::::::::::::::::::::::::::: D A T O S   T R A B A J A D O R :::::::::::::::::::::::::::::
@@ -132,6 +146,11 @@
   $edad_per             = isset($_POST["edad_per"])? limpiarCadena($_POST["edad_per"]):"";
     
   $imagen1			        = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
+
+  // ::::::::::::::::::::::::::::::::: D A T O S   T R A B A J A D O R :::::::::::::::::::::::::::::
+  $idpersona_sucursal	  = isset($_POST["idpersona_sucursal"])? limpiarCadena($_POST["idpersona_sucursal"]):"";
+  $idpersona_suc	  	  = isset($_POST["idpersona_suc"])? limpiarCadena($_POST["idpersona_suc"]):"";
+  $sucursal 	          = isset($_POST["sucursal"])? limpiarCadena($_POST["sucursal"]):"";
 
   switch ($_GET["op"]) {
 
@@ -195,31 +214,31 @@
 
     case 'tbla_principal':
 
-      $rspta = $usuario->listar();
+      $rspta = $usuario->tbla_principal();
           
       //Vamos a declarar un array
-      $data = [];  
-      $imagen_error = "this.src='../dist/svg/user_default.svg'"; $cont=1;
-      $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
+      $data = []; $cont=1;
 
       if ($rspta['status']) {
         foreach ($rspta['data'] as $key => $value) {
           $data[] = [
             "0"=>$cont++,
-            "1" => $value['estado'] ? '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+            "1" => ($value['estado'] ? '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
                 ($value['cargo']=='Administrador' ? ' <button class="btn btn-danger btn-sm disabled" data-toggle="tooltip" data-original-title="El administrador no se puede eliminar."><i class="fas fa-skull-crossbones"></i> </button>' : ' <button class="btn btn-danger  btn-sm" onclick="eliminar(' . $value['idusuario'] .', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>' ) :
                 '<button class="btn btn-warning  btn-sm" onclick="mostrar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' . 
-                ' <button class="btn btn-primary  btn-sm" onclick="activar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Recuperar"><i class="fa fa-check"></i></button>',
+                ' <button class="btn btn-primary  btn-sm" onclick="activar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Recuperar"><i class="fa fa-check"></i></button>') .
+              ' <button class="btn bg-purple  btn-sm" onclick="tabla_sucursal(' . $value['idusuario'] . ', \''.$value['nombres'].'\')" data-toggle="tooltip" data-original-title="Sucursal"><i class="fas fa-store-alt"></i></button>',
             "2" => '<div class="user-block">'. 
               '<img class="img-circle" src="../dist/docs/persona/perfil/' . $value['foto_perfil'] . '" alt="User Image" onerror="' . $imagen_error . '">'.
               '<span class="username"><p class="text-primary m-b-02rem" >' . $value['nombres'] . '</p></span>'. 
               '<span class="description"> - ' . $value['tipo_documento'] .  ': ' . $value['numero_documento'] . ' </span>'.
             '</div>',
-            "3" => $value['celular'],
-            "4" => $value['login'],
-            "5" => $value['cargo'],
-            "6" => nombre_dia_semana( date("Y-m-d", strtotime($value['last_sesion'])) ) .', <br>'. date("d/m/Y", strtotime($value['last_sesion'])) .' - '. date("g:i a", strtotime($value['last_sesion'])) ,
-            "7" => ($value['estado'] ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+            "3" => $value['sucursal'],
+            "4" => $value['celular'],
+            "5" => $value['login'],
+            "6" => $value['cargo'],
+            "7" => nombre_dia_semana( date("Y-m-d", strtotime($value['last_sesion'])) ) .', <br>'. date("d/m/Y", strtotime($value['last_sesion'])) .' - '. date("g:i a", strtotime($value['last_sesion'])) ,
+            "8" => ($value['estado'] ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
           ];
         }
         $results = [
@@ -368,6 +387,100 @@
         echo json_encode($rspta, true);
       }
   
+    break;
+
+    // ::::::::::::::::::::::::::::::::: S E C C I O N   S U C U R S A L :::::::::::::::::::::::::::::
+
+    case 'guardar_y_editar_sucursal':
+      
+      if (empty($idpersona_sucursal)){
+
+        $rspta=$usuario->insertar_sucursal($idpersona_suc, $sucursal);                    
+        echo json_encode($rspta, true);
+        
+      }else{  
+        // editamos un persona existente
+        $rspta=$usuario->editar_sucursal($idpersona_sucursal, $idpersona_suc, $sucursal);          
+        echo json_encode($rspta, true);
+      }
+  
+    break;
+
+    case 'tbla_principal_sucursal':
+
+      $rspta = $usuario->tbla_principal_sucursal($_GET["id_persona"]);
+          
+      //Vamos a declarar un array
+      $data = []; $cont=1;
+
+      if ($rspta['status']) {
+        foreach ($rspta['data'] as $key => $value) {
+          $data[] = [
+            "0"=>$cont++,
+            "1" => '<button class="btn btn-warning  btn-sm" onclick="mostrar(' . $value['idpersona_sucursal'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'.
+              ($value['estado'] ? ' <button class="btn btn-danger btn-sm" onclick="eliminar_sucursal(' . $value['idpersona_sucursal'] .','. $value['idusuario'].', \''. $value['sucursal'] .'\', \''. $value['codigo'] .'\', \''. $value['direccion'] .'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'  :                
+              ' <button class="btn btn-success btn-sm" onclick="activar_sucursal(' . $value['idpersona_sucursal'] .','. $value['idusuario'] .', \''. $value['sucursal'] .'\', \''. $value['codigo'] .'\', \''. $value['direccion'] .'\')" data-toggle="tooltip" data-original-title="Recuperar"><i class="fa fa-check"></i></button>'),
+            "2" => $value['sucursal'],
+            "3" => $value['direccion'],
+            "4" => ($value['estado'] ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+          ];
+        }
+        $results = [
+          "sEcho" => 1, //Información para el datatables
+          "iTotalRecords" => count($data), //enviamos el total registros al datatable
+          "iTotalDisplayRecords" => 1, //enviamos el total registros a visualizar
+          "data" => $data,
+        ];
+        echo json_encode($results, true);
+      } else {
+        echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
+      }
+
+    break;
+
+    case 'tbla_principal_sucursal_todos':
+
+      $rspta = $usuario->tbla_principal_sucursal($_GET["id_persona"]);
+          
+      //Vamos a declarar un array
+      $data = []; $cont=1;
+
+      if ($rspta['status']) {
+        foreach ($rspta['data'] as $key => $value) {
+          $data[] = [
+            "0"=>$cont++,
+            "1" => ($value['estado'] ? 'Actual' : ' <button class="btn btn-success btn-sm" onclick="abrir_sucursal_para_todos_los_modulos(' . $value['idpersona_sucursal'] .','. $value['idusuario'] .', \''. $value['sucursal'] .'\', \''. $value['codigo'] .'\', \''. $value['direccion'] .'\')" data-toggle="tooltip" data-original-title="Abrir Sucursal"><i class="fa fa-check"></i></button>'),
+            "2" => $value['sucursal'],
+            "3" => $value['direccion'],
+            "4" => ($value['estado'] ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+          ];
+        }
+        $results = [
+          "sEcho" => 1, //Información para el datatables
+          "iTotalRecords" => count($data), //enviamos el total registros al datatable
+          "iTotalDisplayRecords" => 1, //enviamos el total registros a visualizar
+          "data" => $data,
+        ];
+        echo json_encode($results, true);
+      } else {
+        echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
+      }
+
+    break;
+
+    case 'desactivar_sucursal':
+      $rspta = $usuario->desactivar_sucursal($_GET["id_tabla"]);
+      echo json_encode($rspta, true);
+    break;
+
+    case 'activar_sucursal':
+      $rspta = $usuario->activar_sucursal($_GET["idpersona_sucursal"], $_GET["id_usuario"]);
+      echo json_encode($rspta, true);
+    break;
+
+    case 'eliminar_sucursal':
+      $rspta = $usuario->eliminar_sucursal($_GET["id_tabla"]);
+      echo json_encode($rspta, true);
     break;
 
     // default: 

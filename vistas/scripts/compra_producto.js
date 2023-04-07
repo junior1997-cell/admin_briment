@@ -1,7 +1,7 @@
 //Requejo99@
 var reload_detraccion = "";
 
-var tabla_compra_insumo;
+var tabla_compra_producto;
 var tabla_comprobantes;
 
 var tabla_compra_x_proveedor;
@@ -34,11 +34,11 @@ function init() {
   $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#idproveedor', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#idproveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#filtro_proveedor', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_pro', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto_pro', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto_pro', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
@@ -193,16 +193,18 @@ function regresar() {
 //TABLA - COMPRAS
 function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
   //console.log(idproyecto);
-  tabla_compra_insumo = $("#tabla-compra").dataTable({
+  tabla_compra_producto = $("#tabla-compra").dataTable({
     responsive: true, 
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
-    dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,7,8,5,6], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,7,8,5,6], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,7,8,5,6], } },              
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
+    buttons: [      
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_compra_producto.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,3,7,8,5,6], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,3,7,8,5,6], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,3,7,8,5,6], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax: {
       url: `../ajax/compra_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
@@ -236,7 +238,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     ],
   }).DataTable();
 
-  $(tabla_compra_insumo).ready(function () {  $('.cargando').hide(); });
+  $(tabla_compra_producto).ready(function () {  $('.cargando').hide(); });
 
   //console.log(idproyecto);
   tabla_compra_x_proveedor = $("#tabla-compra-proveedor").dataTable({
@@ -342,7 +344,7 @@ function guardar_y_editar_compras(e) {
       if (result.value.status == true){        
         Swal.fire("Correcto!", "Compra guardada correctamente", "success");
 
-        tabla_compra_insumo.ajax.reload(null, false);
+        tabla_compra_producto.ajax.reload(null, false);
         tabla_compra_x_proveedor.ajax.reload(null, false);
 
         limpiar_form_compra(); regresar();
@@ -368,7 +370,7 @@ function eliminar_compra(idcompra_producto, nombre) {
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu compra ha sido Eliminado.' ) }, 
-    function(){ tabla_compra_insumo.ajax.reload(null, false); tabla_compra_x_proveedor.ajax.reload(null, false); },
+    function(){ tabla_compra_producto.ajax.reload(null, false); tabla_compra_x_proveedor.ajax.reload(null, false); },
     false, 
     false, 
     false,
@@ -383,15 +385,12 @@ var impuesto = 18;
 var cont = 0;
 var detalles = 0;
 
-function agregarDetalleComprobante(idproducto, nombre, unidad_medida, categoria, precio_venta, precio_compra, img, stock) {
-  // console.log(idproducto,nombre,unidad_medida, categoria,precio_venta,img,stock);
-  var stock = $(`#table_stock_${idproducto}`).text() == 0  ||  $(`#table_stock_${idproducto}`).text() == ''? 0 : parseFloat($(`#table_stock_${idproducto}`).text()) ;
-  // var precio_venta = 0;
+function agregarDetalleComprobante(idproducto, nombre, unidad_medida, laboratorio, presentacion, precio_actual, img) {
+  
   var precio_sin_igv =0;
   var cantidad = 1;
   var descuento = 0;
   var precio_igv = 0;
-  // console.log( stock );
 
   if (idproducto != "") {
 
@@ -409,7 +408,7 @@ function agregarDetalleComprobante(idproducto, nombre, unidad_medida, categoria,
     } else {
 
       if ($("#tipo_comprobante").select2("val") == "Factura") {
-        var subtotal = cantidad * precio_venta;
+        var subtotal = cantidad * precio_actual;
       } else {
         var subtotal = cantidad * precio_sin_igv;
       }
@@ -433,20 +432,24 @@ function agregarDetalleComprobante(idproducto, nombre, unidad_medida, categoria,
           <div class="user-block text-nowrap">
             <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img_p}', '${encodeHtml(nombre)}')">
             <span class="username"><p class="mb-0 nombre_producto_${cont}">${nombre}</p></span>
-            <span class="description categoria_${cont}"><b>Categoría: </b>${categoria}</span>
+            <span class="description categoria_${cont}"><b>Lab: </b>${laboratorio}</span>
           </div>
         </td>
-        <td class="py-1"><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
+        <td>
+          <select name="lote_${cont}" id="lote_${cont}" class="form-control select2 lote_${cont}" style="width: 100%;" onchange="formato_lote(0);"> </select>
+          <input type="hidden" name="lote_array[]" id="lote_array_${cont}">
+        </td>
+        <td class="py-1"><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="laboratorio_${cont}" type="hidden" name="laboratorio[]" id="laboratorio[]" value="${laboratorio}"></td>
         <td class="py-1 form-group"><input class="producto_${idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
         <td class="py-1 hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${parseFloat(precio_sin_igv).toFixed(2)}" readonly min="0" ></td>
         <td class="py-1 hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number" name="precio_igv[]" id="precio_igv[]" value="${parseFloat(precio_igv).toFixed(2)}" readonly  ></td>
         <td class="py-1 form-group">
-          <input type="number" class="w-135px form-control valid_precio_con_igv "  name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(precio_venta).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
-          <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(precio_venta).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
+          <input type="number" class="w-135px form-control valid_precio_con_igv "  name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(precio_actual).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
+          <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(precio_actual).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
         </td>
         <td class="py-1 form-group">
-          <input type="number" class="w-135px form-control valid_precio_venta" name="valid_precio_venta[${cont}]" id="valid_precio_venta_${cont}" value="${parseFloat(precio_venta).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" >
-          <input type="hidden" class="precio_venta_${cont}" name="precio_venta[]" id="precio_venta_${cont}" value="${parseFloat(precio_venta).toFixed(2)}"  >
+          <input type="number" class="w-135px form-control valid_precio_venta" name="valid_precio_venta[${cont}]" id="valid_precio_venta_${cont}" value="0" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" >
+          <input type="hidden" class="precio_venta_${cont}" name="precio_venta[]" id="precio_venta_${cont}" value="0"  >
         </td>
         <td class="py-1 form-group">
           <input type="number" class="w-135px form-control descuento_${cont}" name="descuento[]" value="${descuento}" min="0.00" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()">
@@ -475,6 +478,10 @@ function agregarDetalleComprobante(idproducto, nombre, unidad_medida, categoria,
         $(this).rules('add', { required: true, messages: { required: 'Campo requerido' } }); 
         $(this).rules('add', { min:0.01, messages: { min:"Mínimo 0.01" } }); 
       });
+
+      $(`#lote_${cont}`).select2({theme:"bootstrap4", placeholder: "Selec. lote", allowClear: true, });
+
+      lista_select2("../ajax/ajax_general.php?op=select2Lote", `#lote_${cont}`, null);
 
       cont++;
       evaluar();      
@@ -788,6 +795,10 @@ function mostrar_compra(idcompra_producto) {
                 <span class="description categoria_${cont}"><b>Categoría: </b>${element.categoria}</span>
               </div>
             </td>
+            <td>
+              <select name="lote_${cont}" id="lote_${cont}" class="form-control select2 lote_${cont}" style="width: 100%;" onchange="formato_lote(0);"> </select>
+              <input type="hidden" name="lote_array[]" id="lote_array_${cont}">
+            </td>
             <td> <span class="unidad_medida_${cont}">${element.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${element.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${element.categoria}"></td>
             <td class="form-group"><input class="producto_${element.idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${element.cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
             <td class="hidden"><input class="w-135px input-no-border precio_sin_igv_${cont}" type="number" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${element.precio_sin_igv}" readonly ></td>
@@ -898,6 +909,10 @@ function copiar_venta(idcompra_producto) {
                 <span class="username"><p class="mb-0 nombre_producto_${cont}" >${element.nombre}</p></span>
                 <span class="description categoria_${cont}"><b>Categoría: </b>${element.categoria}</span>
               </div>
+            </td>
+            <td>
+              <select name="lote_${cont}" id="lote_${cont}" class="form-control select2 lote_${cont}" style="width: 100%;" onchange="formato_lote(0);"> </select>
+              <input type="hidden" name="lote_array[]" id="lote_array_${cont}">
             </td>
             <td> <span class="unidad_medida_${cont}">${element.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${element.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${element.categoria}"></td>
             <td class="form-group"><input class="producto_${element.idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${element.cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
@@ -1354,12 +1369,11 @@ function listarmateriales() {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
-    dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
     buttons: [
-      { text: '<i class="fa-solid fa-arrows-rotate"></i>', action: function ( e, dt, node, config ) { tablamateriales.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } }
-    ],
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tablamateriales.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },    ],
     ajax: {
-      url: "../ajax/ajax_general.php?op=tblaProductos",
+      url: "../ajax/ajax_general.php?op=tblaProductosCompra",
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -1367,8 +1381,10 @@ function listarmateriales() {
       },
     },
     createdRow: function (row, data, ixdex) {
-      // columna: sueldo mensual
-      if (data[3] != '') { $("td", row).eq(3).addClass('text-right'); }  
+      // columna: stock
+      if (data[2] != '') { $("td", row).eq(2).addClass('text-center'); }  
+      // columna: presentacion
+      if (data[3] != '') { $("td", row).eq(3).addClass('text-center'); }  
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",

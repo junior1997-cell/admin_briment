@@ -1,16 +1,16 @@
 <!-- nombre de proyeto -->
 <script>
   
-  if (localStorage.getItem("nube_idproyecto") == 0 || localStorage.getItem("nube_idproyecto") == '0' || localStorage.getItem("nube_idproyecto") == null || localStorage.getItem("nube_idproyecto") === undefined ) {
+  if (localStorage.getItem("nube_id_sucursal") == 0 || localStorage.getItem("nube_id_sucursal") == '0' || localStorage.getItem("nube_id_sucursal") == null || localStorage.getItem("nube_id_sucursal") === undefined ) {
 
-    $("#ver-proyecto").html('<i class="fas fa-tools"></i> Selecciona un proyecto');
+    $("#ver-proyecto").html('<i class="fas fa-tools"></i> Selecciona una sucursal');
     $(".ver-otros-modulos-1").hide();
 
   } else {
-    console.log("id proyecto actual: " + localStorage.getItem("nube_idproyecto"));
-    $("#ver-proyecto").html(`<i class="fas fa-tools"></i> <p class="d-inline-block hide-max-width-1080px">Proyecto:</p> ${localStorage.getItem('nube_nombre_proyecto')}`);
+    console.log("id proyecto actual: " + localStorage.getItem("nube_id_sucursal"));
+    $("#ver-proyecto").html(`<i class="fas fa-store-alt"></i> ${localStorage.getItem('nube_nombre_sucursal')}`);
     $(".ver-otros-modulos-1").show();
-    //$('#icon_folder_'+localStorage.getItem('nube_idproyecto')).html('<i class="fas fa-folder-open"></i>');
+    //$('#icon_folder_'+localStorage.getItem('nube_id_sucursal')).html('<i class="fas fa-folder-open"></i>');
   }
 </script>
 
