@@ -234,10 +234,9 @@ function mostrar(idproducto) {
       $("#laboratorio").val(e.data.idlaboratorio).trigger("change");  
       $("#presentacion").val(e.data.idpresentacion).trigger("change");  
       $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
-      $("#precio_actual").val(e.data.precio_actual);  
+      $("#precio_actual").val(e.data.precio_actual);
+      $("#principio_activo").val(e.data.principio_activo);  
       $("#descripcion").val(e.data.descripcion);
-
-      // $('#precio_unitario').val(parseFloat(e.data.precio_unitario));
 
       if (e.data.imagen != "") {        
         $("#foto1_i").attr("src", "../dist/docs/producto/img_perfil/" + e.data.imagen);  
@@ -434,6 +433,7 @@ $(function () {
       laboratorio:        { required: true },
       presentacion:       { required: true },
       unidad_medida:      { required: true },
+      principio_activo:   { minlength:3,},
       descripcion:        { minlength: 4 },
       
     },
@@ -442,6 +442,7 @@ $(function () {
       laboratorio:        { required: "Campo requerido" },
       presentacion:       { required: "Campo requerido", },
       unidad_medida:      { required: "Campo requerido" },    
+      principio_activo:   { minlength:"Minimo 3 caracteres",},
       descripcion:        { minlength: "Minimo 4 caracteres" },
     },
 

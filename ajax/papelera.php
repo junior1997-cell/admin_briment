@@ -17,7 +17,7 @@
       require_once "../modelos/Papelera.php";
       require_once "../modelos/Fechas.php";
 
-      $papelera = new Papelera();
+      $papelera = new Papelera($_SESSION['idusuario']);
 
       // DATA
       $nombre_tabla     = isset($_GET["nombre_tabla"])? limpiarCadena($_GET["nombre_tabla"]):"";

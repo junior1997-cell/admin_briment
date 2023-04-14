@@ -13,7 +13,7 @@
       
       require_once "../modelos/Chart_valorizacion.php";
 
-      $chart_valorizacion = new ChartValorizacion();
+      $chart_valorizacion = new ChartValorizacion($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima');
       $date_now = date("d-m-Y h.i.s A");

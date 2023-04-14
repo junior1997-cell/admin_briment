@@ -44,7 +44,7 @@
                     <!-- /.col -->
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="compra_insumos.php">Home</a></li>
+                        <li class="breadcrumb-item"><a href="compra_producto.php">Home</a></li>
                         <li class="breadcrumb-item active">Compras</li>
                       </ol>
                     </div>
@@ -151,7 +151,7 @@
                             <table id="tabla-compra" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
-                                  <th colspan="9" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
+                                  <th colspan="10" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
                                 </tr>
                                 <tr>
                                   <th class="">#</th>
@@ -161,6 +161,7 @@
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
                                   <th>Total</th>
                                   <th>Descripción</th>
+                                  <th>CFDI</th>   
 
                                   <th>Tipo comprobante</th>
                                   <th>Num. Comprobante</th>
@@ -176,6 +177,7 @@
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
                                   <th class="px-2">S/. 0.00</th>
                                   <th>Descripción</th>
+                                  <th>CFDI</th>   
 
                                   <th>Tipo comprobante</th>
                                   <th>Num. Comprobante</th>
@@ -223,7 +225,7 @@
                                   <th>Comprobante</th>
                                   <th data-toggle="tooltip" data-original-title="Número Comprobante">Num. Comprobante</th>
                                   <th>Total</th>
-                                  <th>Descripcion</th>                                  
+                                  <th>Descripcion</th>                                                              
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -249,6 +251,7 @@
                                  
                                 <div class="row" id="cargando-1-fomulario">
                                   <!-- id compra_producto  -->
+                                  <input type="hidden" name="idsucursal" id="idsucursal" />
                                   <input type="hidden" name="idcompra_producto" id="idcompra_producto" /> 
                                   <input type="hidden" name="num_doc" id="num_doc" /> 
 
@@ -342,7 +345,7 @@
                                       <thead class="bg-color-0037a4 text-white" >
                                         <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
                                         <th>Producto</th>
-                                        <th>Lote</th>
+                                        <th>Lote - F.V.</th>
                                         <th>Unidad</th>
                                         <th>Cantidad</th>
                                         <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U </th>
@@ -353,9 +356,10 @@
                                         <th>Subtotal</th>
                                       </thead>
                                       <tfoot>
-                                        <td colspan="5" id="colspan_subtotal"></td>
+                                        <td colspan="7" id="colspan_subtotal"></td>
                                         <th class="text-right">
                                           <h6 class="tipo_gravada">GRAVADA</h6>
+                                          <h6 class="">TOTAL DSCTO.</h6>
                                           <h6 class="val_igv">IGV (18%)</h6>
                                           <h5 class="font-weight-bold">TOTAL</h5>
                                         </th>
@@ -364,11 +368,14 @@
                                           <input type="hidden" name="subtotal_compra" id="subtotal_compra" />
                                           <input type="hidden" name="tipo_gravada" id="tipo_gravada" />
 
+                                          <h6 class="font-weight-bold total_descuento">S/ 0.00</h6>
+                                          <input type="hidden" name="total_descuento" id="total_descuento" />
+
                                           <h6 class="font-weight-bold igv_compra">S/ 0.00</h6>
                                           <input type="hidden" name="igv_compra" id="igv_compra" />
                                           
-                                          <h5 class="font-weight-bold total_venta">S/ 0.00</h5>
-                                          <input type="hidden" name="total_venta" id="total_venta" />
+                                          <h5 class="font-weight-bold total_compra">S/ 0.00</h5>
+                                          <input type="hidden" name="total_compra" id="total_compra" />
                                           
                                         </th>
                                       </tfoot>
@@ -612,7 +619,7 @@
 
                   <!-- Modal agregar proveedores - charge-11 -->
                   <div class="modal fade" id="modal-agregar-proveedor">
-                    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
                       <div class="modal-content">
                         <div class="modal-header">
                           <h4 class="modal-title ">Agregar proveedor</h4>
@@ -634,10 +641,9 @@
                                 <input type="hidden" name="cargo_trabajador_per" id="cargo_trabajador_per" value="1">
                                 <input type="hidden" name="sueldo_mensual_per" id="sueldo_mensual_per">
                                 <input type="hidden" name="sueldo_diario_per" id="sueldo_diario_per">
-                                <input type="hidden" name="input_socio_per" id="input_socio_per" value="0"  >
 
                                 <!-- Tipo de documento -->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                   <div class="form-group">
                                     <label for="tipo_documento_per">Tipo Doc.</label>
                                     <select name="tipo_documento_per" id="tipo_documento_per" class="form-control" placeholder="Tipo de documento">
@@ -646,11 +652,11 @@
                                       <option value="CEDULA">CEDULA</option>
                                       <option value="OTRO">OTRO</option>
                                     </select>
-                                  </div>
+                                  </div> 
                                 </div>
                                 
                                 <!-- N° de documento -->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                   <div class="form-group">
                                     <label for="num_documento_per">N° de documento</label>
                                     <div class="input-group">
@@ -666,7 +672,7 @@
                                 </div>
 
                                 <!-- Nombre -->
-                                <div class="col-12 col-sm-12 col-md-12 col-lg-5">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                   <div class="form-group">
                                     <label for="nombre_per">Nombres/Razon Social</label>
                                     <input type="text" name="nombre_per" class="form-control" id="nombre_per" placeholder="Nombres y apellidos" />
@@ -674,7 +680,7 @@
                                 </div>
                                 
                                 <!-- Telefono -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-2">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
                                     <label for="telefono_per">Teléfono</label>
                                     <input type="text" name="telefono_per" id="telefono_per" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
@@ -682,70 +688,18 @@
                                 </div>
 
                                 <!-- Correo electronico -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
                                     <label for="email_per">Correo electrónico</label>
                                     <input type="email" name="email_per" class="form-control" id="email_per" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
                                   </div>
-                                </div>
-
-                                <!-- fecha de nacimiento -->
-                                <div class="col-12 col-sm-10 col-md-6 col-lg-3">
-                                  <div class="form-group">
-                                    <label for="nacimiento_per">Fecha Nacimiento</label>
-                                    <input type="date" class="form-control" name="nacimiento_per" id="nacimiento_per" placeholder="Fecha de Nacimiento"
-                                      onclick="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');" onchange="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');" />
-                                    <input type="hidden" name="edad_per" id="edad_per" />
-                                  </div>
-                                </div>
-
-                                <!-- edad -->
-                                <div class="col-12 col-sm-2 col-md-6 col-lg-1">
-                                  <div class="form-group">
-                                    <label for="edad_per">Edad</label>
-                                    <p class="edad_per" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
-                                  </div>
-                                </div>
-
-                                <!-- banco -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                  <div class="form-group">
-                                    <label for="banco">Banco</label>
-                                    <select name="banco" id="banco" class="form-control select2 banco" style="width: 100%;" onchange="formato_banco();">
-                                      <!-- Aqui listamos los bancos -->
-                                    </select>
-                                  </div>
-                                </div>
-
-                                <!-- Cuenta bancaria -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                  <div class="form-group">
-                                    <label for="cta_bancaria" class="chargue-format-1">Cuenta Bancaria</label>
-                                    <input type="text" name="cta_bancaria" class="form-control" id="cta_bancaria" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
-                                  </div>
-                                </div>
-
-                                <!-- CCI -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                  <div class="form-group">
-                                    <label for="cci" class="chargue-format-2">CCI</label>
-                                    <input type="text" name="cci" class="form-control" id="cci" placeholder="CCI" data-inputmask="" data-mask />
-                                  </div>
-                                </div>
-
-                                <!-- Titular de la cuenta -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                  <div class="form-group">
-                                    <label for="titular_cuenta_per">Titular de la cuenta</label>
-                                    <input type="text" name="titular_cuenta_per" class="form-control" id="titular_cuenta_per" placeholder="Titular de la cuenta" />
-                                  </div>
-                                </div>                                 
+                                </div>                                                            
 
                                 <!-- Direccion -->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 classdirecc">
                                   <div class="form-group">
                                     <label for="direccion_per">Dirección</label>
-                                    <input type="text" name="direccion_per" class="form-control" id="direccion_per" placeholder="Dirección" />
+                                    <textarea name="direccion_per" id="direccion_per" class="form-control" placeholder="Dirección" rows="2"></textarea>
                                   </div>
                                 </div>
 
@@ -808,6 +762,7 @@
                           <table id="tblamateriales" class="table table-striped table-bordered table-condensed table-hover" style="width: 100% !important;">
                             <thead>
                               <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
+                              <th>Code</th>
                               <th>Nombre Producto</th>
                               <th>Stock</th>
                               <th data-toggle="tooltip" data-original-title="Precio Unitario">Presentacion.</th>
@@ -1008,46 +963,55 @@
                     </div>
                   </div>
 
-                  <!-- MODAL -  AGREGAR comprobantes - charge-7 -->                   
-                  <div class="modal fade bg-color-02020263" id="modal-comprobantes-compra">
-                    <div class="modal-dialog  modal-dialog-scrollable modal-md shadow-0px1rem3rem-rgb-0-0-0-50 rounded">
+                  <!-- MODAL -  AGREGAR comprobantes - charge-7 -->             
+                  <div class="modal fade" id="modal-comprobante-compra">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
                       <div class="modal-content">
-                        <div class="modal-header"> 
-                          <h4 class="modal-title titulo-comprobante-compra">Comprobantes</h4>
+                        <div class="modal-header">
+                          <h4 class="modal-title modal-titulo-comprobante">Comprobante Compra</h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span class="text-danger" aria-hidden="true">&times;</span>
                           </button>
                         </div>
 
-                        <div class="modal-body ">
+                        <div class="modal-body">
                           <!-- form start -->
-                          <form id="form-comprobante" name="form-comprobante" method="POST" >
-                             
-                            <div class="row mx-2" id="cargando-7-fomulario">
+                          <form id="form-comprobante" name="form-comprobante" method="POST">
+                            
+                            <div class="row" id="cargando-7-fomulario">
                               <!-- id Comprobante -->
-                              <input type="hidden" name="id_compra_proyecto" id="id_compra_proyecto" />
-                              <input type="hidden" name="idfactura_compra_insumo" id="idfactura_compra_insumo" />
+                              <input type="hidden" name="idcompra" id="idcompra" />
 
                               <!-- Doc  -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
-                                <div class="row">
-                                  <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 pl-0 mb-3 text-center">
+                              <div class="col-md-12 col-lg-12">
+                                <div class="row text-center">
+                                  <div class="col-md-12" style="padding-top: 15px; padding-bottom: 5px;">
+                                    <label for="cip" class="control-label">Documento </label>
+                                  </div>
+                                  <div class="col-md-6 text-center subir">
                                     <button type="button" class="btn btn-success btn-block btn-xs" id="doc1_i"><i class="fas fa-file-upload"></i> Subir.</button>
                                     <input type="hidden" id="doc_old_1" name="doc_old_1" />
-                                    <input style="display: none;" id="doc1" type="file" name="doc1" class="docpdf" accept="application/pdf, image/*" />
+                                    <input style="display: none;" id="doc1" type="file" name="doc1" class="docpdf" />
+                                  </div>                                  
+                                  <div class="col-md-6 text-center recargar_insumno">
+                                    <button type="button" class="btn btn-info btn-block btn-xs" onclick="re_visualizacion(1, 'compra_producto', 'comprobante_compra');"><i class="fas fa-redo"></i> Recargar.</button>
                                   </div>
-                                  <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 pr-0 mb-3 text-center">
-                                    <button type="button" class="btn btn-info btn-block btn-xs" onclick="re_visualizacion(1, 'compra_insumo', 'comprobante_compra', '100%', '320'); reload_zoom();"><i class="fa fa-eye"></i> Recargar.</button>
-                                  </div>                                                                     
-                                  <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-center mt-1" id="doc1_ver"> 
-                                    <img src="../dist/svg/doc_uploads.svg" alt="" width="50%" />                           
-                                  </div>                                                                
-                                  <div class="col-12 col-sm-12 col-md-7 col-lg-12 col-xl-12 text-center" id="doc1_nombre"><!-- aqui va el nombre del pdf --></div>                                                                   
+                                  <div class="col-md-4 text-center descargar" style="display: none;">
+                                    <a type="button" class="btn-xs btn btn-warning btn-block btn-xs" id="descargar_comprobobante"  download="Comprobantes"> <i class="fas fa-download"></i> Descargar. </a>
+                                  </div>
+                                  <div class="col-md-4 text-center ver_completo" style="display: none;">
+                                    <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" id="ver_completo" > <i class="fas fa-expand"></i> Completo. </a>
+                                  </div>
                                 </div>
+                                <div id="doc1_ver" class="text-center mt-4">
+                                  <img src="../dist/svg/doc_uploads.svg" alt="" width="50%" />
+                                </div>
+                                <div class="text-center" id="doc1_nombre"><!-- aqui va el nombre del pdf --></div>
                               </div>
+
                               <!-- barprogress -->
-                              <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12 mb-3" style="margin-top: 20px;">
-                                <div class="progress" id="barra_progress_comprobante_div">
+                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-20px" id="barra_progress_comprobante_div" style="display: none;">
+                                <div class="progress" >
                                   <div id="barra_progress_comprobante" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
                                     0%
                                   </div>
@@ -1062,14 +1026,14 @@
                                 <h4>Cargando...</h4>
                               </div>
                             </div>
-                             
+                            
                             <!-- /.card-body -->
-                            <button type="submit" style="display: none;" id="submit-form-comprobante-compra"></button>
+                            <button type="submit" style="display: none;" id="submit-form-comprobante">Submit</button>
                           </form>
                         </div>
                         <div class="modal-footer justify-content-between">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-success btn-sm float-right" id="guardar_registro_comprobante_compra" >Guardar Cambios</button>
+                          <button type="submit" class="btn btn-success" id="guardar_registro_comprobante">Guardar Cambios</button>
                         </div>
                       </div>
                     </div>
@@ -1133,64 +1097,61 @@
                                 <!-- cont registro -->
                                 <input type="hidden" name="cont" id="cont" />
                                 
+                                <!-- código -->
+                                <div class="col-12 col-sm-12 col-md-3 col-lg-3">
+                                  <div class="form-group">
+                                    <label for="codigo_pro">Código</label>
+                                    <input type="text" name="codigo_pro" class="form-control" id="codigo_pro" placeholder="código." />
+                                  </div>
+                                </div>
+
                                 <!-- Nombre -->
-                                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="col-12 col-sm-12 col-md-9 col-lg-9">
                                   <div class="form-group">
                                     <label for="nombre_producto_pro">Nombre <sup class="text-danger">(unico*)</sup></label>
                                     <input type="text" name="nombre_producto_pro" class="form-control" id="nombre_producto_pro" placeholder="Nombre del Insumo." />
                                   </div>
                                 </div>
 
-                                <!-- Categoria -->
+                                <!-- Laboratorio -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
-                                    <label for="categoria_producto_pro">Categoria <sup class="text-danger">(unico*)</sup></label>
-                                    <select name="categoria_producto_pro" id="categoria_producto_pro" class="form-control select2" style="width: 100%;"> 
+                                    <label for="laboratorio_pro">Laboratorio <sup class="text-danger">(unico*)</sup></label>
+                                    <select name="laboratorio_pro" id="laboratorio_pro" class="form-control select2" style="width: 100%;"> 
                                     </select>
                                   </div>
-                                </div>                                  
+                                </div>                               
 
-                                <!-- Unnidad de medida-->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
+                                <!-- Presentación-->
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6" >
+                                  <div class="form-group">
+                                    <label for="presentacion_pro">Presentación <sup class="text-danger">(unico*)</sup></label>
+                                    <select name="presentacion_pro" id="presentacion_pro" class="form-control select2" style="width: 100%;"> </select>
+                                  </div>
+                                </div>
+
+                                <!-- Unidad de medida-->
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-6" >
                                   <div class="form-group">
                                     <label for="unidad_medida_pro">Unidad medida <sup class="text-danger">(unico*)</sup></label>
                                     <select name="unidad_medida_pro" id="unidad_medida_pro" class="form-control select2" style="width: 100%;"> </select>
                                   </div>
                                 </div>
-
-                                <!-- Marca -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <!-- Precio actual-->
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-6" style="display: none;" >
                                   <div class="form-group">
-                                    <label for="marca_pro">Marca <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="marca_pro" id="marca_pro" class="form-control"  placeholder="Marca." />
+                                    <label for="precio_actual_pro">Precio</label>
+                                    <input type="text" name="precio_actual_pro" class="form-control" id="precio_actual_pro"/>
                                   </div>
                                 </div>
-
-                                <!-- ContenidoNeto -->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <!-- Principio activo-->
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                   <div class="form-group">
-                                    <label for="contenido_neto_pro">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="contenido_neto_pro" id="contenido_neto_pro" class="form-control" placeholder="Contenido Neto." />
+                                    <label for="principio_activo_pro">Principio activo </label> <br />
+                                    <textarea name="principio_activo_pro" id="principio_activo_pro" class="form-control" rows="1"></textarea>
                                   </div>
                                 </div>
-
-                                <!--Precio U-->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                                  <div class="form-group">
-                                    <label for="precio_unitario_pro">Precio <sup class="text-danger">*</sup></label>
-                                    <input type="text" name="precio_unitario_pro" id="precio_unitario_pro" value="0" class="form-control" readonly />
-                                  </div>
-                                </div>
-
-                                <!-- Stock -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
-                                  <div class="form-group">
-                                    <label for="stock_pro">Stock: </label>
-                                    <input type="text" name="stock_pro" id="stock_pro" value="0" class="form-control" readonly="readonly">                                  
-                                  </div>
-                                </div>
-
-                                <!-- Descripcion -->
+                                <!-- Descripcion-->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                   <div class="form-group">
                                     <label for="descripcion_pro">Descripción </label> <br />

@@ -21,34 +21,27 @@ class Usuario
     $data_user = ejecutarConsulta_retornarID($sql); if ($data_user['status'] == false){return $data_user; }
 
     //add registro en nuestra bitacora
-    $sql2 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario','" . $data_user['data'] . "','Registrar','$this->id_usr_sesion')";
+    $sql_d = $trabajador.', '.$cargo.', '.$login.', '.$clave;
+    $sql2 = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5,'usuario','" . $data_user['data'] . "','$sql_d','$this->id_usr_sesion')";
     $bitacora1 = ejecutarConsulta($sql2); if ( $bitacora1['status'] == false) {return $bitacora1; }
 
-    //add registro en nuestra bitacora
-    $sql2 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario','" . $data_user['data'] . "','Registrar','$this->id_usr_sesion')";
-    $bitacora1 = ejecutarConsulta($sql2); if ( $bitacora1['status'] == false) {return $bitacora1; }
-
-    $num_elementos = 0; $sw = "";
+    $ii = 0; $sw = "";
 
     if ( !empty($permisos) ) {
 
-      while ($num_elementos < count($permisos)) {
+      while ($ii < count($permisos)) {
         
         $idusuarionew = $data_user['data'];
 
-        $sql_detalle = "INSERT INTO usuario_permiso(idusuario, idpermiso, user_created) VALUES('$idusuarionew', '$permisos[$num_elementos]','$this->id_usr_sesion')";
-
-        $sw = ejecutarConsulta_retornarID($sql_detalle);  
-
-        if ( $sw['status'] == false) {return $sw; }
+        $sql_detalle = "INSERT INTO usuario_permiso(idusuario, idpermiso, user_created) VALUES('$idusuarionew', '$permisos[$ii]','$this->id_usr_sesion')";
+        $sw = ejecutarConsulta_retornarID($sql_detalle); if ( $sw['status'] == false) {return $sw; }
 
         //add registro en nuestra bitacora
-        $sql2 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','" .  $sw['data'] . "','Registrar permisos','$this->id_usr_sesion')";
-        $bitacora = ejecutarConsulta($sql2);
+        $sql_d = $idusuarionew.', '.$permisos[$ii];
+        $sql2 = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5,'usuario_permiso','" .  $sw['data'] . "','$sql_d','$this->id_usr_sesion')";
+        $bitacora = ejecutarConsulta($sql2);  if ( $bitacora['status'] == false) {return $bitacora; }
 
-        if ( $bitacora['status'] == false) {return $bitacora; }
-
-        $num_elementos++;
+        $ii++;
 
       }
 
@@ -78,68 +71,62 @@ class Usuario
     $update_user = ejecutarConsulta($sql); if ($update_user['status'] == false) {return $update_user; }     
     
     //add registro en nuestra bitacora
-    $sql5_1 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario', '$idusuario' ,'Editamos los campos del usuario','$this->id_usr_sesion')";
+    $sql_d = $idusuario.', '.$trabajador.', '.$trabajador_old.', '.$cargo.', '.$login.', '.$clave;
+    $sql5_1 = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6,'usuario', '$idusuario' ,'$sql_d','$this->id_usr_sesion')";
     $bitacora5_1 = ejecutarConsulta($sql5_1); if ( $bitacora5_1['status'] == false) {return $bitacora5_1; }  
 
-    $num_elementos = 0; $sw = "";
+    $ii = 0; $sw = "";
 
     if ($permisos != "") {      
 
-      while ($num_elementos < count($permisos)) {
+      while ($ii < count($permisos)) {
 
-        $sql_detalle = "INSERT INTO usuario_permiso(idusuario, idpermiso,user_created) VALUES('$idusuario', '$permisos[$num_elementos]','$this->id_usr_sesion')";
-
-        $sw = ejecutarConsulta_retornarID($sql_detalle);  
-
-        if ( $sw['status'] == false) {return $sw; }
+        $sql_detalle = "INSERT INTO usuario_permiso(idusuario, idpermiso,user_created) VALUES('$idusuario', '$permisos[$ii]','$this->id_usr_sesion')";
+        $sw = ejecutarConsulta_retornarID($sql_detalle); if ( $sw['status'] == false) {return $sw; }
 
         //add registro en nuestra bitacora
-        $sqlsw = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','" .  $sw['data'] . "','Asigamos nuevos persmisos cuando editamos usuario','$this->id_usr_sesion')";
-        $bitacorasw = ejecutarConsulta($sqlsw);
+        $sql_d = $idusuario.', '.$permisos[$ii];
+        $sqlsw = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6,'usuario_permiso','" . $sw['data'] . "','$sql_d','$this->id_usr_sesion')";
+        $bitacora = ejecutarConsulta($sqlsw);  if ( $bitacora['status'] == false) {return $bitacora; }
 
-        if ( $bitacorasw['status'] == false) {return $bitacorasw; }
-
-        $num_elementos = $num_elementos + 1;
+        $ii += 1;
 
       }
-
-      return $sw;
-    
+      return $sw;    
     }
-
   }
 
   //Implementamos un método para desactivar categorías
-  public function desactivar($idusuario) {
-    $sql = "UPDATE usuario SET estado='0', user_trash= '$this->id_usr_sesion' WHERE idusuario='$idusuario'";
+  public function desactivar($id) {
+    $sql = "UPDATE usuario SET estado='0', user_trash= '$this->id_usr_sesion' WHERE idusuario='$id'";
     $desactivar = ejecutarConsulta($sql); if ( $desactivar['status'] == false) {return $desactivar; }    
 
     //add registro en nuestra bitacora
-    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro desactivado','$this->id_usr_sesion')";
+    $sqlde = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (2,'usuario_permiso','$id','$id','$this->id_usr_sesion')";
     $bitacorade = ejecutarConsulta($sqlde); if ( $bitacorade['status'] == false) {return $bitacorade; }   
 
     return $desactivar;
   }
 
   //Implementamos un método para activar :: !!sin usar ::
-  public function activar($idusuario) {
-    $sql = "UPDATE usuario SET estado='1', user_updated= '$this->id_usr_sesion' WHERE idusuario='$idusuario'";
+  public function activar($id) {
+    $sql = "UPDATE usuario SET estado='1', user_updated= '$this->id_usr_sesion' WHERE idusuario='$id'";
     $activar= ejecutarConsulta($sql); if ( $activar['status'] == false) {return $activar; }    
 
     //add registro en nuestra bitacora
-    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro activado','$this->id_usr_sesion')";
-    $bitacorade = ejecutarConsulta($sqlde); if ( $bitacorade['status'] == false) {return $bitacorade; }   
+    // $sqlde = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (1,'usuario_permiso','$id','$id','$this->id_usr_sesion')";
+    // $bitacorade = ejecutarConsulta($sqlde); if ( $bitacorade['status'] == false) {return $bitacorade; }   
 
     return $activar;
   }
 
   //Implementamos un método para eliminar usuario
-  public function eliminar($idusuario) {
-    $sql = "UPDATE usuario SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idusuario='$idusuario'";
+  public function eliminar($id) {
+    $sql = "UPDATE usuario SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idusuario='$id'";
     $eliminar= ejecutarConsulta($sql);  if ( $eliminar['status'] == false) {return $eliminar; }    
 
     //add registro en nuestra bitacora
-    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro Eliminado','$this->id_usr_sesion')";
+    $sqlde = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (4,'usuario_permiso','$id','$id','$this->id_usr_sesion')";
     $bitacorade = ejecutarConsulta($sqlde); if ( $bitacorade['status'] == false) {return $bitacorade; }   
 
     return $eliminar;
@@ -236,7 +223,7 @@ class Usuario
     $id = $usuario['data']['idusuario'];
     $sql_1 = "SELECT ps.idpersona_sucursal, s.nombre, s.codigo, s.direccion
     FROM persona_sucursal as ps, sucursal as s
-    WHERE ps.idsucursal AND s.idsucursal AND ps.estado = '1' AND ps.estado_delete = '1' AND ps.idusuario = '$id';";
+    WHERE ps.idsucursal = s.idsucursal AND ps.estado = '1' AND ps.estado_delete = '1' AND ps.idusuario = '$id';";
     $sucursal = ejecutarConsultaSimpleFila($sql_1); if ( $sucursal['status'] == false) {return $sucursal; }    
 
     return [
@@ -279,15 +266,16 @@ class Usuario
 
     if ( empty($buscando['data']) ) {
       // eliminamos todas las sucursales 
-      $sql_1 = "UPDATE persona_sucursal SET estado='0' WHERE idusuario='$idusuario'";
+      $sql_1 = "UPDATE persona_sucursal SET estado='0', user_trash='$this->id_usr_sesion' WHERE idusuario='$idusuario'";
       $papelera =  ejecutarConsulta($sql_1); if ( $papelera['status'] == false) {return $papelera; }
 
       // insertar
-      $sql_2 = "INSERT INTO persona_sucursal(idsucursal, idusuario) VALUES ('$sucursal', '$idusuario')";
+      $sql_2 = "INSERT INTO persona_sucursal(idsucursal, idusuario, user_created) VALUES ('$sucursal', '$idusuario', '$this->id_usr_sesion')";
       $new_sucursal =  ejecutarConsulta($sql_2); if ( $new_sucursal['status'] == false) {return $new_sucursal; }
 
       //add registro en nuestra bitacora
-      $sql_3 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('persona_sucursal','".$new_sucursal['data']."','Registro creado', 'created_at', '$this->id_usr_sesion')";
+      $sql_d = $idusuario.', '.$sucursal;
+      $sql_3 = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5,'persona_sucursal','".$new_sucursal['data']."','$sql_d', '$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_3); if ( $bitacora['status'] == false) {return $bitacora; }  
 
       return $new_sucursal;
@@ -310,12 +298,13 @@ class Usuario
   public function editar_sucursal($idpersona_sucursal, $idpersona_suc, $sucursal){   
 
     // editar
-    $sql = "UPDATE persona_sucursal SET idsucursal='$sucursal', idusuario='$idpersona_suc'
+    $sql = "UPDATE persona_sucursal SET idsucursal='$sucursal', idusuario='$idpersona_suc', user_updated='$this->id_usr_sesion'
     WHERE idpersona_sucursal= '$idpersona_sucursal'; ";
     $edit_sucursal = ejecutarConsulta($sql); if ( $edit_sucursal['status'] == false) {return $edit_sucursal; } 
 
     //add registro en nuestra bitacora
-    $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('persona_sucursal','".$edit_sucursal['data']."','Registro actualizado', 'updated_at', '$this->id_usr_sesion')";
+    $sql_d = $idpersona_sucursal.', '.$idpersona_suc.', '.$sucursal;
+    $sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6, 'persona_sucursal','".$edit_sucursal['data']."','$sql_d', '$this->id_usr_sesion')";
     $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 
     return $edit_sucursal;
@@ -330,14 +319,14 @@ class Usuario
 
   public function desactivar_sucursal($idpersona_sucursal){    
 
-    $sql = "UPDATE persona_sucursal SET estado='0' WHERE idpersona_sucursal='$idpersona_sucursal'";     
+    $sql = "UPDATE persona_sucursal SET estado='0', user_trash='$this->id_usr_sesion' WHERE idpersona_sucursal='$idpersona_sucursal'";     
     return ejecutarConsulta($sql); 
   }
 
   public function activar_sucursal($idpersona_sucursal, $id_persona){
 
     // eliminamos todas las sucursales 
-    $sql = "UPDATE persona_sucursal SET estado='0' WHERE idusuario='$id_persona'";
+    $sql = "UPDATE persona_sucursal SET estado='0', user_trash='$this->id_usr_sesion' WHERE idusuario='$id_persona'";
     $papelera =  ejecutarConsulta($sql); if ( $papelera['status'] == false) {return $papelera; }
 
     $sql = "UPDATE persona_sucursal SET estado='1' WHERE idpersona_sucursal='$idpersona_sucursal'";     
@@ -345,7 +334,7 @@ class Usuario
   }
 
   public function eliminar_sucursal($idpersona_sucursal){
-    $sql = "UPDATE persona_sucursal SET estado_delete='0' WHERE idpersona_sucursal='$idpersona_sucursal'";     
+    $sql = "UPDATE persona_sucursal SET estado_delete='0', user_delete='$this->id_usr_sesion' WHERE idpersona_sucursal='$idpersona_sucursal'";     
     return ejecutarConsulta($sql); 
   }
 

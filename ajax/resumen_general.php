@@ -17,8 +17,8 @@
       require_once "../modelos/Fechas.php";
       require_once "../modelos/Compra_insumos.php";
 
-      $resumen_general = new Resumen_general();
-      $compra_insumos = new Compra_insumos();
+      $resumen_general = new Resumen_general($_SESSION['idusuario']);
+      $compra_insumos = new Compra_insumos($_SESSION['idusuario']);
 
       switch ($_GET["op"]) {
 

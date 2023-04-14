@@ -19,11 +19,11 @@
     require_once "../modelos/Venta_producto.php";
     require_once "../modelos/Compra_cafe.php";
     
-    $ajax_general   = new Ajax_general();
+    $ajax_general   = new Ajax_general($_SESSION['idusuario']);
     $compra_insumos = new Producto($_SESSION['idusuario']);
-    $compra_producto= new Compra_producto();
-    $venta_producto = new Venta_producto();
-    $compra_cafe = new Compra_cafe();
+    $compra_producto= new Compra_producto($_SESSION['idusuario']);
+    $venta_producto = new Venta_producto($_SESSION['idusuario']);
+    $compra_cafe = new Compra_cafe($_SESSION['idusuario']);
 
     $scheme_host  =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_briment/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
     $imagen_error = "this.src='../dist/svg/404-v2.svg'";
@@ -303,13 +303,13 @@
 
           foreach ($rspta['data'] as $key => $value) {    
 
-            $data .= '<option value=' . $value['id'] . '>' . $value['nombre'] . ' - ' . $value['abreviatura'] .'</option>';
+            $data .= '<option value="'.$value['id'].'" nombre ="'.$value['nombre'].'" abreviatura ="'.$value['abreviatura'].'" >' . $value['nombre'] . ' - ' . $value['abreviatura'] .'</option>';
           }
 
           $retorno = array(
             'status' => true, 
             'message' => 'Salió todo ok', 
-            'data' => $data, 
+            'data' => '<option value="1">NINGUNO - N</option>'.$data, 
           );
   
           echo json_encode($retorno, true);
@@ -432,9 +432,8 @@
 
         if ($rspta['status'] == true) {
 
-          foreach ($rspta['data'] as $key => $value) {  
-
-            $data .= '<option value=' . $value['idlaboratorio'] . '>' . $value['nombre'] .'</option>';
+          foreach ($rspta['data'] as $key => $val) {  
+            $data .= '<option value=' . $val['idlote'] . '>' . $val['nombre'] . ' - '.date("d/m/Y", strtotime($val['fecha_vencimiento'])).'</option>';
           }
 
           $retorno = array(
@@ -480,14 +479,15 @@
 
             $datas[] = [
               "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' .  $data_agregar .')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
-              "1" => '<div class="user-block w-250px">'.
+              "1" => $reg['codigo'],
+              "2" => '<div class="user-block w-250px">'.
                 '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="' . $img . '" alt="user image" onerror="' . $imagen_error . '" onclick="ver_img_producto(\'' . $img . '\', \''.encodeCadenaHtml($reg['nombre']).'\');">'.
                 '<span class="username"><p class="mb-0" >' . $reg['nombre'] . '</p></span>
                 <span class="description"><b>Lab.: </b>' . $reg['laboratorio'] . '</span>'.
               '</div>',
-              "2" =>'<span class="badge '.$clas_stok.' font-size-14px" stock="'.$reg['stock'].'" id="table_stock_'.$reg['idproducto'].'">'.$reg['stock'].'</span>',
-              "3" => $reg['presentacion'],
-              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['descripcion'] . '</textarea>'. $toltip,
+              "3" =>'<span class="badge '.$clas_stok.' font-size-14px" stock="'.$reg['stock'].'" id="table_stock_'.$reg['idproducto'].'">'.$reg['stock'].'</span>',
+              "4" => $reg['presentacion'],
+              "5" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['descripcion'] . '</textarea>'. $toltip,
             ];
           }
   

@@ -11,7 +11,7 @@
 
     require_once "../modelos/proveedor.php";
 
-    $proveedor = new Proveedor();
+    $proveedor = new Proveedor($_SESSION['idusuario']);
 
     $idproveedor_proyecto = isset($_POST["idproveedor_proyecto"]) ? limpiarCadena($_POST["idproveedor_proyecto"]) : "";
     $idproyecto = isset($_POST["idproyecto"]) ? limpiarCadena($_POST["idproyecto"]) : "";

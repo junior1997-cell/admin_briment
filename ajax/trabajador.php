@@ -17,10 +17,9 @@
 
       require_once "../modelos/Trabajador.php";
 
-      $trabajador = new Trabajador();
+      $trabajador = new Trabajador($_SESSION['idusuario']);
 
-      date_default_timezone_set('America/Lima');
-      $date_now = date("d-m-Y h.i.s A");
+      date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
 
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';

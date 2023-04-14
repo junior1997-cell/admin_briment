@@ -142,7 +142,7 @@
                 </div>
                 <!-- /.container-fluid -->
 
-                <!-- MODAL - AGREGAR producto - charge-1 -->
+                <!-- MODAL - AGREGAR PRODUCTO - charge-1 -->
                 <div class="modal fade" id="modal-agregar-producto">
                   <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
@@ -195,18 +195,25 @@
                               </div>
 
                               <!-- Unidad de medida-->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-4" >
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-6" >
                                 <div class="form-group">
                                   <label for="Unidad_medida">Unidad medida <sup class="text-danger">(unico*)</sup></label>
                                   <select name="unidad_medida" id="unidad_medida" class="form-control select2" style="width: 100%;"> </select>
                                 </div>
                               </div>
                               <!-- Precio actual-->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-4 hidden " >
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-6 hidden " >
                                 <div class="form-group">
                                   <label for="">Precio</label>
                                   <input type="text" name="precio_actual" class="form-control" id="precio_actual"/>
 
+                                </div>
+                              </div>
+                              <!-- Principio activo-->
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                                <div class="form-group">
+                                  <label for="principio_activo">Principio activo </label> <br />
+                                  <textarea name="principio_activo" id="principio_activo" class="form-control" rows="1"></textarea>
                                 </div>
                               </div>
                               <!-- Descripcion-->
@@ -260,7 +267,7 @@
                   </div>
                 </div>                
 
-                <!-- MODAL - VER DETALLE INSUMO-->
+                <!-- MODAL - VER DETALLE PRODUCTO-->
                 <div class="modal fade" id="modal-ver-insumo">
                   <div class="modal-dialog modal-dialog-scrollable modal-md">
                     <div class="modal-content">
@@ -280,7 +287,7 @@
                   </div>
                 </div>
 
-                <!-- MODAL - VER PERFIL INSUMO-->
+                <!-- MODAL - VER PERFIL PRODUCTO-->
                 <div class="modal fade" id="modal-ver-perfil-insumo">
                   <div class="modal-dialog modal-dialog-centered modal-md">
                     <div class="modal-content bg-color-0202022e shadow-none border-0">
@@ -319,7 +326,6 @@
                               <th class="py-1">Stock</th>
                               <th class="py-1">F. V.</th>
                               <th class="py-1">Descripción</th> 
-                              <th>Estado</th>
                             </tr>
                           </thead>
                           <tbody></tbody>
@@ -329,8 +335,7 @@
                               <th class="py-1">Nombre</th>
                               <th class="py-1">Stock</th>
                               <th class="py-1">F. V.</th>
-                              <th class="py-1">Descripción</th> 
-                              <th>Estado</th>                            
+                              <th class="py-1">Descripción</th>      
                             </tr>
                           </tfoot>
                         </table>

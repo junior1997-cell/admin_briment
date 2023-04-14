@@ -13,7 +13,7 @@
       
       require_once "../modelos/Chart_compra_grano.php";
 
-      $chart_compra_grano = new ChartCompraGrano();
+      $chart_compra_grano = new ChartCompraGrano($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
 

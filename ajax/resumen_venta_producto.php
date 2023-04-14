@@ -15,7 +15,7 @@
       require_once "../modelos/Resumen_venta_producto.php";
       require_once "../modelos/Producto.php";
 
-      $resumen_producto = new ResumenVentaProducto();
+      $resumen_producto = new ResumenVentaProducto($_SESSION['idusuario']);
       $producto = new Producto($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");

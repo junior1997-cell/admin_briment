@@ -13,7 +13,7 @@
       
       require_once "../modelos/Chart_compra_insumo.php";
 
-      $chart_compra_insumo = new ChartCompraInsumo();
+      $chart_compra_insumo = new ChartCompraInsumo($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima');
       $date_now = date("d-m-Y h.i.s A");

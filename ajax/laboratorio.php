@@ -11,7 +11,7 @@
     
     require_once "../modelos/laboratorio.php";
 
-    $marca_l = new laboratorio();
+    $marca_l = new laboratorio($_SESSION['idusuario']);
 
     $idlaboratorio = isset($_POST["idlaboratorio"]) ? limpiarCadena($_POST["idlaboratorio"]) : "";
     $nombre_laboratorio = isset($_POST["nombre_laboratorio"]) ? limpiarCadena($_POST["nombre_laboratorio"]) : "";

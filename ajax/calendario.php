@@ -17,7 +17,7 @@
 
       require_once "../modelos/Calendario.php";
 
-      $calendario = new Calendario();
+      $calendario = new Calendario($_SESSION['idusuario']);
 
       $idcalendario		  = isset($_POST["idcalendario"])? limpiarCadena($_POST["idcalendario"]):"";
       $idproyecto 		  = isset($_POST["idproyecto"])? limpiarCadena($_POST["idproyecto"]):"";

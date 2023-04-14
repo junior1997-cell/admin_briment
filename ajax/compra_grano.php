@@ -14,8 +14,8 @@ if (!isset($_SESSION["nombre"])) {
     require_once "../modelos/Compra_grano.php";
     require_once "../modelos/Persona.php";
 
-    $compra_grano = new Compra_grano();
-    $cliente = new Persona();
+    $compra_grano = new Compra_grano($_SESSION['idusuario']);
+    $cliente = new Persona($_SESSION['idusuario']);
     
     date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
     $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';

@@ -11,7 +11,7 @@
     
     require_once "../modelos/Unidades_m.php";
 
-    $unidades_m = new Unidades_m();
+    $unidades_m = new Unidades_m($_SESSION['idusuario']);
 
     $idunidad_medida = isset($_POST["idunidad_medida"]) ? limpiarCadena($_POST["idunidad_medida"]) : "";
     $nombre = isset($_POST["nombre_medida"]) ? limpiarCadena($_POST["nombre_medida"]) : "";

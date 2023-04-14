@@ -10,7 +10,7 @@
   } else {
     require_once "../modelos/Cargo.php";
 
-    $cargo = new Cargo();
+    $cargo = new Cargo($_SESSION['idusuario']);
 
     $idcargo_trabajador = isset($_POST["idcargo_trabajador"]) ? limpiarCadena($_POST["idcargo_trabajador"]) : "";
     $nombre = isset($_POST["nombre_cargo"]) ? limpiarCadena($_POST["nombre_cargo"]) : "";

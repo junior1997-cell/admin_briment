@@ -15,7 +15,7 @@
 
 			require_once "../modelos/Permiso.php";
 
-			$permiso=new Permiso();
+			$permiso=new Permiso($_SESSION['idusuario']);
 			$imagen_error = "this.src='../dist/svg/user_default.svg'";
 
 			switch ($_GET["op"]){

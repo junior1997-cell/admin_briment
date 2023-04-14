@@ -9,7 +9,7 @@
     case 'verificar':
 
       require_once "../modelos/Usuario.php";
-      $usuario = new Usuario(); 
+      $usuario = new Usuario($_SESSION['idusuario']); 
 
       $logina = $_POST['logina'];
       $clavea = $_POST['clavea'];
@@ -109,9 +109,9 @@
   require_once "../modelos/Permiso.php";
   require_once "../modelos/Persona.php";      
 
-  $usuario = new Usuario();  
-  $permisos = new Permiso();
-  $persona = new Persona();
+  $usuario = new Usuario($_SESSION['idusuario']);  
+  $permisos = new Permiso($_SESSION['idusuario']);
+  $persona = new Persona($_SESSION['idusuario']);
 
   date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
 
@@ -233,7 +233,7 @@
               '<span class="username"><p class="text-primary m-b-02rem" >' . $value['nombres'] . '</p></span>'. 
               '<span class="description"> - ' . $value['tipo_documento'] .  ': ' . $value['numero_documento'] . ' </span>'.
             '</div>',
-            "3" => $value['sucursal'],
+            "3" => empty( $value['sucursal'])? '': '<span class="text-purple"><i class="fas fa-store-alt"></i> '. $value['sucursal'] . '</span>',
             "4" => $value['celular'],
             "5" => $value['login'],
             "6" => $value['cargo'],

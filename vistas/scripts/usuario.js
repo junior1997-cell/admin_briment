@@ -419,7 +419,7 @@ function tabla_sucursal(id, nombre) {
   $('#modal-agregar-sucursal').modal('show');
   $('.titulo-modal-sucursal').html(`Sucursal: ${nombre}`);
   $('#idpersona_suc').val(id);
- 
+  $('#guardar_registro_sucursal').hide();
 
   tbla_sucursal = $('#tabla-sucursal').dataTable({
     responsive: true,
@@ -509,9 +509,7 @@ function guardar_y_editar_sucursal(e) {
 }
 
 //Función para desactivar registros
-function eliminar_sucursal(idpersona_sucursal, idusuario, nombre, codigo, direccion) {
-
-  
+function eliminar_sucursal(idpersona_sucursal, idusuario, nombre, codigo, direccion) { 
 
   crud_eliminar_papelera(
     "../ajax/usuario.php?op=desactivar_sucursal",

@@ -14,7 +14,7 @@ var tabla_pagos2;
 var tabla_pagos3;
 
 var array_doc = [];
-var host = window.location.host == 'localhost'? `http://localhost/admin_briment/dist/docs/compra_insumo/comprobante_compra/` : `${window.location.origin}/dist/docs/compra_insumo/comprobante_compra/` ;
+var host = window.location.host == 'localhost'? `http://localhost/admin_briment/dist/docs/compra_producto/comprobante_compra/` : `${window.location.origin}/dist/docs/compra_producto/comprobante_compra/` ;
 
 var array_class_trabajador = [];
 
@@ -31,14 +31,15 @@ function init() {
 
   $("#lCompras").addClass("active");
 
-  $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
+  $("#idsucursal").val(localStorage.getItem("nube_id_sucursal"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  // lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#idproveedor', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#idproveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#filtro_proveedor', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
+
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_pro', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto_pro', null);
+  lista_select2("../ajax/ajax_general.php?op=select2laboratorio", '#laboratorio_pro', null);
+  lista_select2("../ajax/ajax_general.php?op=select2presentacion", '#presentacion_pro', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
@@ -46,6 +47,7 @@ function init() {
   $("#guardar_registro_pago").on("click", function (e) {  $("#submit-form-pago").submit(); });
   $("#guardar_registro_comprobante_compra").on("click", function (e) {  $("#submit-form-comprobante-compra").submit();  });  
   $("#guardar_registro_material").on("click", function (e) {  $("#submit-form-producto").submit(); });  
+  $("#guardar_registro_comprobante").on("click", function (e) {  $("#submit-form-comprobante").submit(); });  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - FILTROS ══════════════════════════════════════
   $("#filtro_tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione comprobante", allowClear: true, });
@@ -65,7 +67,8 @@ function init() {
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - P R O D U C T O ══════════════════════════════════════
   $("#unidad_medida_pro").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
-  $("#categoria_producto_pro").select2({ theme: "bootstrap4", placeholder: "Seleccinar una categoria", allowClear: true, });
+  $("#laboratorio_pro").select2({ theme: "bootstrap4", placeholder: "Seleccinar una laboratorio", allowClear: true, });
+  $("#presentacion_pro").select2({ theme: "bootstrap4", placeholder: "Seleccinar una presentación", allowClear: true, });
 
   no_select_tomorrow("#fecha_compra");
   no_select_over_18('#nacimiento_per');
@@ -124,8 +127,8 @@ function limpiar_form_compra() {
   $("#val_igv").val(0);
   $("#descripcion").val("");
   
-  $("#total_venta").val("");  
-  $(".total_venta").html("0");
+  $("#total_compra").val("");  
+  $(".total_compra").html("0");
 
   $(".subtotal_compra").html("S/ 0.00");
   $("#subtotal_compra").val("");
@@ -133,8 +136,8 @@ function limpiar_form_compra() {
   $(".igv_compra").html("S/ 0.00");
   $("#igv_compra").val("");
 
-  $(".total_venta").html("S/ 0.00");
-  $("#total_venta").val("");
+  $(".total_compra").html("S/ 0.00");
+  $("#total_compra").val("");
 
   $("#estado_detraccion").val("0");
   $('#my-switch_detracc').prop('checked', false); 
@@ -232,7 +235,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [7,8],  visible: false,  searchable: false,  },
+      { targets: [8,9],  visible: false,  searchable: false,  },
       { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
     ],
@@ -246,10 +249,10 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
-    dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5",  "pdf"],
     ajax: {
-      url: "../ajax/compra_producto.php?op=listar_compraxporvee",
+      url: "../ajax/compra_producto.php?op=listar_compra_x_porveedor",
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -294,8 +297,14 @@ function listar_facuras_proveedor(idproveedor) {
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
-    dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
+    buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_compra_producto.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,3,4,5,6], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,3,4,5,6], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,3,4,5,6], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
+    ],
     ajax: {
       url: "../ajax/compra_producto.php?op=listar_detalle_compraxporvee&idproveedor=" + idproveedor,
       type: "get",
@@ -312,6 +321,11 @@ function listar_facuras_proveedor(idproveedor) {
     bDestroy: true,
     iDisplayLength: 5, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
+    columnDefs: [
+      // { targets: [8,9],  visible: false,  searchable: false,  },
+      // { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+    ],
   }).DataTable();
 }
 
@@ -394,18 +408,18 @@ function agregarDetalleComprobante(idproducto, nombre, unidad_medida, laboratori
 
   if (idproducto != "") {
 
-    if ($(".producto_" + idproducto).hasClass("producto_selecionado")) {
+    // if ($(".producto_" + idproducto).hasClass("producto_selecionado")) {
       
-      toastr_success("Agregado!!",`Producto: ${nombre} agregado !!`, 700);
+    //   toastr_success("Agregado!!",`Producto: ${nombre} agregado !!`, 700);
 
-      var cant_producto = $(".producto_" + idproducto).val();
+    //   var cant_producto = $(".producto_" + idproducto).val();
 
-      var sub_total = parseInt(cant_producto, 10) + 1;
+    //   var sub_total = parseInt(cant_producto, 10) + 1;
 
-      $(".producto_" + idproducto).val(sub_total);
+    //   $(".producto_" + idproducto).val(sub_total);
 
-      modificarSubtotales();
-    } else {
+    //   modificarSubtotales();
+    // } else {
 
       if ($("#tipo_comprobante").select2("val") == "Factura") {
         var subtotal = cantidad * precio_actual;
@@ -432,12 +446,12 @@ function agregarDetalleComprobante(idproducto, nombre, unidad_medida, laboratori
           <div class="user-block text-nowrap">
             <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img_p}', '${encodeHtml(nombre)}')">
             <span class="username"><p class="mb-0 nombre_producto_${cont}">${nombre}</p></span>
-            <span class="description categoria_${cont}"><b>Lab: </b>${laboratorio}</span>
+            <span class="description laboratorio_${cont}"><b>Lab: </b>${laboratorio}</span>
           </div>
         </td>
-        <td>
-          <select name="lote_${cont}" id="lote_${cont}" class="form-control select2 lote_${cont}" style="width: 100%;" onchange="formato_lote(0);"> </select>
-          <input type="hidden" name="lote_array[]" id="lote_array_${cont}">
+        <td class="py-1 form-group">
+          <select name="valid_lote[${cont}]" id="valid_lote_${cont}" class="form-control valid_lote select2 lote_${cont}" style="width: 100%;" onchange="replicar_precio_venta(${cont}, '#lote_${cont}', this);" > </select>
+          <input type="hidden" name="lote[]" id="lote_${cont}">
         </td>
         <td class="py-1"><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="laboratorio_${cont}" type="hidden" name="laboratorio[]" id="laboratorio[]" value="${laboratorio}"></td>
         <td class="py-1 form-group"><input class="producto_${idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
@@ -479,13 +493,16 @@ function agregarDetalleComprobante(idproducto, nombre, unidad_medida, laboratori
         $(this).rules('add', { min:0.01, messages: { min:"Mínimo 0.01" } }); 
       });
 
-      $(`#lote_${cont}`).select2({theme:"bootstrap4", placeholder: "Selec. lote", allowClear: true, });
+      $(`#valid_lote_${cont}`).select2({theme:"bootstrap4", placeholder: "Selec. lote", allowClear: true, });
+      lista_select2(`../ajax/ajax_general.php?op=select2Lote`, `#valid_lote_${cont}`, null);
 
-      lista_select2("../ajax/ajax_general.php?op=select2Lote", `#lote_${cont}`, null);
+      $('.valid_lote').each(function(e) { 
+        $(this).rules('add', { required: true, messages: { required: 'Campo requerido' } }); 
+      });
 
       cont++;
       evaluar();      
-    }
+    // }
   } else {
     // alert("Error al ingresar el detalle, revisar los datos del artículo");
     toastr_error("Error!!",`Error al ingresar el detalle, revisar los datos del producto.`, 700);
@@ -504,7 +521,7 @@ function evaluar() {
     $(".igv_compra").html("S/ 0.00");
     $("#igv_compra").val(0);
 
-    $(".total_venta").html("S/ 0.00");
+    $(".total_compra").html("S/ 0.00");
     $("#total_compra").val(0);
 
   }
@@ -520,7 +537,7 @@ function modificarSubtotales() {
 
     $(".hidden").hide(); //Ocultamos: IGV, PRECIO CON IGV
 
-    $("#colspan_subtotal").attr("colspan", 6); //cambiamos el: colspan
+    $("#colspan_subtotal").attr("colspan", 7); //cambiamos el: colspan
 
     $("#val_igv").val(0);
     $("#val_igv").prop("readonly",true);
@@ -556,7 +573,7 @@ function modificarSubtotales() {
 
       $(".hidden").show(); //Mostramos: IGV, PRECIO SIN IGV
 
-      $("#colspan_subtotal").attr("colspan", 8); //cambiamos el: colspan
+      $("#colspan_subtotal").attr("colspan", 9); //cambiamos el: colspan
       
       $("#val_igv").prop("readonly",false);
 
@@ -599,7 +616,7 @@ function modificarSubtotales() {
 
       $(".hidden").hide(); //Ocultamos: IGV, PRECIO CON IGV
 
-      $("#colspan_subtotal").attr("colspan", 6); //cambiamos el: colspan
+      $("#colspan_subtotal").attr("colspan", 7); //cambiamos el: colspan
 
       $("#val_igv").val(0);
       $("#val_igv").prop("readonly",true);
@@ -637,52 +654,52 @@ function modificarSubtotales() {
 }
 
 function calcularTotalesSinIgv() {
-  var total = 0.0;
-  var igv = 0;
-  var mtotal = 0;
+  var total = 0, igv = 0, descuento = 0;
 
   if (array_class_trabajador.length === 0) {
   } else {
     array_class_trabajador.forEach((element, index) => {
-      total += parseFloat(quitar_formato_miles($(`.subtotal_producto_${element.id_cont}`).text()));
+      total     += parseFloat(quitar_formato_miles($(`.subtotal_producto_${element.id_cont}`).text()));
+      descuento += parseFloat(quitar_formato_miles($(`.descuento_${element.id_cont}`).val()));
     });
 
     $(".subtotal_compra").html("S/ " + formato_miles(total));
-    $("#subtotal_compra").val(redondearExp(total, 4));
+    $("#subtotal_compra").val(redondearExp(total, 2));
+
+    $(".total_descuento").html(`S/ ${formato_miles(descuento)}`);
+    $("#total_descuento").val(redondearExp(descuento, 2));
 
     $(".igv_compra").html("S/ 0.00");
     $("#igv_compra").val(0.0);
     $(".val_igv").html('IGV (0%)');
 
-    $(".total_venta").html("S/ " + formato_miles(total.toFixed(2)));
-    $("#total_venta").val(redondearExp(total, 4));
+    $(".total_compra").html("S/ " + formato_miles(total.toFixed(2)));
+    $("#total_compra").val(redondearExp(total, 2));
   }
 }
 
 function calcularTotalesConIgv() {
-  var val_igv = $('#val_igv').val();
-  var igv = 0;
-  var total = 0.0;
-
-  var subotal_sin_igv = 0;
+  var val_igv = $('#val_igv').val(), igv = 0, total = 0, subotal_sin_igv = 0, descuento = 0;
 
   array_class_trabajador.forEach((element, index) => {
-    total += parseFloat(quitar_formato_miles($(`.subtotal_producto_${element.id_cont}`).text()));
+    total     += parseFloat(quitar_formato_miles($(`.subtotal_producto_${element.id_cont}`).text()));
+    descuento += parseFloat(quitar_formato_miles($(`.descuento_${element.id_cont}`).val()));
   });
-
-  //console.log(total); 
 
   subotal_sin_igv = quitar_igv_del_precio(total, val_igv, 'decimal').toFixed(2);
   igv = (parseFloat(total) - parseFloat(subotal_sin_igv)).toFixed(2);
 
   $(".subtotal_compra").html(`S/ ${formato_miles(subotal_sin_igv)}`);
-  $("#subtotal_compra").val(redondearExp(subotal_sin_igv, 4));
+  $("#subtotal_compra").val(redondearExp(subotal_sin_igv, 2));
+
+  $(".total_descuento").html(`S/ ${formato_miles(descuento)}`);
+  $("#total_descuento").val(redondearExp(descuento, 2));
 
   $(".igv_compra").html("S/ " + formato_miles(igv));
   $("#igv_compra").val(igv);
 
-  $(".total_venta").html("S/ " + formato_miles(total.toFixed(2)));
-  $("#total_venta").val(redondearExp(total, 4));
+  $(".total_compra").html("S/ " + formato_miles(total.toFixed(2)));
+  $("#total_compra").val(redondearExp(total, 2));
 
   total = 0.0;
 }
@@ -1163,49 +1180,6 @@ function limpiar_form_proveedor() {
   $(".tooltip").removeClass("show").addClass("hidde");
 }
 
-// damos formato a: Cta, CCI
-function formato_banco() {
-
-  if ($("#banco_prov").select2("val") == null || $("#banco_prov").select2("val") == "" || $("#banco_prov").select2("val") == "1" ) {
-
-    $("#c_bancaria_prov").prop("readonly", true);
-    $("#cci_prov").prop("readonly", true);
-    $("#c_detracciones_prov").prop("readonly", true);
-
-  } else {
-    
-    $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-    $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-    $(".chargue-format-3").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');    
-
-    $.post("../ajax/ajax_general.php?op=formato_banco", { 'idbanco': $("#banco_prov").select2("val") }, function (e, status) {
-      
-      e = JSON.parse(e);  // console.log(e);
-
-      if (e.status == true) {
-        $(".chargue-format-1").html("Cuenta Bancaria");
-        $(".chargue-format-2").html("CCI");
-        $(".chargue-format-3").html("Cuenta Detracciones");
-
-        $("#c_bancaria_prov").prop("readonly", false);
-        $("#cci_prov").prop("readonly", false);
-        $("#c_detracciones_prov").prop("readonly", false);
-
-        var format_cta = decifrar_format_banco(e.data.formato_cta);
-        var format_cci = decifrar_format_banco(e.data.formato_cci);
-        var formato_detracciones = decifrar_format_banco(e.data.formato_detracciones);
-        // console.log(format_cta, formato_detracciones);
-
-        $("#c_bancaria_prov").inputmask(`${format_cta}`);
-        $("#cci_prov").inputmask(`${format_cci}`);
-        $("#c_detracciones_prov").inputmask(`${formato_detracciones}`);
-      } else {
-        ver_errores(e);
-      }      
-    }).fail( function(e) { ver_errores(e); } );
-  }
-}
-
 //guardar proveedor
 function guardar_proveedor(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
@@ -1261,58 +1235,44 @@ function guardar_proveedor(e) {
   });
 }
 
-function mostrar_para_editar_proveedor() {
-  $("#cargando-11-fomulario").hide();
-  $("#cargando-12-fomulario").show();
+function mostrar_para_editar_proveedor() {  
 
-  $('#modal-agregar-proveedor').modal('show');
-  $(".tooltip").remove();
+  if ($('#idproveedor').select2("val") == null || $('#idproveedor').select2("val") == '') {
+    toastr_error('Vacio','Seleccione un proveedor', 700);
+  }else{
+    $("#cargando-11-fomulario").hide();
+    $("#cargando-12-fomulario").show();
+    $('#modal-agregar-proveedor').modal('show');
 
-  $.post("../ajax/compra_producto.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
+    $(".tooltip").remove();
 
-    e = JSON.parse(e);  console.log(e);
+    $.post("../ajax/compra_producto.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
 
-    if (e.status == true) {     
-      $("#idpersona_per").val(e.data.idpersona);
-      $("#tipo_documento_per").val(e.data.tipo_documento).trigger("change");     
+      e = JSON.parse(e);  console.log(e);
 
-      $("#nombre_per").val(e.data.nombres);
-      $("#num_documento_per").val(e.data.numero_documento);
-      $("#direccion_per").val(e.data.direccion);
-      $("#telefono_per").val(e.data.celular);
-      $("#email_per").val(e.data.correo);
-
-      $("#nacimiento_per").val(e.data.fecha_nacimiento).trigger("change");
-      $("#edad_per").val(e.data.edad);        
-    
-      $("#cta_bancaria").val(e.data.cuenta_bancaria).trigger("change"); 
-      $("#cci").val(e.data.cci).trigger("change"); 
-      $("#banco").val(e.data.idbancos).trigger("change"); 
-      $("#titular_cuenta_per").val(e.data.titular_cuenta);
-
-      $("#sueldo_mensual_per").val(e.data.sueldo_mensual);
-      $("#sueldo_diario_per").val(e.data.sueldo_diario);  
-      $("#cargo_trabajador_per").val(e.data.idcargo_trabajador);
+      if (e.status == true) {     
+        $("#idpersona_per").val(e.data.idpersona);
+        $("#tipo_documento_per").val(e.data.tipo_documento).trigger("change"); 
+        $("#nombre_per").val(e.data.nombres);
+        $("#num_documento_per").val(e.data.numero_documento);
+        $("#direccion_per").val(e.data.direccion);
+        $("#telefono_per").val(e.data.celular);
+        $("#email_per").val(e.data.correo);  
       
-      $("#id_tipo_persona_per").val(e.data.idtipo_persona); 
+        if (e.data.foto_perfil!="") {
+          $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);
+          $("#foto1_actual").val(e.data.foto_perfil);
+        }
 
-      $("#sueldo_mensual_per").val(e.data.sueldo_mensual);
-      $("#sueldo_diario_per").val(e.data.sueldo_diario);  
-      
-      $("#input_socio_per").val(e.data.es_socio);       
-
-      if (e.data.foto_perfil!="") {
-        $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);
-        $("#foto1_actual").val(e.data.foto_perfil);
-      }
-      calcular_edad('#nacimiento_per','.edad_per','#edad_per'); 
-
-      $("#cargando-11-fomulario").show();
-      $("#cargando-12-fomulario").hide();
-    } else {
-      ver_errores(e);
-    }    
-  }).fail( function(e) { ver_errores(e); });
+        $("#cargando-11-fomulario").show();
+        $("#cargando-12-fomulario").hide();
+      } else {
+        ver_errores(e);
+      }    
+    }).fail( function(e) { ver_errores(e); });
+  }
+  
+  
 }
 
 function habilitando_socio() {  
@@ -1382,7 +1342,7 @@ function listarmateriales() {
     },
     createdRow: function (row, data, ixdex) {
       // columna: stock
-      if (data[2] != '') { $("td", row).eq(2).addClass('text-center'); }  
+      if (data[2] != '') { $("td", row).eq(2).addClass('text-left'); }  
       // columna: presentacion
       if (data[3] != '') { $("td", row).eq(3).addClass('text-center'); }  
     },
@@ -1414,16 +1374,14 @@ function mostrar_productos(idproducto, cont) {
 
     if (e.status == true) {
       $("#idproducto_pro").val(e.data.idproducto);
+      $("#codigo_pro").val(e.data.codigo);
       $("#nombre_producto_pro").val(e.data.nombre);
-      $("#marca_pro").val(e.data.marca).trigger("change");  
-      $("#descripcion_pro").val(e.data.descripcion);
-      $("#stock_pro").val(e.data.stock); 
-      $("#contenido_neto_pro").val(e.data.contenido_neto);  
-      $('#precio_unitario_pro').val(parseFloat(e.data.precio_unitario));
-      
+      $("#laboratorio_pro").val(e.data.idlaboratorio).trigger("change");  
+      $("#presentacion_pro").val(e.data.idpresentacion).trigger("change");  
       $("#unidad_medida_pro").val(e.data.idunidad_medida).trigger("change");
-      
-      $("#categoria_producto_pro").val(e.data.idcategoria_producto).trigger("change");
+      $("#precio_actual_pro").val(e.data.precio_actual);
+      $("#principio_activo_pro").val(e.data.principio_activo);  
+      $("#descripcion_pro").val(e.data.descripcion);
 
       if (e.data.imagen != "") {        
         $("#foto2_i").attr("src", "../dist/docs/producto/img_perfil/" + e.data.imagen);  
@@ -1477,16 +1435,15 @@ function actualizar_producto() {
   var cont            = $("#cont").val(); 
 
   var nombre_p        = $("#nombre_producto_pro").val();
-  var unidad_medida_p = $("#unidad_medida_pro").find(':selected').text();
-  var categoria_p     = $("#categoria_producto_pro").find(':selected').text();
+  var unidad_medida_p = $('#unidad_medida_pro').select2('data')[0].element.attributes.nombre.value;
+  var laboratorio_p   = $("#laboratorio_pro").find(':selected').text();
+  
 
   if (idproducto == "" || idproducto == null) {     
   } else {
     $(`.nombre_producto_${cont}`).html(nombre_p); 
-    $(`.categoria_${cont}`).html(`<b>Cateogría: </b>${categoria_p}`);
-    $(`.categoria_${cont}`).val(categoria_p); 
-    $(`.unidad_medida_${cont}`).html(unidad_medida_p); 
-    $(`.unidad_medida_${cont}`).val(unidad_medida_p);
+    $(`.laboratorio_${cont}`).html(`<b>Lab.: </b>${laboratorio_p}`).val(laboratorio_p);
+    $(`.unidad_medida_${cont}`).html(unidad_medida_p).val(unidad_medida_p); 
 
     if ($('#foto2').val()) {
       var src_img = $(`#foto2_i`).attr("src");
@@ -1495,6 +1452,111 @@ function actualizar_producto() {
   } 
   
   modificarSubtotales();
+}
+
+// :::::::::::::::::::::::::: S E C C I O N    C O M P R O B A N T E S  ::::::::::::::::::::::::::
+
+//subir factura compra ativo fijo
+$("#doc1_i").click(function () { $("#doc1").trigger("click");  });
+$("#doc1").change(function (e) { addImageApplication(e, $("#doc1").attr("id")); });
+
+// Eliminamos el doc comprobante
+function doc1_eliminar() {
+  $("#doc1").val("");
+  $("#doc1_ver").html('<img src="../dist/svg/doc_uploads.svg" alt="" width="50%" >');
+  $("#doc1_nombre").html("");
+}
+
+function comprobante_compra(idcompra, doc, nro_comprobante) {
+  $(".tooltip").remove();
+  $("#modal-comprobante-compra").modal("show");
+  $("#idcompra").val(idcompra);
+  $(".modal-titulo-comprobante").html(nro_comprobante);
+
+  $("#doc1_nombre").html("");
+  $("#doc_old_1").val("doc");
+  
+  if (doc != "") {
+    $("#doc_old_1").val(doc);
+    $("#doc1_ver").html(doc_view_extencion(doc, 'compra_producto', 'comprobante_compra','100%' ));
+
+    $(".subir").removeClass("col-md-6").addClass("col-md-4");
+    $(".recargar_insumno").removeClass("col-md-6").addClass("col-md-4"); 
+
+    $(".ver_completo").show();
+    $(".ver_completo").removeClass("col-md-4").addClass("col-md-2");
+    $("#ver_completo").attr("href", "../dist/docs/compra_producto/comprobante_compra/" + doc);
+
+    $(".descargar").show();
+    $(".descargar").removeClass("col-md-4").addClass("col-md-2");
+    $("#descargar_comprobobante").attr("href", "../dist/docs/compra_producto/comprobante_compra/" + doc).attr("download",  nro_comprobante); 
+    
+  } else {
+    $("#doc1_ver").html('<img src="../dist/svg/doc_uploads.svg" alt="" width="50%" >');
+    $("#doc_old_1").val("");
+
+    $(".ver_completo").hide();
+    $(".descargar").hide(); 
+
+    $(".subir").removeClass("col-md-4").addClass("col-md-6");
+    $(".recargar_insumno").removeClass("col-md-4").addClass("col-md-6");
+  }
+  
+}
+
+function guardar_y_editar_comprobante(e) {
+  // e.preventDefault(); //No se activará la acción predeterminada del evento
+  var formData = new FormData($("#form-comprobante")[0]);
+
+  $.ajax({
+    url: "../ajax/compra_producto.php?op=guardar_y_editar_comprobante",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (e) {
+      try {
+        e = JSON.parse(e);
+        if (e.status == true) {
+
+          Swal.fire("Correcto!", "Documento guardado correctamente", "success");
+          tabla_compra_producto.ajax.reload(null, false);          
+          $("#modal-comprobante-compra").modal("hide");
+
+        } else {
+          ver_errores(e);
+        } 
+      } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }      
+
+      $("#guardar_registro_comprobante").html('Guardar Cambios').removeClass('disabled');
+    },
+    xhr: function () {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener(
+        "progress",
+        function (evt) {
+          if (evt.lengthComputable) {
+            var percentComplete = (evt.loaded / evt.total) * 100;
+            /*console.log(percentComplete + '%');*/
+            $("#barra_progress_comprobante").css({ width: percentComplete + "%" });
+            $("#barra_progress_comprobante").text(percentComplete.toFixed(2) + " %");
+          }
+        },
+        false
+      );
+      return xhr;
+    },
+    beforeSend: function () {
+      $("#barra_progress_comprobante_div").show();
+      $("#guardar_registro_comprobante").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress_comprobante").css({ width: "0%",  }).text("0%");
+    },
+    complete: function () {
+      $("#barra_progress_comprobante_div").hide();
+      $("#barra_progress_comprobante").css({ width: "0%", }).text("0%");
+    },
+    error: function (jqXhr) { ver_errores(jqXhr); },
+  });
 }
 
 init();
@@ -1531,8 +1593,6 @@ $(function () {
       'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
       'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
       'descuento[]':      { min: "Mínimo 0.00", required: "Campo requerido"},
-      // 'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
-      // 'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
     },
 
     errorElement: "span",
@@ -1550,7 +1610,7 @@ $(function () {
       $(element).removeClass("is-invalid").addClass("is-valid");
     },
 
-    submitHandler: function (form) {
+    submitHandler: function (form) {      
       guardar_y_editar_compras(form);
     },
   });  
@@ -1593,6 +1653,7 @@ $(function () {
     },
 
     submitHandler: function (e) {
+      $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
       guardar_proveedor(e);
     },
   });
@@ -1600,18 +1661,18 @@ $(function () {
   $("#form-producto").validate({
     rules: {
       nombre_producto_pro:    { required: true, minlength:3, maxlength:200},
-      categoria_producto_pro: { required: true },
-      marca_pro:              { required: true },
+      laboratorio_pro:        { required: true },
+      presentacion_pro:       { required: true },
       unidad_medida_pro:      { required: true },
-      contenido_neto_pro:     {  min: 1, number: true },
+      principio_activo_pro:   { minlength:3,},
       descripcion_pro:        { minlength: 4 },      
     },
     messages: {
       nombre_producto_pro:    { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
-      categoria_producto_pro: { required: "Campo requerido", },
-      marca_pro:              { required: "Campo requerido" },
-      unidad_medida_pro:      { required: "Campo requerido" },
-      contenido_neto_pro:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },    
+      laboratorio_pro:        { required: "Campo requerido" },
+      presentacion_pro:       { required: "Campo requerido", },
+      unidad_medida_pro:      { required: "Campo requerido" },    
+      principio_activo_pro:   { minlength:"Minimo 3 caracteres",},
       descripcion_pro:        { minlength: "Minimo 4 caracteres" },
     },
 
@@ -1631,9 +1692,40 @@ $(function () {
     },
 
     submitHandler: function (e) {
+      $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
       guardar_y_editar_productos(e);
     },
 
+  });
+
+  $("#form-comprobante").validate({
+    rules: {
+      idcompra: { required: true },
+    },
+
+    messages: {
+      idcompra: {  required: "Este campo es requerido", },
+    },
+
+    errorElement: "span",
+
+    errorPlacement: function (error, element) {
+      error.addClass("invalid-feedback");
+      element.closest(".form-group").append(error);
+    },
+
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass("is-invalid").removeClass("is-valid");
+    },
+
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass("is-invalid").addClass("is-valid");
+    },
+
+    submitHandler: function (e) {
+      $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
+      guardar_y_editar_comprobante(e);
+    },
   });
 
   $("#idproveedor").rules('add', { required: true, messages: {  required: "Campo requerido" } });
@@ -1687,37 +1779,6 @@ function ver_img_producto(file, nombre) {
   $('.jq_image_zoom').zoom({ on:'grab' });
 }
 
-// damos formato a: Cta, CCI
-function formato_banco() {
-
-  if ($("#banco").select2("val") == null || $("#banco").select2("val") == "" || $("#banco").select2("val") == '1') {
-
-    $("#cta_bancaria").prop("readonly",true);   $("#cci").prop("readonly",true);
-  } else {
-    
-    $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>'); $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-
-    $("#cta_bancaria").prop("readonly",false);   $("#cci").prop("readonly",false);
-
-    $.post("../ajax/ajax_general.php?op=formato_banco", { idbanco: $("#banco").select2("val") }, function (e, status) {
-
-      e = JSON.parse(e);  console.log(e); 
-
-      if (e.status) {
-        $(".chargue-format-1").html('Cuenta Bancaria'); $(".chargue-format-2").html('CCI');
-
-        var format_cta = decifrar_format_banco(e.data.formato_cta); var format_cci = decifrar_format_banco(e.data.formato_cci);
-
-        $("#cta_bancaria").inputmask(`${format_cta}`);
-
-        $("#cci").inputmask(`${format_cci}`);
-      } else {
-        ver_errores(e);
-      }      
-
-    }).fail( function(e) { ver_errores(e); } );   
-  }  
-}
 
 function replicar_precio_venta(id, name_input, valor) {
   var value = $(valor).val(); console.log(value);

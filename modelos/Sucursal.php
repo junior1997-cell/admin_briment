@@ -17,11 +17,11 @@ Class Sucursal
 	public function insertar($nombre, $codigo, $direccion)
 	{
 		$sql="INSERT INTO sucursal (nombre, codigo, direccion, user_created)VALUES ('$nombre','$codigo', '$direccion','$this->id_usr_sesion')";
-		$intertar =  ejecutarConsulta_retornarID($sql); 
-		if ($intertar['status'] == false) {  return $intertar; } 
+		$intertar =  ejecutarConsulta_retornarID($sql); if ($intertar['status'] == false) {  return $intertar; } 
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('sucursal','".$intertar['data']."','Registro creado', 'created_at', '$this->id_usr_sesion')";
+		$sql_d = $nombre.', '.$codigo.', '.$direccion;
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5,'sucursal','".$intertar['data']."','$sql_d', '$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $intertar;
@@ -34,20 +34,21 @@ Class Sucursal
 		$editar =  ejecutarConsulta($sql); if ( $editar['status'] == false) {return $editar; } 
 	
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('sucursal','$idsucursal', 'Registro actualizado', 'estado_0', '$this->id_usr_sesion')";
+		$sql_d =$idsucursal.', '.$nombre.', '.$codigo.', '.$direccion;
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6, 'sucursal','$idsucursal', '$sql_d', '$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
 	
 		return $editar;
 	}
 
 	//Implementamos un método para desactivar lote
-	public function desactivar($idsucursal)
+	public function desactivar($id)
 	{
-		$sql="UPDATE sucursal SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idsucursal='$idsucursal'";
+		$sql="UPDATE sucursal SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idsucursal='$id'";
 		$desactivar= ejecutarConsulta($sql); if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('sucursal','".$idsucursal."',  'Registro enviado a papelera','estado_0','$this->id_usr_sesion')";
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (2, 'sucursal','".$id."', '$id','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $desactivar;
@@ -61,13 +62,13 @@ Class Sucursal
 	}
 
 	//Implementamos un método para eliminar sucursal
-	public function eliminar($idsucursal)
+	public function eliminar($id)
 	{
-		$sql="UPDATE sucursal SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idsucursal='$idsucursal'";
+		$sql="UPDATE sucursal SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idsucursal='$id'";
 		$eliminar =  ejecutarConsulta($sql);	if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, codigo, id_user) VALUES ('sucursal','$idsucursal','Registro eliminado permanentemente', 'estado_delete_0', '$this->id_usr_sesion')";
+		$sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (4, 'sucursal','$id','$id', '$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;

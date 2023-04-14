@@ -13,7 +13,7 @@ class Producto
   }
 
   //Implementamos un método para insertar registros
-  public function insertar( $codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$descripcion,$imagen) {
+  public function insertar( $codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$principio_activo,$descripcion,$imagen) {
     $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio, p.idpresentacion, p.codigo, p.nombre,um.nombre as unidad_medida, 
     l.nombre as laboratorio, pre.nombre as presentacion
     FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
@@ -22,13 +22,13 @@ class Producto
     $buscando = ejecutarConsultaArray($sql);  if ($buscando['status'] == false) { return $buscando; }
 
     if ( empty($buscando['data']) ) {
-      $sql = "INSERT INTO producto( idunidad_medida, idlaboratorio, idpresentacion, codigo, nombre, descripcion, imagen,user_created) 
-      VALUES ('$unidad_medida','$laboratorio','$presentacion','$codigo','$nombre_producto','$descripcion','$imagen','$this->id_usr_sesion')";
-     
+      $sql = "INSERT INTO producto( idunidad_medida, idlaboratorio, idpresentacion, codigo, nombre, principio_activo, descripcion, imagen,user_created) 
+      VALUES ('$unidad_medida','$laboratorio','$presentacion','$codigo','$nombre_producto','$principio_activo','$descripcion','$imagen','$this->id_usr_sesion')";     
       $intertar =  ejecutarConsulta_retornarID($sql); if ($intertar['status'] == false) {  return $intertar; } 
 
       //add registro en nuestra bitacora
-      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','".$intertar['data']."','Nuevo producto registrado','$this->id_usr_sesion')";
+      $sql_d = $codigo.','.$nombre_producto.','.$laboratorio.','.$presentacion.','.$unidad_medida.','.$principio_activo.','.$descripcion.','.$imagen;
+      $sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5,'producto','".$intertar['data']."','$sql_d','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 
       return $intertar;
@@ -54,7 +54,7 @@ class Producto
   }
 
   //Implementamos un método para editar registros
-  public function editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$precio_actual,$descripcion,$imagen1) {
+  public function editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$principio_activo,$descripcion,$imagen1) {
     // var_dump($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil);die();
     $sql = "UPDATE producto SET 
     idunidad_medida='$unidad_medida',
@@ -62,50 +62,46 @@ class Producto
     idpresentacion='$presentacion',
     codigo='$codigo',
     nombre='$nombre_producto',
-    precio_actual='$precio_actual',
+    principio_activo='$principio_activo',
     descripcion='$descripcion',
     imagen='$imagen1',
     user_updated= '$this->id_usr_sesion'
 		WHERE idproducto='$idproducto'";
-
-    $editar =  ejecutarConsulta($sql);
-    if ( $editar['status'] == false) {return $editar; } 
+    $editar =  ejecutarConsulta($sql);  if ( $editar['status'] == false) {return $editar; } 
 
     //add registro en nuestra bitacora
-    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','$idproducto','Producto editado','$this->id_usr_sesion')";
+    $sql_d = $idproducto.','.$codigo.','.$nombre_producto.','.$laboratorio.','.$presentacion.','.$unidad_medida.','.$principio_activo.','.$descripcion.','.$imagen1;
+    $sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6,'producto','$idproducto','$sql_d','$this->id_usr_sesion')";
     $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
 
     return $editar;
   }
 
   //Implementamos un método para desactivar categorías
-  public function desactivar($idproducto) {
-    $sql = "UPDATE producto SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idproducto ='$idproducto'";
-    $desactivar= ejecutarConsulta($sql);
-
-    if ($desactivar['status'] == false) {  return $desactivar; }
+  public function desactivar($id) {
+    $sql = "UPDATE producto SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idproducto ='$id'";
+    $desactivar= ejecutarConsulta($sql); if ($desactivar['status'] == false) {  return $desactivar; }
     
     //add registro en nuestra bitacora
-    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','".$idproducto."','Producto desactivado','$this->id_usr_sesion')";
+    $sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (2,'producto','".$id."','$id','$this->id_usr_sesion')";
     $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
     
     return $desactivar;
   }
 
   //Implementamos un método para activar categorías
-  public function activar($idproducto) {
-    $sql = "UPDATE producto SET estado='1' WHERE idproducto ='$idproducto'";
+  public function activar($id) {
+    $sql = "UPDATE producto SET estado='1' WHERE idproducto ='$id'";
     return ejecutarConsulta($sql);
   }
 
   //Implementamos un método para activar categorías
-  public function eliminar($idproducto) {
-    $sql = "UPDATE producto SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idproducto ='$idproducto'";
-    $eliminar =  ejecutarConsulta($sql);
-    if ( $eliminar['status'] == false) {return $eliminar; }  
+  public function eliminar($id) {
+    $sql = "UPDATE producto SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idproducto ='$id'";
+    $eliminar =  ejecutarConsulta($sql); if ( $eliminar['status'] == false) {return $eliminar; }  
     
     //add registro en nuestra bitacora
-    $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','$idproducto','Producto Eliminado','$this->id_usr_sesion')";
+    $sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (4,'producto','$id','$id','$this->id_usr_sesion')";
     $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
     
     return $eliminar;
@@ -162,13 +158,14 @@ class Producto
     $producto = ejecutarConsulta($sql_0); if ( $producto['status'] == false) {return $producto; }  
 
     foreach ($producto['data'] as $key => $val) {
+      $id = $val['idproducto'];
       $sql_1 = "SELECT SUM(dcp.cantidad) as cant_compra FROM detalle_compra_producto as dcp
-      WHERE dcp.idproducto = 1 AND dcp.estado = '1' AND dcp.estado_delete = '1';";
+      WHERE dcp.estado = '1' AND dcp.estado_delete = '1' AND dcp.idproducto = '$id';";
       $compra = ejecutarConsultaSimpleFila($sql_1); if ( $compra['status'] == false) {return $compra; }  
 
-      $sql_1 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp
-      WHERE dvp.idproducto = 1 AND dvp.estado = '1' AND dvp.estado_delete = '1';";
-      $venta = ejecutarConsultaSimpleFila($sql_1); if ( $venta['status'] == false) {return $venta; }  
+      $sql_2 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp
+      WHERE dvp.estado = '1' AND dvp.estado_delete = '1' AND dvp.idproducto = '$id';";
+      $venta = ejecutarConsultaSimpleFila($sql_2); if ( $venta['status'] == false) {return $venta; }  
 
       $n_compra = empty($compra['data']) ? 0 : (empty($compra['data']['cant_compra']) ? 0 : floatval($compra['data']['cant_compra']) ) ;
       $n_venta  = empty($venta['data']) ? 0 : (empty($venta['data']['cant_venta']) ? 0 : floatval($venta['data']['cant_venta']) ) ;
@@ -214,8 +211,8 @@ class Producto
   public function tbla_lote($id_producto) {
     $sql = "SELECT  dcp.idlote, l.nombre, l.stock, l.fecha_vencimiento, l.descripcion, l.estado
     FROM detalle_compra_producto as dcp, lote as l
-    WHERE dcp.idlote = l.idlote AND dcp.estado = '1' AND dcp.estado_delete = '0' AND 
-    l.estado = '1' AND l.estado_delete AND dcp.idproducto  = '$id_producto'
+    WHERE dcp.idlote = l.idlote AND dcp.estado = '1' AND dcp.estado_delete = '1' AND 
+    l.estado = '1' AND l.estado_delete = '1' AND dcp.idproducto  = '$id_producto'
     GROUP BY dcp.idlote;";
     return ejecutarConsultaArray($sql);
   }

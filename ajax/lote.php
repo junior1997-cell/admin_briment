@@ -11,7 +11,7 @@
     
     require_once "../modelos/Lote.php";
 
-    $lote = new Lote();
+    $lote = new Lote($_SESSION['idusuario']);
 
     $idlote = isset($_POST["idlote"]) ? limpiarCadena($_POST["idlote"]) : "";
     $nombre_lote = isset($_POST["nombre_lote"]) ? limpiarCadena($_POST["nombre_lote"]) : "";

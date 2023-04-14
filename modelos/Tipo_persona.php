@@ -17,11 +17,11 @@ Class Tipo_persona
 	public function insertar($nombre_tipo, $descripcion)
 	{
 		$sql="INSERT INTO tipo_persona (nombre, descripcion, user_created)VALUES ('$nombre_tipo', '$descripcion','$this->id_usr_sesion')";
-		$intertar =  ejecutarConsulta_retornarID($sql); 
-		if ($intertar['status'] == false) {  return $intertar; } 
+		$intertar =  ejecutarConsulta_retornarID($sql); if ($intertar['status'] == false) {  return $intertar; } 
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('tipo_persona','".$intertar['data']."','Nuevo tipo trabajador registrado','$this->id_usr_sesion')";
+		$sql_d = $nombre_tipo.', '.$descripcion;
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5, 'tipo_persona','".$intertar['data']."','$sql_d','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $intertar;
@@ -31,26 +31,24 @@ Class Tipo_persona
 	public function editar($idtipo_persona,$nombre_tipo,$descripcion)
 	{
 		$sql="UPDATE tipo_persona SET nombre='$nombre_tipo', descripcion= '$descripcion', user_updated= '$this->id_usr_sesion' WHERE idtipo_persona='$idtipo_persona'";
-		$editar =  ejecutarConsulta($sql);
-		if ( $editar['status'] == false) {return $editar; } 
+		$editar =  ejecutarConsulta($sql); if ( $editar['status'] == false) {return $editar; } 
 	
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('tipo_persona','$idtipo_persona','Tipo trabajador editado','$this->id_usr_sesion')";
+		$sql_d = $idtipo_persona.', '.$nombre_tipo.', '.$descripcion;
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6, 'tipo_persona','$idtipo_persona','$sql_d','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
 	
 		return $editar;
 	}
 
 	//Implementamos un método para desactivar tipo
-	public function desactivar($idtipo_persona)
+	public function desactivar($id)
 	{
-		$sql="UPDATE tipo_persona SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idtipo_persona='$idtipo_persona'";
-		$desactivar= ejecutarConsulta($sql);
-
-		if ($desactivar['status'] == false) {  return $desactivar; }
+		$sql="UPDATE tipo_persona SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idtipo_persona='$id'";
+		$desactivar= ejecutarConsulta($sql);	if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('tipo_persona','".$idtipo_persona."','Tipo trabajador desactivado','$this->id_usr_sesion')";
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (2, 'tipo_persona','".$id."','$id','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $desactivar;
@@ -64,14 +62,13 @@ Class Tipo_persona
 	}
 
 	//Implementamos un método para eliminar tipo
-	public function eliminar($idtipo_persona)
+	public function eliminar($id)
 	{
-		$sql="UPDATE tipo_persona SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idtipo_persona='$idtipo_persona'";
-		$eliminar =  ejecutarConsulta($sql);
-		if ( $eliminar['status'] == false) {return $eliminar; }  
+		$sql="UPDATE tipo_persona SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idtipo_persona='$id'";
+		$eliminar =  ejecutarConsulta($sql); if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('tipo_persona','$idtipo_persona','Tipo trabajador Eliminado','$this->id_usr_sesion')";
+		$sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (4, 'tipo_persona','$id','$id','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;

@@ -27,6 +27,7 @@
       $laboratorio      = isset($_POST["laboratorio"]) ? limpiarCadena($_POST["laboratorio"]) : "" ;
       $presentacion     = isset($_POST["presentacion"]) ? encodeCadenaHtml($_POST["presentacion"]) : "" ;
       $unidad_medida    = isset($_POST["unidad_medida"]) ? encodeCadenaHtml($_POST["unidad_medida"]) : "" ;
+      $principio_activo = isset($_POST["principio_activo"]) ? encodeCadenaHtml($_POST["principio_activo"]) : "" ;
       $descripcion      = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
       $precio_actual    = isset($_POST["precio_actual"]) ? encodeCadenaHtml($_POST["precio_actual"]) : "" ;
       $imagen1          = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
@@ -47,7 +48,7 @@
 
           if (empty($idproducto)) {
            
-            $rspta = $producto->insertar($codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$descripcion,$imagen1 );            
+            $rspta = $producto->insertar($codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$principio_activo,$descripcion,$imagen1 );            
             echo json_encode( $rspta, true);
 
           } else {
@@ -59,7 +60,7 @@
               if ( !empty( $img1_ant ) ) { unlink("../dist/docs/producto/img_perfil/" . $img1_ant); }
             }
             
-            $rspta = $producto->editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$precio_actual,$descripcion,$imagen1 );            
+            $rspta = $producto->editar($idproducto,$codigo,$nombre_producto,$laboratorio,$presentacion,$unidad_medida,$principio_activo, $descripcion,$imagen1 );            
             echo json_encode( $rspta, true) ;
           }
         break;
@@ -163,8 +164,7 @@
                 "1" => $reg['nombre'],
                 "2" => $reg['stock'],
                 "3" => $reg['fecha_vencimiento'],
-                "4" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg['descripcion'] . '</textarea>',
-                "5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,                
+                "4" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg['descripcion'] . '</textarea>'                
               ];
             }
   

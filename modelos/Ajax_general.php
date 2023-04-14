@@ -176,7 +176,7 @@
     /* ══════════════════════════════════════ U N I D A D   D E   M E D I D A ══════════════════════════════════════ */
 
     public function select2_unidad_medida() {
-      $sql = "SELECT idunidad_medida AS id, nombre, abreviatura FROM unidad_medida WHERE estado='1' AND estado_delete = '1' ORDER BY nombre ASC;";
+      $sql = "SELECT idunidad_medida AS id, nombre, abreviatura FROM unidad_medida WHERE estado='1' AND estado_delete = '1' AND idunidad_medida > 1 ORDER BY nombre ASC;";
       return ejecutarConsulta($sql);
     }
 

@@ -15,7 +15,7 @@
 
       require_once "../modelos/Escritorio.php";
 
-      $escritorio = new Escritorio();
+      $escritorio = new Escritorio($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
 

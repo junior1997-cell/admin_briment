@@ -10,7 +10,7 @@
     
     require_once "../modelos/Color.php";
 
-    $color = new Color();
+    $color = new Color($_SESSION['idusuario']);
 
     $idcolor      = isset($_POST["idcolor"]) ? limpiarCadena($_POST["idcolor"]) : "";
     $nombre       = isset($_POST["nombre_color"]) ? limpiarCadena($_POST["nombre_color"]) : "";

@@ -29,7 +29,7 @@
         if ($new_trabajador['status'] == false) { return $new_trabajador;}
 
         //add registro en nuestra bitacora
-        $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','".$new_trabajador['data']."','Registro Nuevo Trabajador','$this->id_usr_sesion')";
+        $sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('trabajador','".$new_trabajador['data']."','Registro Nuevo Trabajador','$this->id_usr_sesion')";
         $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
         
         $sw = array( 'status' => true, 'message' => 'noduplicado', 'data' => $new_trabajador['data'], 'id_tabla' =>$new_trabajador['id_tabla'] );
@@ -62,7 +62,7 @@
       if ($trabajdor['status'] == false) { return  $trabajdor;}
 
       //add registro en nuestra bitacora
-      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','".$idtrabajador."','Editamos el registro Trabajador','$this->id_usr_sesion')";
+      $sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('trabajador','".$idtrabajador."','Editamos el registro Trabajador','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
       
       return $trabajdor;      
@@ -75,7 +75,7 @@
       if ( $desactivar['status'] == false) {return $desactivar; }  
 
       //add registro en nuestra bitacora
-      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','.$idtrabajador.','Desativar el registro Trabajador','$this->id_usr_sesion')";
+      $sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('trabajador','.$idtrabajador.','Desativar el registro Trabajador','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 
       return $desactivar;
@@ -88,7 +88,7 @@
       if ( $eliminar['status'] == false) {return $eliminar; }  
 
       //add registro en nuestra bitacora
-      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','.$idtrabajador.','Eliminar registro Trabajador','$this->id_usr_sesion')";
+      $sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('trabajador','.$idtrabajador.','Eliminar registro Trabajador','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 
       return $eliminar;

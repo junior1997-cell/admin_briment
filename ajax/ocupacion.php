@@ -11,7 +11,7 @@
     
     require_once "../modelos/Ocupacion.php";
 
-    $ocupacion = new Ocupacion();
+    $ocupacion = new Ocupacion($_SESSION['idusuario']);
 
     $idocupacion = isset($_POST["idocupacion"]) ? limpiarCadena($_POST["idocupacion"]) : "";
     $nombre_ocupacion = isset($_POST["nombre_ocupacion"]) ? limpiarCadena($_POST["nombre_ocupacion"]) : "";

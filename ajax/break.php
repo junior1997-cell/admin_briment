@@ -16,7 +16,7 @@
 
       require_once "../modelos/Break.php";
 
-      $breaks=new Breaks();
+      $breaks=new Breaks($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima');
       $date_now = date("d-m-Y h.i.s A");
