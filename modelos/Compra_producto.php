@@ -15,9 +15,9 @@ class Compra_producto
 
   // ::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C O M P R A  ::::::::::::::::::::::::::::::::::::::::: 
   //Implementamos un método para insertar registros
-  public function insertar( $idsucursal, $idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
-  $total_compra, $subtotal_compra, $igv_compra, $total_descuento, $tipo_gravada, $idproducto, $lote, $unidad_medida, $laboratorio, $cantidad, $precio_sin_igv, $precio_igv, 
-  $precio_con_igv,$precio_venta, $descuento) {    
+  public function insertar( $idsucursal, $idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_compra, $subtotal_compra,
+  $igv_compra, $total_descuento, $tipo_gravada, 
+  $idproducto, $lote, $unidad_medida,$um_abreviatura, $presentacion, $laboratorio, $cantidad, $precio_sin_igv, $precio_igv, $precio_con_igv,$precio_venta, $descuento) {    
 
     // buscamos al si la FACTURA existe
     $sql_2 = "SELECT  cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.igv, cp.total_compra, cp.estado, cp.estado_delete, 
@@ -47,9 +47,9 @@ class Compra_producto
           $id = $idventanew['data'];
           $subtotal_producto = (floatval($cantidad[$ii]) * floatval($precio_con_igv[$ii])) - $descuento[$ii];
 
-          $sql_detalle = "INSERT INTO detalle_compra_producto(idcompra_producto, idproducto, idlote, unidad_medida, laboratorio, cantidad, precio_sin_igv, igv, 
+          $sql_detalle = "INSERT INTO detalle_compra_producto(idcompra_producto, idproducto, idlote, unidad_medida,um_abreviatura, presentacion, laboratorio, cantidad, precio_sin_igv, igv, 
           precio_con_igv,precio_venta, descuento, subtotal, user_created) 
-          VALUES ('$id','$idproducto[$ii]', '$lote[$ii]', '$unidad_medida[$ii]',  '$laboratorio[$ii]', '$cantidad[$ii]', '$precio_sin_igv[$ii]', '$precio_igv[$ii]', 
+          VALUES ('$id','$idproducto[$ii]', '$lote[$ii]', '$unidad_medida[$ii]', '$um_abreviatura[$ii]', '$presentacion[$ii]', '$laboratorio[$ii]', '$cantidad[$ii]', '$precio_sin_igv[$ii]', '$precio_igv[$ii]', 
           '$precio_con_igv[$ii]','$precio_venta[$ii]', '$descuento[$ii]', '$subtotal_producto','$this->id_usr_sesion')";
           $compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($compra_new['status'] == false) { return  $compra_new;}
 
@@ -59,8 +59,8 @@ class Compra_producto
           $sql_bit_d = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (5,'detalle_compra_producto','".$compra_new['data']."','$sql_d','$this->id_usr_sesion')";
           $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
 
-          //add update table PRODUCTO el precio
-          $sql_producto = "UPDATE producto SET precio_actual='$precio_con_igv[$ii]', user_updated='$this->id_usr_sesion' WHERE idproducto = '$idproducto[$ii]'";
+          //add update table PRODUCTO el precio de venta
+          $sql_producto = "UPDATE producto SET precio_actual='$precio_venta[$ii]', user_updated='$this->id_usr_sesion' WHERE idproducto = '$idproducto[$ii]'";
           $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
 
           //add update table LOTE el stock
@@ -93,49 +93,68 @@ class Compra_producto
   }
 
   //Implementamos un método para editar registros
-  public function editar( $idcompra_producto, $idsucursal, $idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_venta, 
-  $subtotal_compra, $igv_compra, $total_descuento, $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv,  $precio_con_igv,$precio_venta, $descuento, $tipo_gravada) {
+  public function editar( $idcompra_producto, $idsucursal, $idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_compra, $subtotal_compra,
+  $igv_compra, $total_descuento, $tipo_gravada, 
+  $idproducto, $lote, $unidad_medida,$um_abreviatura, $presentacion, $laboratorio, $cantidad, $precio_sin_igv, $precio_igv, $precio_con_igv,$precio_venta, $descuento) {
 
     if ( !empty($idcompra_producto) ) {
-      //Eliminamos todos los permisos asignados para volverlos a registrar
+      //Eliminamos todos los productos asignados para volverlos a registrar
       $sqldel = "DELETE FROM detalle_compra_producto WHERE idcompra_producto='$idcompra_producto';";
-      $delete_compra = ejecutarConsulta($sqldel);
-      if ($delete_compra['status'] == false) { return $delete_compra; }
+      $delete_compra = ejecutarConsulta($sqldel);  if ($delete_compra['status'] == false) { return $delete_compra; }
 
       $sql = "UPDATE compra_producto SET idpersona='$idproveedor',fecha_compra='$fecha_compra',tipo_comprobante='$tipo_comprobante',
       serie_comprobante='$serie_comprobante',val_igv='$val_igv',subtotal='$subtotal_compra',igv='$igv_compra',
-      total='$total_venta',tipo_gravada='$tipo_gravada',descripcion='$descripcion' 
+      total_compra='$total_compra', total_descuento='$total_descuento', tipo_gravada='$tipo_gravada',descripcion='$descripcion', user_updated = '$this->id_usr_sesion' 
       WHERE idcompra_producto = '$idcompra_producto'";
-
       $update_compra = ejecutarConsulta($sql); if ($update_compra['status'] == false) { return $update_compra; }
 
       //add registro en nuestra bitacora
-      $sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('compra_producto','$idcompra_producto','Editar compra','$this->id_usr_sesion')";
+      $sql_d = $idcompra_producto.', '.$idsucursal.', '.$idproveedor.', '.$num_doc.', '.$fecha_compra.', '.$tipo_comprobante.', '.$serie_comprobante.', '.$val_igv.', '.$descripcion.', '.$total_compra.', '.$subtotal_compra.', '.$igv_compra.', '.$total_descuento.', '.$tipo_gravada;
+      $sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6, 'compra_producto','$idcompra_producto','$sql_d','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }
 
-      $num_elementos = 0; $detalle_compra = "";
+      $ii = 0; $detalle_compra = "";
 
-      while ($num_elementos < count($idproducto)) {
+      while ($ii < count($idproducto)) {
 
-        $subtotal_producto = (floatval($cantidad[$num_elementos]) * floatval($precio_con_igv[$num_elementos])) - $descuento[$num_elementos];
+        $subtotal_producto = (floatval($cantidad[$ii]) * floatval($precio_con_igv[$ii])) - $descuento[$ii];
 
-          $sql_detalle = "INSERT INTO detalle_compra_producto(idcompra_producto, idproducto, unidad_medida, categoria, cantidad, precio_sin_igv, igv, 
-          precio_con_igv,precio_venta, descuento, subtotal, user_created) 
-          VALUES ('$idcompra_producto','$idproducto[$num_elementos]', '$unidad_medida[$num_elementos]',  '$categoria[$num_elementos]', '$cantidad[$num_elementos]', 
-          '$precio_sin_igv[$num_elementos]', '$precio_igv[$num_elementos]', '$precio_con_igv[$num_elementos]','$precio_venta[$num_elementos]', '$descuento[$num_elementos]', 
-          '$subtotal_producto','$this->id_usr_sesion')";
-
-          $detalle_compra =  ejecutarConsulta_retornarID($sql_detalle); if ($detalle_compra['status'] == false) { return  $detalle_compra;}
-
-          //add update table producto el stock
-          $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]', precio_unitario='$precio_venta[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
-          $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
+        $sql_detalle = "INSERT INTO detalle_compra_producto(idcompra_producto, idproducto, idlote, unidad_medida, um_abreviatura, presentacion, laboratorio, cantidad, 
+        precio_sin_igv, igv, precio_con_igv, precio_venta, descuento, subtotal, user_created) 
+        VALUES ('$idcompra_producto','$idproducto[$ii]', '$lote[$ii]', '$unidad_medida[$ii]',  '$um_abreviatura[$ii]', '$presentacion[$ii]', '$laboratorio[$ii]', '$cantidad[$ii]', 
+        '$precio_sin_igv[$ii]', '$precio_igv[$ii]', '$precio_con_igv[$ii]','$precio_venta[$ii]', '$descuento[$ii]', 
+        '$subtotal_producto','$this->id_usr_sesion')";
+        $detalle_compra =  ejecutarConsulta_retornarID($sql_detalle); if ($detalle_compra['status'] == false) { return  $detalle_compra;}
 
         //add registro en nuestra bitacora.
-        $sql_bit_d = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('detalle_compra_producto','".$detalle_compra['data']."','Detalle editado compra','$this->id_usr_sesion')";
+        $sql_d = $idcompra_producto.', '.$idproducto[$ii].', '.$unidad_medida[$ii].', '.$laboratorio[$ii].', '.$cantidad[$ii].', '.$precio_sin_igv[$ii].', '.$precio_igv[$ii].', '.
+        $precio_con_igv[$ii].', '.$precio_venta[$ii].', '. $descuento[$ii].', '.$subtotal_producto;
+        $sql_bit_d = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (6,'detalle_compra_producto','".$idcompra_producto."','$sql_d','$this->id_usr_sesion')";
         $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
 
-        $num_elementos = $num_elementos + 1;
+        //add update table PRODUCTO el precio de  venta
+        $sql_producto = "UPDATE producto SET precio_actual='$precio_venta[$ii]', user_updated='$this->id_usr_sesion' WHERE idproducto = '$idproducto[$ii]'";
+        $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
+
+        // :::::::::::::: bsucamos para asigar el stock ::::::::::::
+        $sql_1 = "SELECT SUM(dcp.cantidad) as cant_compra FROM detalle_compra_producto as dcp
+        WHERE dcp.estado = '1' AND dcp.estado_delete = '1' AND dcp.idproducto = '$idproducto[$ii]';";
+        $compra = ejecutarConsultaSimpleFila($sql_1); if ( $compra['status'] == false) {return $compra; }  
+
+        $sql_2 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp
+        WHERE dvp.estado = '1' AND dvp.estado_delete = '1' AND dvp.idproducto = '$idproducto[$ii]';";
+        $venta = ejecutarConsultaSimpleFila($sql_2); if ( $venta['status'] == false) {return $venta; }  
+
+        $n_compra = empty($compra['data']) ? 0 : (empty($compra['data']['cant_compra']) ? 0 : floatval($compra['data']['cant_compra']) ) ;
+        $n_venta  = empty($venta['data']) ? 0 : (empty($venta['data']['cant_venta']) ? 0 : floatval($venta['data']['cant_venta']) ) ;
+
+        $stock = $n_compra - $n_venta;
+
+        //add update table LOTE el stock
+        $sql_stock = "UPDATE lote SET stock ='$stock', user_updated='$this->id_usr_sesion' WHERE idlote = '$lote[$ii]'";
+        $stock_p = ejecutarConsulta($sql_stock); if ($stock_p['status'] == false) { return  $stock_p;}          
+
+        $ii++;
       }
       return $detalle_compra; 
     } else { 
@@ -143,73 +162,58 @@ class Compra_producto
     }
   }
 
-  public function mostrar_compra_para_editar($idcompra_producto) {
-
-    $sql = "SELECT  cp.idcompra_producto,cp.fecha_compra,cp.idpersona, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total_compra, cp.tipo_gravada, 
-    cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo, p.direccion,p.correo
-    FROM compra_producto as cp, persona as p 
-    WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";
-
-    $compra=  ejecutarConsultaSimpleFila($sql); if ($compra['status'] == false) {return $compra; }
-
-    $sql = "SELECT dcp.idproducto, dcp.unidad_medida, dcp.categoria, dcp.cantidad, dcp.precio_sin_igv, dcp.igv, dcp.precio_con_igv, 
-    dcp.precio_venta, dcp.descuento, dcp.subtotal, p.nombre, p.imagen, c.nombre as categoria, um.abreviatura
-    FROM detalle_compra_producto as dcp, producto as p, categoria_producto as c, unidad_medida as um
-    WHERE dcp.idproducto =p.idproducto AND p.idcategoria_producto = c.idcategoria_producto AND p.idunidad_medida = um.idunidad_medida AND dcp.idcompra_producto ='$idcompra_producto';";
-
-    $detalle = ejecutarConsultaArray($sql);    if ($detalle['status'] == false) {return $detalle; }
-
-    return $datos= Array('status' => true, 'data' => ['compra' => $compra['data'], 'detalle' => $detalle['data']], 'message' => 'Todo ok' );
-
-  }
+  
 
   //Implementamos un método para desactivar categorías
-  public function desactivar($idcompra_producto) {
-    // var_dump($idcompra_producto);die();
-    $sql = "UPDATE compra_producto SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idcompra_producto='$idcompra_producto'";
+  public function desactivar($id) {    
+    
+    // buscamos las cantidades
+    $sql_restaurar = "SELECT dcp.idproducto, dcp.idlote, dcp.cantidad FROM detalle_compra_producto AS dcp, compra_producto AS cp 
+    WHERE dcp.idcompra_producto = cp.idcompra_producto AND cp.estado = '1' AND cp.estado_delete = '1' AND dcp.estado = '1' AND dcp.estado_delete = '1' AND dcp.idcompra_producto = '$id';";
+    $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
+
+    // actualizamos el stock
+    foreach ($restaurar_stok['data'] as $key => $value) {  
+      $cant = $value['cantidad'];    
+      $update_producto = "UPDATE lote SET stock = stock - '$cant', user_updated = '$this->id_usr_sesion' WHERE idlote = '".$value['idlote']."';";
+      $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
+    }	
+
+    // desactivamos las compras
+    $sql = "UPDATE compra_producto SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idcompra_producto='$id'";
 		$desactivar= ejecutarConsulta($sql);if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('compra_producto','".$idcompra_producto."','Compra desactivada','$this->id_usr_sesion')";
+		$sql_bit = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (2, 'compra_producto','$id','$id','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
-    
-    // buscamos las cantidades
-    $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_compra_producto WHERE idcompra_producto = '$idcompra_producto';";
-    $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
-    // actualizamos el stock
-    foreach ($restaurar_stok['data'] as $key => $value) {      
-      $update_producto = "UPDATE producto SET stock = stock - '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
-      $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
-    }	
 		
 		return $desactivar;
   }
 
   //Implementamos un método para activar categorías
-  public function eliminar($idcompra_producto) {
-    $sql = "UPDATE compra_producto SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idcompra_producto='$idcompra_producto'";
+  public function eliminar($id) {    
+
+    // buscamos las cantidades
+    $sql_restaurar = "SELECT dcp.idproducto, dcp.idlote, dcp.cantidad FROM detalle_compra_producto AS dcp, compra_producto AS cp 
+    WHERE dcp.idcompra_producto = cp.idcompra_producto AND cp.estado = '1' AND cp.estado_delete = '1' AND dcp.estado = '1' AND dcp.estado_delete = '1' AND dcp.idcompra_producto = '$id';";
+    $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
+
+    // actualizamos el stock
+    foreach ($restaurar_stok['data'] as $key => $value) {   
+      $cant = $value['cantidad'];      
+      $update_producto = "UPDATE lote SET stock = stock - '$cant', user_updated = '$this->id_usr_sesion' WHERE idlote = '".$value['idlote']."';";
+      $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
+    }	
+
+    //  borramos la compra
+    $sql = "UPDATE compra_producto SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idcompra_producto='$id'";
 		$eliminar =  ejecutarConsulta($sql);if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES ('compra_producto','$idcompra_producto','Compra Eliminada','$this->id_usr_sesion')";
+		$sql = "INSERT INTO bitacora_bd( idcodigo, nombre_tabla, id_tabla, sql_d, id_user) VALUES (4, 'compra_producto','$id','$id','$this->id_usr_sesion')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
-
-    // buscamos las cantidades
-    $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_compra_producto WHERE idcompra_producto = '$idcompra_producto';";
-    $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
-    // actualizamos el stock
-    foreach ($restaurar_stok['data'] as $key => $value) {      
-      $update_producto = "UPDATE producto SET stock = stock - '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
-      $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
-    }	
 		
 		return $eliminar;
-  }
-
-  //Implementar un método para mostrar los datos de un registro a modificar
-  public function mostrar($idcompra_producto) {
-    $sql = "SELECT * FROM compra_producto WHERE idcompra_producto='$idcompra_producto'";
-    return ejecutarConsultaSimpleFila($sql);
   }
 
   //Implementar un método para listar los registros
@@ -232,7 +236,7 @@ class Compra_producto
     $data = Array();
     $scheme_host=  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_briment/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
 
-    $sql = "SELECT cp.idcompra_producto, cp.idpersona, cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.total_compra, cp.tipo_gravada, cp.comprobante, cp.descripcion, p.nombres
+    $sql = "SELECT cp.idcompra_producto, cp.idpersona, cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.subtotal, cp.igv, cp.total_descuento, cp.total_compra, cp.tipo_gravada, cp.comprobante, cp.descripcion, p.nombres
     FROM compra_producto as cp, persona as p  
     WHERE cp.idpersona = p.idpersona AND cp.estado= '1' AND cp.estado_delete = '1' $filtro_proveedor $filtro_comprobante $filtro_fecha
 		ORDER BY cp.fecha_compra DESC ";
@@ -255,7 +259,7 @@ class Compra_producto
   //Implementar un método para listar los registros x proveedor
   public function listar_detalle_comprax_provee($idproveedor) {
 
-    $sql = "SELECT cp.idcompra_producto, cp.idpersona,cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante,cp.total_compra,cp.descripcion
+    $sql = "SELECT cp.idcompra_producto, cp.idpersona,cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante,cp.total_compra,cp.descripcion, cp.comprobante
     FROM compra_producto as cp WHERE cp.idpersona = '$idproveedor' AND cp.estado= '1' AND cp.estado_delete = '1'";
 
     return ejecutarConsulta($sql);
@@ -264,18 +268,16 @@ class Compra_producto
   //mostrar detalles uno a uno de la factura
   public function ver_compra($idcompra_producto) {
 
-    $sql = "SELECT cp.idpersona, cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total_compra, cp.tipo_gravada, 
+    $sql = "SELECT cp.idcompra_producto, cp.idpersona, cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.total_descuento, cp.igv, cp.total_compra, cp.tipo_gravada, 
     cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo 
     FROM compra_producto as cp, persona as p 
     WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";
-
     $compra=  ejecutarConsultaSimpleFila($sql); if ($compra['status'] == false) {return $compra; }
 
-    $sql = "SELECT dcp.idproducto, dcp.unidad_medida, dcp.categoria, dcp.cantidad, dcp.precio_sin_igv, dcp.igv, dcp.precio_con_igv, 
-    dcp.precio_venta, dcp.descuento, dcp.subtotal, p.nombre, p.imagen, c.nombre as categoria 
-    FROM detalle_compra_producto as dcp, producto as p, categoria_producto as c 
-    WHERE dcp.idproducto =p.idproducto AND p.idcategoria_producto = c.idcategoria_producto AND dcp.idcompra_producto ='$idcompra_producto';";
-
+    $sql = "SELECT dcp.idproducto, dcp.unidad_medida, dcp.um_abreviatura, dcp.presentacion, dcp.laboratorio, dcp.cantidad, dcp.precio_sin_igv, dcp.igv, dcp.precio_con_igv, 
+    dcp.precio_venta, dcp.descuento, dcp.subtotal, p.nombre, p.imagen, p.codigo, l.idlote, l.nombre as lote, l.fecha_vencimiento
+    FROM detalle_compra_producto as dcp, producto as p, lote as l
+    WHERE dcp.idproducto =p.idproducto AND l.idlote = dcp.idlote AND dcp.idcompra_producto ='$idcompra_producto';";
     $detalle = ejecutarConsultaArray($sql);    if ($detalle['status'] == false) {return $detalle; }
 
     return $datos= Array('status' => true, 'data' => ['compra' => $compra['data'], 'detalle' => $detalle['data']], 'message' => 'Todo ok' );

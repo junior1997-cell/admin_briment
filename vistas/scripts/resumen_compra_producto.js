@@ -90,11 +90,13 @@ function tbla_principal(id_proyecto) {
 		lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
 		aProcessing: true,//Activamos el procesamiento del datatables
 	  aServerSide: true,//Paginación y filtrado realizados por el servidor
-	  dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
+	  dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
 	  buttons: [ 
-      { extend: 'copyHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], }  }, 
-      { extend: 'excelHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], } }, 
-      { extend: 'pdfHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], }, orientation: 'landscape', pageSize: 'LEGAL', },
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_principal.ajax.reload(null, false); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,11,12,4,5,6,8,9,10], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,11,12,4,5,6,8,9,10], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,11,12,4,5,6,8,9,10], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
 		ajax:	{
       url: '../ajax/resumen_compra_producto.php?op=tbla_principal',
@@ -110,17 +112,19 @@ function tbla_principal(id_proyecto) {
       // columna: op
       if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap"); }
       // columna: UM
+      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
+      // columna: stock
+      if (data[5] != '') { $("td", row).eq(5).addClass("text-center"); }
+      //columna:cantidad
       if (data[6] != '') { $("td", row).eq(6).addClass("text-center"); }
-     //columna:cantidad
-      if (data[7] != '') { $("td", row).eq(7).addClass("text-center"); }
       // columna: Compra
-      if (data[8] != '') { $("td", row).eq(8).addClass("text-center");  }
+      if (data[7] != '') { $("td", row).eq(7).addClass("text-center");  }
       // columna: Precio promedio
-      if (data[9] != '') { $("td", row).eq(9).addClass("text-right"); }
-      // columna: Precio actual
-      if (data[10] != '') { $("td", row).eq(10).addClass("text-right");  }
+      if (data[8] != '') { $("td", row).eq(8).addClass("text-right"); }
+      // columna: Descuento
+      if (data[9] != '') { $("td", row).eq(9).addClass("text-right");  }
       // columna: Suma Total
-      if (data[11] != '') { $("td", row).eq(11).addClass("text-right");  }
+      if (data[10] != '') { $("td", row).eq(10).addClass("text-right");  }
 
     },
 		language: {
@@ -129,19 +133,19 @@ function tbla_principal(id_proyecto) {
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
     footerCallback: function( tfoot, data, start, end, display ) {
-      var api1 = this.api(); var total1 = api1.column( 10 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api1.column( 10 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );
+      var api1 = this.api(); var total1 = api1.column( 9 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api1.column( 9 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );
 
-      var api2 = this.api(); var total2 = api2.column( 11 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api2.column( 11 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
+      var api2 = this.api(); var total2 = api2.column( 10 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api2.column( 10 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
     },
 		bDestroy: true,
 		iDisplayLength: 10,//Paginación
 	  //order: [[ 0, "desc" ]]//Ordenar (columna,orden)
     columnDefs:[ 
-      { "targets": [ 12,13 ], "visible": false, "searchable": false }, 
-      { targets: [7], render: $.fn.dataTable.render.number(',', '.', 2) },
-      { targets: [9,10,11], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { "targets": [ 11,12 ], "visible": false, "searchable": false }, 
+      { targets: [6], render: $.fn.dataTable.render.number(',', '.', 2) },
+      { targets: [8,9,10], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ]
 	}).DataTable();
   
@@ -168,11 +172,14 @@ function tbla_facuras( idproducto, nombre_producto ) {
 		lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
 		aProcessing: true,//Activamos el procesamiento del datatables
 		aServerSide: true,//Paginación y filtrado realizados por el servidor
-		dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
+		dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
 		buttons: [ 
-      { extend: 'copyHtml5', footer: true,exportOptions: { columns: [0,2,10,11,4,5,6,8]} }, 
-      { extend: 'excelHtml5', footer: true,exportOptions: { columns: [0,2,10,11,4,5,6,8]} }, 
-      { extend: 'pdfHtml5', footer: true,exportOptions: { columns: [0,2,10,11,4,5,6,8]}, orientation: 'landscape', pageSize: 'LEGAL', }
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_factura.ajax.reload(null, false); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { extend: 'copyHtml5', exportOptions: { columns: [0,2,10,11,4,5,6,8], }, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray", footer: true,  }, 
+      { extend: 'excelHtml5', exportOptions: { columns: [0,2,10,11,4,5,6,8], }, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", footer: true,  }, 
+      { extend: 'pdfHtml5', exportOptions: { columns: [0,2,10,11,4,5,6,8], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
+      { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
+
     ],
 		ajax:	{
       url: `../ajax/resumen_compra_producto.php?op=tbla_facturas&idproducto=${idproducto}`,
@@ -197,12 +204,16 @@ function tbla_facuras( idproducto, nombre_producto ) {
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
     footerCallback: function( tfoot, data, start, end, display ) {
-      var api1 = this.api(); var total1 = api1.column( 5 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api1.column( 5 ).footer() ).html( `${formato_miles(total1)}` );
+      
+      var api0 = this.api(); var total0 = api0.column( 5 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api0.column( 5 ).footer() ).html( `${formato_miles(total0)}` );
+      var api1 = this.api(); var total1 = api1.column( 6 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api1.column( 6 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1/end)}</span>` );
       var api2 = this.api(); var total2 = api2.column( 7 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
       $( api2.column( 7 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
-      var api3 = this.api(); var total2 = api3.column( 8 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api3.column( 8 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
+      var api3 = this.api(); var total3 = api3.column( 8 ).data().reduce( function ( a, b ) { return (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api3.column( 8 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total3)}</span>` );
+      
     },
 		bDestroy: true,
 		iDisplayLength: 10,//Paginación

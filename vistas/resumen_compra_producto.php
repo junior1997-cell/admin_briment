@@ -85,17 +85,16 @@
                                   <th class="">Op</th>
                                   <th>Code</th>  
                                   <th class="">Producto</th>
-                                  <th data-toggle="tooltip" data-original-title="Unidad de Medida">UM</th>
-                                  <th class="">Cont. Neto</th>
+                                  <th data-toggle="tooltip" data-original-title="Unidad de Medida">UM</th>                                  
                                   <th class="">Stock</th>                                  
-                                  <th>Cantidad</th>
+                                  <th class="text-center">Cantidad <br> <small>(total)</small></th>
                                   <th>Compra</th> 
-                                  <th>Precio venta</th> 
-                                  <th>Descuento</th>    
-                                  <th>Suma Total</th> 
+                                  <th class="text-center">Precio <br> <small>(compra promedio)</small></th> 
+                                  <th>Dcto.</th>    
+                                  <th>Total</th> 
 
                                   <th>Producto</th> 
-                                  <th>Categoría</th> 
+                                  <th>Laboratorio</th> 
                                 </tr>
                               </thead>
                               <tbody>                         
@@ -108,16 +107,15 @@
                                   <th>Code</th> 
                                   <th class="">Producto</th>
                                   <th>UM</th>
-                                  <th class="">Cont. Neto</th>
                                   <th class="">Stock</th>                                  
                                   <th class="text-center">Cantidad</th> 
                                   <th>Compra</th>
-                                  <th>Precio venta</th>
+                                  <th>Precio</th>
                                   <th class="text-nowrap px-2">0.00</th>   
                                   <th class="text-nowrap px-2"><i class="fas fa-spinner fa-pulse fa-sm"></i></th>    
                                   
                                   <th>Producto</th> 
-                                  <th>Categoría</th> 
+                                  <th>Laboratorio</th> 
                                 </tr>
                               </tfoot>
                             </table>
@@ -134,7 +132,7 @@
                                   <th>N° Comprob.</th>
                                   <th>Fecha compra</th>
                                   <th data-toggle="tooltip" data-original-title="Centidad">Cant.</th>
-                                  <th>Precio</th>  
+                                  <th>Precio compra</th>  
                                   <th data-toggle="tooltip" data-original-title="Descuento">Dcto.</th>
                                   <th>SubTotal</th>  
                                   <th>Tipo</th>
@@ -152,7 +150,7 @@
                                   <th>N° Comprob.</th>
                                   <th >Fecha compra</th>
                                   <th class="text-center px-2">0.00</th>
-                                  <th class="text-nowrap px-2">Precio</th>  
+                                  <th class="text-nowrap px-2">Precio compra</th>  
                                   <th class="text-nowrap px-2">S/ 0.00</th> 
                                   <th class="text-nowrap px-2">S/ 0.00</th>                         
                                   <th>Tipo</th>

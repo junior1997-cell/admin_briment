@@ -9,7 +9,7 @@
     case 'verificar':
 
       require_once "../modelos/Usuario.php";
-      $usuario = new Usuario($_SESSION['idusuario']); 
+      $usuario = new Usuario(); 
 
       $logina = $_POST['logina'];
       $clavea = $_POST['clavea'];

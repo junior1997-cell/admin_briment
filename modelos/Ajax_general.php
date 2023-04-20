@@ -203,20 +203,21 @@
     //funcion para mostrar registros de prosuctos
     public function tblaProductos() {
       $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
-      p.descripcion, p.imagen, p.estado,um.nombre as unidad_medida, l.nombre as laboratorio, pre.nombre as presentacion
+      p.descripcion, p.imagen, p.estado, um.nombre as unidad_medida, um.abreviatura, l.nombre as laboratorio, pre.nombre as presentacion
       FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
       WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
       and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
       $producto = ejecutarConsultaArray($sql); if ( $producto['status'] == false) {return $producto; }  
 
       foreach ($producto['data'] as $key => $val) {
-        $sql_1 = "SELECT SUM(dcp.cantidad) as cant_compra FROM detalle_compra_producto as dcp
-        WHERE dcp.idproducto = 1 AND dcp.estado = '1' AND dcp.estado_delete = '1';";
+        $id = $val['idproducto'];
+        $sql_1 = "SELECT SUM(dcp.cantidad) as cant_compra FROM detalle_compra_producto as dcp, compra_producto as cp
+        WHERE dcp.idcompra_producto = cp.idcompra_producto AND cp.estado = '1' AND cp.estado_delete = '1' AND dcp.estado = '1' AND dcp.estado_delete = '1' AND dcp.idproducto = '$id';";
         $compra = ejecutarConsultaSimpleFila($sql_1); if ( $compra['status'] == false) {return $compra; }  
-  
-        $sql_1 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp
-        WHERE dvp.idproducto = 1 AND dvp.estado = '1' AND dvp.estado_delete = '1';";
-        $venta = ejecutarConsultaSimpleFila($sql_1); if ( $venta['status'] == false) {return $venta; }  
+
+        $sql_2 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp, venta_producto as vp
+        WHERE vp.idventa_producto = dvp.idventa_producto AND vp.estado = '1' AND vp.estado_delete = '1' AND dvp.estado = '1' AND dvp.estado_delete = '1' AND dvp.idproducto = '$id';";
+        $venta = ejecutarConsultaSimpleFila($sql_2); if ( $venta['status'] == false) {return $venta; }   
   
         $n_compra = empty($compra['data']) ? 0 : (empty($compra['data']['cant_compra']) ? 0 : floatval($compra['data']['cant_compra']) ) ;
         $n_venta  = empty($venta['data']) ? 0 : (empty($venta['data']['cant_venta']) ? 0 : floatval($venta['data']['cant_venta']) ) ;
@@ -235,9 +236,10 @@
           "imagen"          => $val['imagen'],
           "estado"          => $val['estado'],
           "unidad_medida"   => $val['unidad_medida'],
+          "abreviatura"     => $val['abreviatura'],
           "laboratorio"     => $val['laboratorio'],
           "presentacion"    => $val['presentacion'],
-          "stock"            => $stock,
+          "stock"           => $stock,
         ];
       }
   

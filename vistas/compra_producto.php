@@ -151,7 +151,7 @@
                             <table id="tabla-compra" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
-                                  <th colspan="10" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
+                                  <th colspan="13" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
                                 </tr>
                                 <tr>
                                   <th class="">#</th>
@@ -165,6 +165,9 @@
 
                                   <th>Tipo comprobante</th>
                                   <th>Num. Comprobante</th>
+                                  <th>Subtotal</th>  
+                                  <th>IGV</th>  
+                                  <th>Descuento</th>  
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -181,6 +184,9 @@
 
                                   <th>Tipo comprobante</th>
                                   <th>Num. Comprobante</th>
+                                  <th>Subtotal</th>  
+                                  <th>IGV</th>  
+                                  <th>Descuento</th>  
                                 </tr>
                               </tfoot>
                             </table>
@@ -344,11 +350,12 @@
                                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
                                       <thead class="bg-color-0037a4 text-white" >
                                         <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
+                                        <th>Código</th>
                                         <th>Producto</th>
-                                        <th>Lote - F.V.</th>
+                                        <th class="d-flex justify-content-between"><span>Lote - Fecha Vencimiento</span> <span class="text-center badge badge-warning cursor-pointer ml-2" data-toggle="tooltip" data-original-title="Agregar lote" onclick="modal_lote();"><i class="fas fa-plus p-t-3px"></i></span> </th>
                                         <th>Unidad</th>
                                         <th>Cantidad</th>
-                                        <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U </th>
+                                        <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U <small>(neto)</small></th>
                                         <th class="hidden">IGV</th>
                                         <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U <small>(unitario)</small></th>
                                         <th data-toggle="tooltip" data-original-title="Precio Venta">P/V <small>(venta)</small></th>
@@ -356,7 +363,7 @@
                                         <th>Subtotal</th>
                                       </thead>
                                       <tfoot>
-                                        <td colspan="7" id="colspan_subtotal"></td>
+                                        <td colspan="8" id="colspan_subtotal"></td>
                                         <th class="text-right">
                                           <h6 class="tipo_gravada">GRAVADA</h6>
                                           <h6 class="">TOTAL DSCTO.</h6>
@@ -956,8 +963,8 @@
                         </div>
                         <div class="modal-footer justify-content-between">
                           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <a type="button" class="btn btn-success float-right" id="excel_compra" target="_blank" ><i class="far fa-file-excel"></i> Excel</a>
-                          <a type="button" class="btn btn-info" id="print_pdf_compra" target="_blank" ><i class="fas fa-print"></i> Imprimir/PDF</a>
+                          <a type="button" class="btn btn-success float-right" id="excel_compra" target="_blank" data-toggle="tooltip" data-original-title="Descargar" ><i class="far fa-file-excel"></i> Excel</a>
+                          <a type="button" class="btn btn-info" id="print_pdf_compra" target="_blank" data-toggle="tooltip" data-original-title="Ver comprobante" ><i class="fa-regular fa-file-lines"></i> Comprobante</a>
                         </div>
                       </div>
                     </div>
@@ -1197,6 +1204,80 @@
                         <div class="modal-footer justify-content-between">
                           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_producto();">Close</button>
                           <button type="submit" class="btn btn-success" id="guardar_registro_material">Guardar Cambios</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- MODAL - LOTE - chargue 11 -->
+                  <div class="modal fade" id="modal-agregar-lote">
+                    <div class="modal-dialog modal-dialog-scrollable modal-md">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Agregar Lote</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text-danger" aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+
+                        <div class="modal-body">
+                          <!-- form start -->
+                          <form id="form-lote" name="form-lote" method="POST" autocomplete="off">
+                            <div class="card-body">
+                              <div class="row" id="cargando-11-fomulario">
+                                <!-- id idunidad_medida -->
+                                <input type="hidden" name="idlote_lot" id="idlote_lot" />
+
+                                <!-- nombre_medida -->
+                                <div class="col-lg-12 class_pading">
+                                  <div class="form-group">
+                                    <label for="nombre_lot">Nombre</label>
+                                    <input type="text" name="nombre_lot" class="form-control" id="nombre_lot" placeholder="Nombre del Lote" />
+                                  </div>
+                                </div>
+
+                                <!-- Fecha de vencimiento -->
+                                <div class="col-lg-12 class_pading">
+                                  <div class="form-group">
+                                    <label for="fecha_vencimiento_lot">Fecha de Vencimiento </label>
+                                    <input class="form-control" type="date" id="fecha_vencimiento_lot" name="fecha_vencimiento_lot" min=<?php $hoy=date("Y-m-d"); echo $hoy;?> />
+                                  </div>
+                                </div>                            
+
+                                <!-- Descripciòn -->
+                                <div class="col-lg-12 class_pading">
+                                  <div class="form-group">
+                                    <label for="descripcion_lot">Descripción</label>
+                                    <textarea name="descripcion_lot" id="descripcion_lot" class="form-control" rows="2"></textarea>                              
+                                  </div>
+                                </div>
+
+                                <!-- barprogress -->
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-20px" id="barra_progress_lote_div" style="display: none;">
+                                  <div class="progress" >
+                                    <div id="barra_progress_lote" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
+                                      0%
+                                    </div>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                              <div class="row" id="cargando-12-fomulario" style="display: none;">
+                                <div class="col-lg-12 text-center">
+                                  <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
+                                  <br />
+                                  <h4>Cargando...</h4>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <button type="submit" style="display: none;" id="submit-form-lote">Submit</button>
+                          </form>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_lote();">Close</button>
+                          <button type="submit" class="btn btn-success" id="guardar_registro_lote">Guardar Cambios</button>
                         </div>
                       </div>
                     </div>

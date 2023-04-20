@@ -15,24 +15,60 @@ class ResumenCompraProducto
 
   //Implementar un método para listar los registros
   public function tbla_principal() {
-    $sql = "SELECT p.idproducto, p.nombre AS nombre_producto, p.marca, p.contenido_neto, p.stock, p.imagen, um.nombre AS unidad_medida, 
-    catp.nombre AS categoria_producto, 
+    $data = [];
+    $sql = "SELECT p.idproducto, p.codigo, p.nombre AS nombre_producto, p.precio_actual, p.imagen, um.nombre AS unidad_medida, 
+    l.nombre AS laboratorio, 
     SUM(dcp.cantidad) AS cantidad, SUM(dcp.precio_sin_igv) AS precio_sin_igv, SUM(dcp.igv) AS igv, SUM(dcp.precio_con_igv) AS precio_con_igv,
-    AVG(dcp.precio_venta) AS precio_venta, SUM(dcp.descuento) AS descuento, SUM(dcp.subtotal) AS subtotal
-    FROM compra_producto as cp, detalle_compra_producto as dcp, producto as p, unidad_medida as um, categoria_producto as catp
+    AVG(dcp.precio_con_igv) AS precio_compra_promedio, SUM(dcp.descuento) AS descuento, SUM(dcp.subtotal) AS subtotal
+    FROM compra_producto as cp, detalle_compra_producto as dcp, producto as p, unidad_medida as um, laboratorio as l
     WHERE cp.idcompra_producto = dcp.idcompra_producto AND dcp.idproducto = p.idproducto AND p.idunidad_medida = um.idunidad_medida 
-    AND p.idcategoria_producto = catp.idcategoria_producto AND cp.estado = '1' AND cp.estado_delete = '1' 
+    AND p.idlaboratorio = l.idlaboratorio AND cp.estado = '1' AND cp.estado_delete = '1' 
     GROUP BY dcp.idproducto ORDER BY p.nombre ASC;";
+    $producto = ejecutarConsulta($sql); if ( $producto['status'] == false) {return $producto; } 
 
-    return ejecutarConsulta($sql);
+    foreach ($producto['data'] as $key => $val) {
+
+      $id = $val['idproducto'];
+      $sql_1 = "SELECT SUM(dcp.cantidad) as cant_compra FROM detalle_compra_producto as dcp, compra_producto as cp
+      WHERE dcp.idcompra_producto = cp.idcompra_producto AND cp.estado = '1' AND cp.estado_delete = '1' AND dcp.estado = '1' AND dcp.estado_delete = '1' AND dcp.idproducto = '$id';";
+      $compra = ejecutarConsultaSimpleFila($sql_1); if ( $compra['status'] == false) {return $compra; }  
+
+      $sql_2 = "SELECT SUM(dvp.cantidad) as cant_venta FROM detalle_venta_producto as dvp, venta_producto as vp
+      WHERE vp.idventa_producto = dvp.idventa_producto AND vp.estado = '1' AND vp.estado_delete = '1' AND dvp.estado = '1' AND dvp.estado_delete = '1' AND dvp.idproducto = '$id';";
+      $venta = ejecutarConsultaSimpleFila($sql_2); if ( $venta['status'] == false) {return $venta; }  
+
+      $n_compra = empty($compra['data']) ? 0 : (empty($compra['data']['cant_compra']) ? 0 : floatval($compra['data']['cant_compra']) ) ;
+      $n_venta  = empty($venta['data']) ? 0 : (empty($venta['data']['cant_venta']) ? 0 : floatval($venta['data']['cant_venta']) ) ;
+
+      $stock = $n_compra - $n_venta;
+
+      $data[] = [
+        "idproducto"      => $val['idproducto'],
+        "codigo"          => $val['codigo'],
+        "nombre_producto" => $val['nombre_producto'],
+        "imagen"          => $val['imagen'],
+        "unidad_medida"   => $val['unidad_medida'],
+        "laboratorio"     => $val['laboratorio'],
+        "cantidad"        => $val['cantidad'],
+        "precio_sin_igv"  => $val['precio_sin_igv'],
+        "igv"             => $val['igv'],
+        "precio_con_igv"  => $val['precio_con_igv'],
+        "precio_compra_promedio"    => $val['precio_compra_promedio'],
+        "precio_actual"   => $val['precio_actual'],
+        "descuento"       => $val['descuento'],
+        "subtotal"        => $val['subtotal'],
+        "stock"           => $stock,
+      ];
+    }
+    return $retorno = ['status'=> true, 'message' => 'Salió todo ok,', 'data' => $data ]; 
   }
 
   public function tbla_facturas( $idproducto) {
     $sql = "SELECT p.idproducto, cp.idcompra_producto, per.nombres as persona, cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, dcp.cantidad, 
-    dcp.precio_venta, dcp.descuento, dcp.subtotal
-    FROM compra_producto as cp, persona AS per, detalle_compra_producto as dcp, producto as p, unidad_medida as um, categoria_producto as catp
+    dcp.precio_con_igv as precio_compra, dcp.precio_venta, dcp.descuento, dcp.subtotal
+    FROM compra_producto as cp, persona AS per, detalle_compra_producto as dcp, producto as p, unidad_medida as um
     WHERE cp.idcompra_producto = dcp.idcompra_producto AND cp.idpersona = per.idpersona AND dcp.idproducto = p.idproducto AND p.idunidad_medida = um.idunidad_medida 
-    AND p.idcategoria_producto = catp.idcategoria_producto AND cp.estado = '1' AND cp.estado_delete = '1' AND dcp.idproducto = '$idproducto' 
+    AND cp.estado = '1' AND cp.estado_delete = '1' AND dcp.idproducto = '$idproducto' 
 		ORDER BY cp.fecha_compra DESC;";
     return ejecutarConsultaArray($sql);
 

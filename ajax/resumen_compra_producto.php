@@ -37,38 +37,37 @@
           $data = []; $count = 1;          
 
           if ($rspta['status']) {
-            while ($reg = $rspta['data']->fetch_object()) {
+            foreach ( $rspta['data'] as $key => $reg) {
               $clas_stok = "";
-              $imagen = (empty($reg->imagen) ? '../dist/docs/producto/img_perfil/producto-sin-foto.svg' : '../dist/docs/producto/img_perfil/'.$reg->imagen) ;
+              $imagen = (empty($reg['imagen']) ? '../dist/docs/producto/img_perfil/producto-sin-foto.svg' : '../dist/docs/producto/img_perfil/'.$reg['imagen']) ;
 
-              if ( $reg->stock <= 0) {
+              if ( $reg['stock'] <= 0) {
                 $clas_stok = 'badge-danger';
-              }else if ($reg->stock > 0 && $reg->stock <= 10) {
+              }else if ($reg['stock'] > 0 && $reg['stock'] <= 10) {
                 $clas_stok = 'badge-warning';
-              }else if ($reg->stock > 10) {
+              }else if ($reg['stock'] > 10) {
                 $clas_stok = 'badge-success';
               }
 
               $data[] = [     
                 "0"  => $count++,       
-                "1" => '<button class="btn btn-info btn-sm" onclick="mostrar_detalle_material(' . $reg->idproducto . ')" data-toggle="tooltip" data-original-title="Ver detalle Producto"><i class="far fa-eye"></i></button>',       
-                "2" => zero_fill($reg->idproducto, 6),    
+                "1" => '<button class="btn btn-info btn-sm" onclick="mostrar_detalle_material(' . $reg['idproducto'] . ')" data-toggle="tooltip" data-original-title="Ver detalle Producto"><i class="far fa-eye"></i></button>',       
+                "2" => $reg['codigo'],    
                 "3" => '<div class="user-block"> 
-                  <img class="profile-user-img img-responsive img-circle cursor-pointer" src="' . $imagen . '" onclick="ver_img_producto(\'' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre_producto).'\');" alt="User Image" onerror="' .  $imagen_error .  '" data-toggle="tooltip" data-original-title="Ver imagen">
-                  <span class="username"><p class="text-primary m-b-02rem" >' . $reg->nombre_producto . '</p></span>
-                  <span class="description"><b>Categoria: </b>'.(empty($reg->categoria_producto) ? ' - ' : $reg->categoria_producto ).'</span>
+                  <img class="profile-user-img img-responsive img-circle cursor-pointer" src="' . $imagen . '" onclick="ver_img_producto(\'' . $imagen . '\', \''.encodeCadenaHtml($reg['nombre_producto']).'\');" alt="User Image" onerror="' .  $imagen_error .  '" data-toggle="tooltip" data-original-title="Ver imagen">
+                  <span class="username"><p class="text-primary m-b-02rem" >' . $reg['nombre_producto'] . '</p></span>
+                  <span class="description"><b>Lab.: </b>'.(empty($reg['laboratorio']) ? ' - ' : $reg['laboratorio'] ).'</span>
                 </div>',
-                "4" => $reg->unidad_medida,
-                "5" => $reg->contenido_neto,
-                "6" => '<span class="badge '.$clas_stok.' font-size-14px" id="table_stock_'.$reg->idproducto.'">'.$reg->stock.'</span>',
-                "7" => $reg->cantidad,
-                "8" => '<button class="btn btn-info btn-sm mb-2" onclick="tbla_facuras( ' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre_producto, ENT_QUOTES) . '\')" data-toggle="tooltip" data-original-title="Ver compras"><i class="fa-solid fa-file-invoice-dollar"></i></button>'. $toltip,
-                "9" => $reg->precio_venta,
-                "10" => $reg->descuento,
-                "11" => $reg->subtotal,
+                "4" => $reg['unidad_medida'],
+                "5" => '<span class="badge '.$clas_stok.' font-size-14px" id="table_stock_'.$reg['idproducto'].'">'.$reg['stock'].'</span>',
+                "6" => $reg['cantidad'],
+                "7" => '<button class="btn btn-info btn-sm mb-2" onclick="tbla_facuras( ' . $reg['idproducto'] . ', \'' .  htmlspecialchars($reg['nombre_producto'], ENT_QUOTES) . '\')" data-toggle="tooltip" data-original-title="Ver compras"><i class="fa-solid fa-file-invoice-dollar"></i></button>'. $toltip,
+                "8" => $reg['precio_compra_promedio'],
+                "9" => $reg['descuento'],
+                "10" => $reg['subtotal'],
                 
-                "12" => $reg->nombre_producto,
-                "13" => $reg->categoria_producto,
+                "11" => $reg['nombre_producto'],
+                "12" => $reg['laboratorio'],
          
               ];
             }
@@ -119,7 +118,7 @@
                 "3" => '<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</span>' .$toltip,  
                 "4" => $reg['fecha_compra'],
                 "5" => $reg['cantidad'],
-                "6" => $reg['precio_venta'] ,
+                "6" => $reg['precio_compra'] ,
                 "7" => $reg['descuento'],
                 "8" => $reg['subtotal'],
                 "9" => $reg['tipo_comprobante'],

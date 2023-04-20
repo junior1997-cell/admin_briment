@@ -370,9 +370,9 @@
                                             <th class="text-center">#</th>
                                             <th class="">Acciones</th>
                                             <th>Nombre</th>
+                                            <th>Stock</th>
                                             <th>Expira</th>
-                                            <th>Descripciòn</th>
-                                            <th>Estado</th>                                            
+                                            <th>Descripciòn</th>                                                                                        
                                           </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -381,9 +381,9 @@
                                             <th class="text-center">#</th>
                                             <th class="">Acciones</th>
                                             <th>Nombre</th>
+                                            <th>Stock</th>
                                             <th>Expira</th>
                                             <th>Descripciòn</th>
-                                            <th>Estado</th>
                                           </tr>
                                         </tfoot>
                                       </table>
@@ -832,7 +832,7 @@
                             <!-- Fecha de vencimiento -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="fecha_pago">Fecha de Vencimiento </label>
+                                <label for="fecha_vencimiento">Fecha de Vencimiento </label>
                                 <input class="form-control" type="date" id="fecha_vencimiento" name="fecha_vencimiento" min=<?php $hoy=date("Y-m-d"); echo $hoy;?> />
                               </div>
                             </div>                            
@@ -847,8 +847,8 @@
 
                             <!-- barprogress -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-                              <div class="progress" id="div_barra_progress_um">
-                                <div id="barra_progress_um" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
+                              <div class="progress" id="barra_progress_lote_div">
+                                <div id="barra_progress_lote" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
                                   0%
                                 </div>
                               </div>

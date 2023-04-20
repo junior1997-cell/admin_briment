@@ -424,9 +424,9 @@
         }
       break;
 
-       /* ══════════════════════════════ L O T E ══════════════════════════════════════ */
+      /* ══════════════════════════════ L O T E ══════════════════════════════════════ */
 
-       case 'select2Lote': 
+      case 'select2Lote': 
 
         $rspta = $ajax_general->select2_lote(); $cont = 1; $data = "";
 
@@ -474,7 +474,7 @@
             else if ($reg['stock'] > 0 && $reg['stock'] <= 10) { $clas_stok = 'badge-warning'; }
             else if ($reg['stock'] > 10) { $clas_stok = 'badge-success'; }
 
-            $data_agregar = $reg['idproducto'] . ', \'' .  htmlspecialchars($reg['nombre'], ENT_QUOTES) . '\', \'' . $reg['unidad_medida'] . '\',\'' . 
+            $data_agregar = $reg['idproducto'] . ', \'' .$reg['codigo']. '\', \'' . htmlspecialchars($reg['nombre'], ENT_QUOTES) . '\', \'' . $reg['unidad_medida'] . '\',\'' . $reg['abreviatura'] . '\',\'' . 
             $reg['laboratorio'] . '\',\'' . $reg['presentacion'] . '\',\'' . $reg['precio_actual'] . '\',\'' . $img_parametro . '\'';
 
             $datas[] = [
@@ -619,13 +619,15 @@
           $img_product = '../dist/docs/producto/img_perfil/'. (empty($reg['imagen']) ? 'producto-sin-foto.svg' : $reg['imagen'] );
           $tbody .= '<tr class="filas">
             <td class="text-center p-6px"><span class="'. $bg_resaltar.'">' . $cont++ . '</span></td>
+            <td class="text-center p-6px"><span class="'. $bg_resaltar.'">' . $reg['codigo'] . '</span></td>
             <td class="text-left p-6px">
               <div class="user-block text-nowrap">
                 <img class="profile-user-img img-responsive img-circle cursor-pointer '. $bg_resaltar.'" src="'.$img_product.'" alt="user image" onclick="ver_img_producto(\''.$img_product.'\', \'' . encodeCadenaHtml( $reg['nombre']) . '\', null)" onerror="this.src=\'../dist/svg/404-v2.svg\';" >
                 <span class="username '. $bg_resaltar.'"><p class="mb-0 ">' . $reg['nombre'] . '</p></span>
-                <span class="description '. $bg_resaltar.'"><b>Categoría: </b>' . $reg['categoria'] . '</span>
+                <span class="description '. $bg_resaltar.'"><b>Lab.: </b>' . $reg['laboratorio'] . '</span>
               </div>
             </td>
+            <td class="text-left p-6px text-nowrap"><span class="'. $bg_resaltar.'">' . $reg['lote'] . ' - ' . date("d/m/Y", strtotime($reg['fecha_vencimiento'])) . '</span></td>
             <td class="text-left p-6px"><span class="'. $bg_resaltar.'">' . $reg['unidad_medida'] . '</span></td>
             <td class="text-center p-6px"><span class="'. $bg_resaltar.'">' . $reg['cantidad'] . '</span></td>		
             <td class="text-right p-6px"><span class="'. $bg_resaltar.'">' . number_format($reg['precio_sin_igv'], 2, '.',',') . '</span></td>
@@ -650,43 +652,52 @@
                 <th class="text-center p-10px" colspan="3" >'.format_d_m_a($rspta['data']['compra']['fecha_compra']).'</th>
               </tr>
               <tr class="text-center">
-                <th class="text-center p-10px" >#</th>
-                <th class="p-10px">Producto</th>
-                <th class="p-10px">U.M.</th>
-                <th class="p-10px">Cant.</th>
-                <th class="p-10px">V/U</th>
-                <th class="p-10px">IGV</th>
-                <th class="p-10px">P/U</th>
-                <th class="p-10px">P/V</th>
-                <th class="p-10px">Desct.</th>
-                <th class="p-10px">Subtotal</th>
+                <th class="p-x-10px p-y-5px text-center" >#</th>
+                <th class="p-x-10px p-y-5px">Código</th>
+                <th class="p-x-10px p-y-5px">Producto</th>
+                <th class="p-x-10px p-y-5px text-nowrap">Lote <br> Fecha Vencimiento</th>
+                <th class="p-x-10px p-y-5px">U.M.</th>
+                <th class="p-x-10px p-y-5px">Cant.</th>
+                <th class="p-x-10px p-y-5px">V/U <small>(neto)</small></th>
+                <th class="p-x-10px p-y-5px">IGV</th>
+                <th class="p-x-10px p-y-5px">P/U <small>(unitario)</small></th>
+                <th class="p-x-10px p-y-5px">P/V <small>(venta)</small></th>
+                <th class="p-x-10px p-y-5px">Desct.</th>
+                <th class="p-x-10px p-y-5px">Subtotal</th>
               </tr>
             </thead>
             <tbody>'.$tbody.'</tbody>          
             <tfoot>
               <tr>
-                  <td class="p-0" colspan="8"></td>
-                  <td class="p-0 text-right"> <h6 class="mt-1 mb-1 mr-1">'.$rspta['data']['compra']['tipo_gravada'].'</h6> </td>
-                  <td class="p-0 text-right">
-                    <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['subtotal'], 2, '.',',') . '</h6>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="p-0" colspan="8"></td>
-                  <td class="p-0 text-right">
-                    <h6 class="mt-1 mb-1 mr-1">IGV('.( ( empty($rspta['data']['compra']['val_igv']) ? 0 : floatval($rspta['data']['compra']['val_igv']) )  * 100 ).'%)</h6>
-                  </td>
-                  <td class="p-0 text-right">
-                    <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['igv'], 2, '.',',') . '</h6>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="p-0" colspan="8"></td>
-                  <td class="p-0 text-right"> <h5 class="mt-1 mb-1 mr-1 font-weight-bold">TOTAL</h5> </td>
-                  <td class="p-0 text-right">
-                    <h5 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['total'], 2, '.',',') . '</h5>
-                  </td>
-                </tr>
+                <td class="p-0" colspan="10"></td>
+                <td class="p-0 text-right"> <h6 class="mt-1 mb-1 mr-1">'.$rspta['data']['compra']['tipo_gravada'].'</h6> </td>
+                <td class="p-0 text-right">
+                  <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['subtotal'], 2, '.',',') . '</h6>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0" colspan="10"></td>
+                <td class="p-0 text-right"> <h6 class="mt-1 mb-1 mr-1">TOTAL DSCTO.</h6> </td>
+                <td class="p-0 text-right">
+                  <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['total_descuento'], 2, '.',',') . '</h6>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0" colspan="10"></td>
+                <td class="p-0 text-right">
+                  <h6 class="mt-1 mb-1 mr-1">IGV('.( ( empty($rspta['data']['compra']['val_igv']) ? 0 : floatval($rspta['data']['compra']['val_igv']) )  * 100 ).'%)</h6>
+                </td>
+                <td class="p-0 text-right">
+                  <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['igv'], 2, '.',',') . '</h6>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0" colspan="10"></td>
+                <td class="p-0 text-right"> <h5 class="mt-1 mb-1 mr-1 font-weight-bold">TOTAL</h5> </td>
+                <td class="p-0 text-right">
+                  <h5 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['total_compra'], 2, '.',',') . '</h5>
+                </td>
+              </tr>
             </tfoot>
           </table>
         </div> ';

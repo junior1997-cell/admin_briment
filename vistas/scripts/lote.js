@@ -11,9 +11,7 @@ function init() {
 
   $("#guardar_registro_lote").on("click", function (e) { $("#submit-form-lote").submit(); });
 
-  //no_select_tomorrow("#fecha_vencimiento");
-
-  
+  //no_select_tomorrow("#fecha_vencimiento"); 
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -26,7 +24,7 @@ function limpiar_lote() {
   $("#idlote").val("");
   $("#nombre_lote").val(""); 
   $("#fecha_vencimiento").val(""); 
-  $("#descripcion_m").val(""); 
+  $("#descripcion_lot").val(""); 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -45,7 +43,7 @@ function listar_lotes() {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",//Definimos los elementos del control de tabla
     buttons: [
-      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_lote.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
+      { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i> ', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tabla_lote.ajax.reload(null, false); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
       { extend: 'copyHtml5', exportOptions: { columns: [0,2,3,4], },footer: true, text: `<i class="fas fa-copy" data-toggle="tooltip" data-original-title="Copiar"></i>`, className: "btn bg-gradient-gray"  }, 
       { extend: 'excelHtml5', exportOptions: { columns: [0,2,3,4], }, footer: true, text: `<i class="far fa-file-excel fa-lg" data-toggle="tooltip" data-original-title="Excel"></i>`, className: "btn bg-gradient-success", }, 
       { extend: 'pdfHtml5', exportOptions: { columns: [0,2,3,4], }, footer: false, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", } ,
@@ -63,14 +61,10 @@ function listar_lotes() {
       if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
       // columna: #
       if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap text-center"); }
-      // columna: #
-      //if (data[2] != '') { $("td", row).eq(2).addClass("text-center"); }
-      // columna: #
+      // columna: Stock
       if (data[3] != '') { $("td", row).eq(3).addClass("text-center"); }
-      // columna: #
-      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
-      // columna: #
-      if (data[5] != '') { $("td", row).eq(5).addClass("text-center"); }
+      // columna: Fecha Vencimiento
+      if (data[4] != '') { $("td", row).eq(4).addClass("text-left"); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -81,7 +75,7 @@ function listar_lotes() {
     iDisplayLength: 5,//Paginación
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs:[
-      { targets: [3], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD-MM-YYYY'), },
+      { targets: [4], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
     ]
   }).DataTable();
 }
@@ -101,45 +95,36 @@ function guardaryeditar_lote(e) {
     success: function (e) {
       e = JSON.parse(e);  console.log(e);  
       if (e.status == true) {
-
 				Swal.fire("Correcto!", "Lote registrado correctamente.", "success");
-
-	      tabla_lote.ajax.reload(null, false);
-         
+	      tabla_lote.ajax.reload(null, false);         
 				limpiar_lote();
-
-        $("#modal-agregar-lote").modal("hide");
-        $("#guardar_registro_lote").html('Guardar Cambios').removeClass('disabled');
-
+        $("#modal-agregar-lote").modal("hide"); 
 			}else{
         ver_errores(e);				 
 			}
+
+      $("#guardar_registro_lote").html('Guardar Cambios').removeClass('disabled');
     },
     xhr: function () {
-
       var xhr = new window.XMLHttpRequest();
-
       xhr.upload.addEventListener("progress", function (evt) {
-
         if (evt.lengthComputable) {
-
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress_um").css({"width": percentComplete+'%'});
-
-          $("#barra_progress_um").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_lote").css({"width": percentComplete+'%'});
+          $("#barra_progress_lote").text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
     },
     beforeSend: function () {
       $("#guardar_registro_lote").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress_um").css({ width: "0%",  });
-      $("#barra_progress_um").text("0%");
+      $("#barra_progress_lote").css({ width: "0%",  });
+      $("#barra_progress_lote").text("0%");
     },
     complete: function () {
-      $("#barra_progress_um").css({ width: "0%", });
-      $("#barra_progress_um").text("0%");
+      $("#barra_progress_lote").css({ width: "0%", });
+      $("#barra_progress_lote").text("0%");
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
@@ -204,10 +189,14 @@ $(function () {
 
   $("#form-lote").validate({
     rules: {
-      nombre_lote: { required: true }      // terms: { required: true },
+      nombre_lote:      { required: true, minlength:3, maxlength:250 }, 
+      fecha_vencimiento:{ required: true},
+      descripcion_lot:  {  minlength:3, }
     },
     messages: {
-      nombre_lote: { required: "Campo requerido.", },
+      nombre_lote:      { required: "Campo requerido.", minlength:"Minimo 3 caracteres", maxlength:"Maximo 250 caracteres" },
+      fecha_vencimiento:{ required: "Campo requerido.", },
+      descripcion_lot:  {  minlength:"Minimo 3 caracteres", },
     },
         
     errorElement: "span",

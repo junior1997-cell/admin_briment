@@ -63,11 +63,10 @@
                 : '<button class="btn btn-warning btn-sm" onclick="mostrar_lote(' . $reg->idlote . ')"><i class="fas fa-pencil-alt"></i></button>' .
                   ' <button class="btn btn-primary btn-sm" onclick="activar_lote(' . $reg->idlote . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
-              "3" => $reg->fecha_vencimiento,
-              "4" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
-                $reg->descripcion,
-              '</div>',
-              "5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+              "3" => $reg->stock,
+              "4" => $reg->fecha_vencimiento,
+              "5" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'. $reg->descripcion. '</div>',
+              #"5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }
           $results = [
