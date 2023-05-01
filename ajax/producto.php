@@ -29,7 +29,7 @@
       $unidad_medida    = isset($_POST["unidad_medida"]) ? encodeCadenaHtml($_POST["unidad_medida"]) : "" ;
       $principio_activo = isset($_POST["principio_activo"]) ? encodeCadenaHtml($_POST["principio_activo"]) : "" ;
       $descripcion      = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
-      $precio_actual    = isset($_POST["precio_actual"]) ? encodeCadenaHtml($_POST["precio_actual"]) : "" ;
+      $precio_venta    = isset($_POST["precio_venta"]) ? encodeCadenaHtml($_POST["precio_venta"]) : "" ;
       $imagen1          = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
       
       switch ($_GET["op"]) {
@@ -117,8 +117,8 @@
                 "4" =>  $reg['laboratorio'],
                 "5" => $reg['presentacion'],     
                 "6" => '<span class="badge '.$clas_stok.' font-size-14px cursor-pointer" onclick="tbla_lote(' . $reg['idproducto'] .', \''.encodeCadenaHtml($reg['nombre']).'\')" data-toggle="tooltip" data-original-title="Ver stock">'.$reg['stock'].'</span>',
-                "7" => $reg['precio_actual'],
-                "8" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg['descripcion'] . '</textarea>',
+                "7" => $reg['precio_venta'],
+                "8" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg['principio_activo'] . '</textarea>',
 
                 "9" => $reg['nombre'],
                 "10" => $reg['unidad_medida']                  

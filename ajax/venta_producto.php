@@ -247,7 +247,7 @@ if (!isset($_SESSION["nombre"])) {
                  
               "2" => $reg['fecha_venta'],
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['cliente'] . '</span>',
-              "4" => $reg['es_socio'],
+              "4" =>'',
               "5" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</span>',
               "6" => $reg['metodo_pago'], 
               "7" => $reg['total'],

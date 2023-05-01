@@ -111,7 +111,7 @@ class Producto
   public function mostrar($idproducto) {
     $data = Array();
 
-    $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
+    $sql = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_venta, 
     p.descripcion, p.imagen,p.created_at, p.estado,um.nombre as unidad_medida, l.nombre as laboratorio, pre.nombre as presentacion
     FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
     WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
@@ -128,7 +128,7 @@ class Producto
       'idunidad_medida' => $producto['data']['idunidad_medida'],
       'idpresentacion' => $producto['data']['idpresentacion'],          
       'nombre'          => decodeCadenaHtml($producto['data']['nombre']),
-      'precio_actual' => (empty($producto['data']['precio_actual']) ? 0 : $producto['data']['precio_actual']), 
+      'precio_venta' => (empty($producto['data']['precio_venta']) ? 0 : $producto['data']['precio_venta']), 
       'descripcion'     => decodeCadenaHtml($producto['data']['descripcion']),
       'imagen'          => $producto['data']['imagen'],
       'estado'          => $producto['data']['estado'],
@@ -150,7 +150,7 @@ class Producto
       $tipo_presentacion = "AND p.idpresentacion = '$idpresentacion'";
     }
 
-    $sql_0 = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.descripcion,p.codigo, p.precio_actual, 
+    $sql_0 = "SELECT p.idproducto, p.idunidad_medida, p.idlaboratorio,p.idpresentacion, p.nombre, p.principio_activo,p.codigo, p.precio_venta, 
     p.descripcion, p.imagen, p.estado,um.nombre as unidad_medida, l.nombre as laboratorio, pre.nombre as presentacion
     FROM producto as p, unidad_medida as um, laboratorio as l, presentacion as pre 
     WHERE p.idunidad_medida =um.idunidad_medida AND p.idlaboratorio =l.idlaboratorio AND p.idpresentacion =pre.idpresentacion 
@@ -179,8 +179,8 @@ class Producto
         "nombre"          => $val['nombre'],
         "descripcion"     => $val['descripcion'],
         "codigo"          => $val['codigo'],
-        "precio_actual"   => $val['precio_actual'],
-        "descripcion"     => $val['descripcion'],
+        "precio_venta"   => $val['precio_venta'],
+        "principio_activo"=> $val['principio_activo'],
         "imagen"          => $val['imagen'],
         "estado"          => $val['estado'],
         "unidad_medida"   => $val['unidad_medida'],

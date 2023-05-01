@@ -66,7 +66,7 @@ if (!isset($_SESSION["nombre"])) {
     $unidad_medida_pro    = isset($_POST["unidad_medida_pro"]) ? encodeCadenaHtml($_POST["unidad_medida_pro"]) : "" ;
     $principio_activo_pro = isset($_POST["principio_activo_pro"]) ? encodeCadenaHtml($_POST["principio_activo_pro"]) : "" ;
     $descripcion_pro      = isset($_POST["descripcion_pro"]) ? encodeCadenaHtml($_POST["descripcion_pro"]) : "" ;
-    $precio_actual_pro    = isset($_POST["precio_actual_pro"]) ? encodeCadenaHtml($_POST["precio_actual_pro"]) : "" ;
+    $precio_venta_pro    = isset($_POST["precio_venta_pro"]) ? encodeCadenaHtml($_POST["precio_venta_pro"]) : "" ;
     $imagen2              = isset($_POST["foto2"]) ? limpiarCadena($_POST["foto2"]) : "" ;
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   P R O V E E D O R ::::::::::::::::::::::::::::::::::::::
@@ -209,7 +209,7 @@ if (!isset($_SESSION["nombre"])) {
       break;      
     
       case 'tbla_principal':
-        $rspta = $compra_producto->tbla_principal($_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
+        $rspta = $compra_producto->tbla_principal($_GET["nube_idsucursal"],$_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
         
         //Vamos a declarar un array
         $data = []; $cont = 1;
@@ -256,7 +256,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'listar_compra_x_porveedor':
         
-        $rspta = $compra_producto->listar_compra_x_porveedor();
+        $rspta = $compra_producto->listar_compra_x_porveedor($_GET["nube_idsucursal"]);
         //Vamos a declarar un array
         $data = []; $cont = 1;
         $c = "info";

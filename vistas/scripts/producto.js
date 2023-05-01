@@ -56,7 +56,7 @@ function limpiar_form_producto() {
   $("#laboratorio").val("null").trigger("change");
   $("#presentacion").val("null").trigger("change");
   $("#unidad_medida").val("null").trigger("change");
-  $("#precio_actual").val('0.00');
+  $("#precio_venta").val('0.00');
   $("#descripcion").val(""); 
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto_producto.jpg");
@@ -194,20 +194,19 @@ function guardaryeditar(e) {
         if (evt.lengthComputable) {
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress").css({"width": percentComplete+'%'});
-          $("#barra_progress").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_producto").css({"width": percentComplete+'%'}).text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
     },
     beforeSend: function () {
       $("#guardar_registro").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress").css({ width: "0%",  });
-      $("#barra_progress").text("0%").addClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_producto").css({ width: "0%",  }).text("0%").addClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_div").show();
     },
     complete: function () {
-      $("#barra_progress").css({ width: "0%", });
-      $("#barra_progress").text("0%").removeClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_producto").css({ width: "0%", }).text("0%").removeClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_div").hide();
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
@@ -234,7 +233,7 @@ function mostrar(idproducto) {
       $("#laboratorio").val(e.data.idlaboratorio).trigger("change");  
       $("#presentacion").val(e.data.idpresentacion).trigger("change");  
       $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
-      $("#precio_actual").val(e.data.precio_actual);
+      $("#precio_venta").val(e.data.precio_venta);
       $("#principio_activo").val(e.data.principio_activo);  
       $("#descripcion").val(e.data.descripcion);
 

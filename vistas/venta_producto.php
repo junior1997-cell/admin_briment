@@ -39,12 +39,12 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1 class="m-0"><i class="nav-icon fas fa-cart-plus"></i> Ventas de abonos <span class="h1-nombre-cliente">- aumenta tus ingresos</span>  </h1>
+                      <h1 class="m-0"><i class="nav-icon fas fa-cart-plus"></i> Ventas de producto <span class="h1-nombre-cliente">- aumenta tus ingresos</span>  </h1>
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="compra_insumos.php">Home</a></li>
+                        <li class="breadcrumb-item"><a href="compra_producto.php">Home</a></li>
                         <li class="breadcrumb-item active">Ventas</li>
                       </ol>
                     </div>
@@ -151,7 +151,7 @@
                             <table id="tabla-venta" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
-                                  <th colspan="15" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
+                                  <th colspan="16" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
                                 </tr>
                                 <tr>
                                   <th class="">#</th>
@@ -272,7 +272,7 @@
                                   <!-- Tipo de Empresa -->
                                   <div class="col-lg-5">
                                     <div class="form-group">
-                                      <label for="idcliente">Agricultor <sup class="text-danger">(único*)</sup></label>
+                                      <label for="idcliente">Cliente <sup class="text-danger">(único*)</sup></label>
                                       <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc('#idcliente', '#num_doc');"> </select>
                                     </div>
                                   </div> 
@@ -298,14 +298,7 @@
                                       <label for="fecha_venta">Fecha <sup class="text-danger">*</sup></label>
                                       <input type="date" name="fecha_venta" id="fecha_venta" class="form-control" placeholder="Fecha" />
                                     </div>
-                                  </div>
-                                  <!-- Establecimiento-->
-                                  <div class="col-lg-3" >
-                                    <div class="form-group">
-                                      <label for="establecimiento">Establecimiento </label> <br />
-                                      <textarea name="establecimiento" id="establecimiento" class="form-control" rows="1">JR. LOS MARINOS #453 - JAEN - CAJAMARCA</textarea>
-                                    </div>
-                                  </div>  
+                                  </div>                                  
 
                                   <!-- Tipo de comprobante -->
                                   <div class="col-lg-4" id="content-tipo-comprobante">
@@ -388,19 +381,21 @@
                                   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive row-horizon disenio-scroll">
                                     <br />
                                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
-                                      <thead style="background-color: #ff6c046b;">
+                                      <thead class="bg-color-0037a4 text-white">
                                         <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
-                                        <th>Producto</th>
-                                        <th>Unidad</th>
+                                        <th>Código</th>
                                         <th>Cantidad</th>
-                                        <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
+                                        <th>Producto</th>
+                                        <th>Lote</th>
+                                        <th>Unidad</th>
+                                        <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U <small>(neto)</small></th>
                                         <th class="hidden">IGV</th>
-                                        <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
+                                        <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U <small>(unitario)</small></th>
                                         <th>Descuento</th>
                                         <th>Subtotal</th>
                                       </thead>
                                       <tfoot>
-                                        <td colspan="4" id="colspan_subtotal"></td>
+                                        <td colspan="7" id="colspan_subtotal"></td>
                                         <th class="text-right">
                                           <h6 class="tipo_gravada">GRAVADA</h6>
                                           <h6 class="val_igv">IGV (18%)</h6>
@@ -682,15 +677,7 @@
                     <div class="modal-dialog modal-dialog-scrollable modal-lg">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h4 class="modal-title "> 
-                            <!-- <a data-toggle="modal" data-target="#modal-agregar-productos">
-                              <button id="btnAgregarArt" type="button" class="btn btn-success" onclick="limpiar_producto()"><span class="fa fa-plus"></span> Crear Productos</button>
-                            </a> -->
-                            Seleccionar producto
-                          </h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span class="text-danger" aria-hidden="true">&times;</span>
-                          </button>
+                          <h4 class="modal-title "> Seleccionar producto</h4>                          
                         </div>
                         <div class="modal-body table-responsive">
                           <table id="tblamateriales" class="table table-striped table-bordered table-condensed table-hover" style="width: 100% !important;">
@@ -699,7 +686,7 @@
                               <th>Nombre Producto</th>
                               <th>Stock</th>
                               <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U.</th>
-                              <th>Descripción</th>
+                              <th>Principio Activo</th>
                             </thead>
                             <tbody></tbody>
                           </table>

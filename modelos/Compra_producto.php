@@ -60,11 +60,11 @@ class Compra_producto
           $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
 
           //add update table PRODUCTO el precio de venta
-          $sql_producto = "UPDATE producto SET precio_actual='$precio_venta[$ii]', user_updated='$this->id_usr_sesion' WHERE idproducto = '$idproducto[$ii]'";
+          $sql_producto = "UPDATE producto SET precio_venta='$precio_venta[$ii]', precio_compra='$precio_con_igv[$ii]', user_updated='$this->id_usr_sesion' WHERE idproducto = '$idproducto[$ii]'";
           $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
 
           //add update table LOTE el stock
-          $sql_stock = "UPDATE lote SET stock = stock + '$cantidad[$ii]', user_updated='$this->id_usr_sesion' WHERE idlote = '$lote[$ii]'";
+          $sql_stock = "UPDATE lote SET stock = stock + '$cantidad[$ii]', precio_venta='$precio_venta[$ii]', precio_compra='$precio_con_igv[$ii]', user_updated='$this->id_usr_sesion' WHERE idlote = '$lote[$ii]'";
           $stock_p = ejecutarConsulta($sql_stock); if ($stock_p['status'] == false) { return  $stock_p;}          
 
           $ii = $ii + 1;
@@ -133,7 +133,7 @@ class Compra_producto
         $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
 
         //add update table PRODUCTO el precio de  venta
-        $sql_producto = "UPDATE producto SET precio_actual='$precio_venta[$ii]', user_updated='$this->id_usr_sesion' WHERE idproducto = '$idproducto[$ii]'";
+        $sql_producto = "UPDATE producto SET precio_venta='$precio_venta[$ii]', precio_compra='$precio_con_igv[$ii]', user_updated='$this->id_usr_sesion' WHERE idproducto = '$idproducto[$ii]'";
         $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
 
         // :::::::::::::: bsucamos para asigar el stock ::::::::::::
@@ -151,7 +151,7 @@ class Compra_producto
         $stock = $n_compra - $n_venta;
 
         //add update table LOTE el stock
-        $sql_stock = "UPDATE lote SET stock ='$stock', user_updated='$this->id_usr_sesion' WHERE idlote = '$lote[$ii]'";
+        $sql_stock = "UPDATE lote SET stock ='$stock', precio_venta='$precio_venta[$ii]', precio_compra='$precio_con_igv[$ii]', user_updated='$this->id_usr_sesion' WHERE idlote = '$lote[$ii]'";
         $stock_p = ejecutarConsulta($sql_stock); if ($stock_p['status'] == false) { return  $stock_p;}          
 
         $ii++;
@@ -217,7 +217,7 @@ class Compra_producto
   }
 
   //Implementar un método para listar los registros
-  public function tbla_principal($fecha_1, $fecha_2, $id_proveedor, $comprobante) {
+  public function tbla_principal($nube_idsucursal, $fecha_1, $fecha_2, $id_proveedor, $comprobante) {
 
     $filtro_proveedor = ""; $filtro_fecha = ""; $filtro_comprobante = ""; 
 
@@ -238,7 +238,7 @@ class Compra_producto
 
     $sql = "SELECT cp.idcompra_producto, cp.idpersona, cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.subtotal, cp.igv, cp.total_descuento, cp.total_compra, cp.tipo_gravada, cp.comprobante, cp.descripcion, p.nombres
     FROM compra_producto as cp, persona as p  
-    WHERE cp.idpersona = p.idpersona AND cp.estado= '1' AND cp.estado_delete = '1' $filtro_proveedor $filtro_comprobante $filtro_fecha
+    WHERE cp.idpersona = p.idpersona AND cp.estado= '1' AND cp.estado_delete = '1' AND cp.idpersona_sucursal = '$nube_idsucursal' $filtro_proveedor $filtro_comprobante $filtro_fecha
 		ORDER BY cp.fecha_compra DESC ";
 
     return ejecutarConsultaArray($sql);
@@ -246,12 +246,12 @@ class Compra_producto
   }
 
   //Implementar un método para listar los registros x proveedor
-  public function listar_compra_x_porveedor() {
+  public function listar_compra_x_porveedor($nube_idsucursal) {
     // $idproyecto=2;
     $sql = "SELECT  COUNT(cp.idcompra_producto) as cantidad, SUM(cp.total_compra) as total_compra, 
     cp.idpersona , p.nombres as razon_social, p.celular
 		FROM compra_producto as cp, persona as p 
-		WHERE  cp.idpersona=p.idpersona AND cp.estado = '1' AND cp.estado_delete = '1'
+		WHERE  cp.idpersona=p.idpersona AND cp.estado = '1' AND cp.estado_delete = '1' AND cp.idpersona_sucursal = '$nube_idsucursal'
     GROUP BY cp.idpersona ORDER BY p.nombres ASC";
     return ejecutarConsulta($sql);
   }

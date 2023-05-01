@@ -7,7 +7,7 @@ function init() {
   $("#mRecurso").addClass("active");
 
   $("#lAllpersona").addClass("active");
-  lista_de_items()
+  lista_de_items();
   tbla_principal('todos', 'ninguno');
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
@@ -39,9 +39,7 @@ $("#foto1").change(function(e) { addImage(e,$("#foto1").attr("id")) });
 function foto1_eliminar() {
 
 	$("#foto1").val("");
-
 	$("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
-
 	$("#foto1_nombre").html("");
 }
 
@@ -249,20 +247,19 @@ function guardar_y_editar_persona(e) {
         if (evt.lengthComputable) {
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress").css({"width": percentComplete+'%'});
-          $("#barra_progress").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_persona").css({"width": percentComplete+'%'}).text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
     },
     beforeSend: function () {
       $("#guardar_registro").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress").css({ width: "0%",  }).text("0%");
-      $("#barra_progress_div").show();
+      $("#barra_progress_persona").css({ width: "0%",  }).text("0%").addClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_persona_div").show();
     },
     complete: function () {
-      $("#barra_progress").css({ width: "0%", }).text("0%");
-      $("#barra_progress_div").hide();
+      $("#barra_progress_persona").css({ width: "0%", }).text("0%").removeClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_persona_div").hide();
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });

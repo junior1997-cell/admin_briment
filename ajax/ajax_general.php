@@ -108,6 +108,12 @@
         } 
       break;
 
+      case 'array_tipo_persona':
+        $rspta=$ajax_general->tipo_persona();
+        //Codificar el resultado utilizando json
+        echo json_encode($rspta, true);
+      break;
+
       /* ══════════════════════════════════════ T R A B A J A D O R  ══════════════════════════════════════ */
       case 'select2Trabajador': 
 
@@ -454,7 +460,7 @@
 
       case 'tblaProductosCompra':
           
-        $rspta = $ajax_general->tblaProductos(); 
+        $rspta = $ajax_general->tblaProductos($_GET["id_sucursal"]); 
 
         $datas = [];         
 
@@ -475,7 +481,7 @@
             else if ($reg['stock'] > 10) { $clas_stok = 'badge-success'; }
 
             $data_agregar = $reg['idproducto'] . ', \'' .$reg['codigo']. '\', \'' . htmlspecialchars($reg['nombre'], ENT_QUOTES) . '\', \'' . $reg['unidad_medida'] . '\',\'' . $reg['abreviatura'] . '\',\'' . 
-            $reg['laboratorio'] . '\',\'' . $reg['presentacion'] . '\',\'' . $reg['precio_actual'] . '\',\'' . $img_parametro . '\'';
+            $reg['laboratorio'] . '\',\'' . $reg['presentacion'] . '\',\'' . $reg['precio_venta'] . '\',\'' . $img_parametro . '\'';
 
             $datas[] = [
               "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' .  $data_agregar .')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
@@ -487,7 +493,7 @@
               '</div>',
               "3" =>'<span class="badge '.$clas_stok.' font-size-14px" stock="'.$reg['stock'].'" id="table_stock_'.$reg['idproducto'].'">'.$reg['stock'].'</span>',
               "4" => $reg['presentacion'],
-              "5" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['descripcion'] . '</textarea>'. $toltip,
+              "5" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['principio_activo'] . '</textarea>'. $toltip,
             ];
           }
   
@@ -508,7 +514,7 @@
 
       case 'tblaProductosVenta':
           
-        $rspta = $ajax_general->tblaProductos(); 
+        $rspta = $ajax_general->tblaProductos($_GET["id_sucursal"]); 
 
         $datas = [];         
 
@@ -528,8 +534,8 @@
             else if ($reg['stock'] > 0 && $reg['stock'] <= 10) { $clas_stok = 'badge-warning'; }
             else if ($reg['stock'] > 10) { $clas_stok = 'badge-success'; }
 
-            $data_agregar = $reg['idproducto'] . ', \'' .  htmlspecialchars($reg['nombre'], ENT_QUOTES) . '\', \'' . $reg['unidad_medida'] . '\',\'' . 
-            $reg['laboratorio'] . '\',\'' . $reg['presentacion'] . '\',\'' . $reg['precio_actual'] . '\',\'' . $img_parametro . '\',\'' .$reg['stock']. '\'';
+            $data_agregar = $reg['idproducto'] . ', \'' .$reg['codigo']. '\', \'' . htmlspecialchars($reg['nombre'], ENT_QUOTES) . '\', \'' . $reg['unidad_medida'] . '\',\'' . $reg['abreviatura'] . '\',\'' . 
+            $reg['laboratorio'] . '\',\'' . $reg['presentacion'] . '\',\'' . $reg['precio_venta'] . '\',\'' . $reg['precio_compra'] . '\',\'' . $img_parametro  . '\',\'' .$reg['stock']. '\'';
 
             $datas[] = [
               "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' .  $data_agregar .')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
@@ -539,8 +545,8 @@
                 <span class="description"><b>Lab.: </b>' . $reg['laboratorio'] . '</span>'.
               '</div>',
               "2" =>'<span class="badge '.$clas_stok.' font-size-14px" stock="'.$reg['stock'].'" id="table_stock_'.$reg['idproducto'].'">'.$reg['stock'].'</span>',
-              "3" => number_format($reg['precio_actual'], 2, '.', ','),
-              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['descripcion'] . '</textarea>'. $toltip,
+              "3" => number_format($reg['precio_venta'], 2, '.', ','),
+              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['principio_activo'] . '</textarea>'. $toltip,
             ];
           }
   

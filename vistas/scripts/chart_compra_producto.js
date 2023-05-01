@@ -1,6 +1,6 @@
 var chart_linea ;
 var chart_barras;
-var chart_pie_productos_mas_vendidos;
+var chart_pie_productos_mas_vendidos, pieChart;
 var color_char_pie = ['text-danger','text-success','text-warning','text-info','text-primary','text-indigo',]
 //Función que se ejecuta al inicio
 function init() {
@@ -15,8 +15,8 @@ function init() {
 
   $("#lChartCompraProducto").addClass("active");
 
-  box_content_reporte();
-  //chart_linea_barra(localStorage.getItem("nube_idproyecto"));
+  box_content_reporte(localStorage.getItem("nube_id_sucursal"));
+  //chart_linea_barra();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   var anio_actual = moment().format('YYYY');
@@ -36,14 +36,14 @@ function init() {
 // ::::::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C H A R T :::::::::::::::::::::::::::::::::::::::::::::
 
 //mostrar datos proveedor pago
-function box_content_reporte() {
+function box_content_reporte(id_sucursal) {
 
   $(".cant_cliente_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_producto_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_total_venta_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
-  $(".cant_total_pago_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
+  $(".cant_total_stock_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
 
-  $.post("../ajax/chart_compra_producto.php?op=box_content_reporte", function (e, status) {
+  $.post("../ajax/chart_compra_producto.php?op=box_content_reporte", {'id_sucursal':id_sucursal}, function (e, status) {
 
     e = JSON.parse(e);   //console.log(e);
 
@@ -51,14 +51,14 @@ function box_content_reporte() {
       $(".cant_cliente_box").html(formato_miles(e.data.cant_clientes));
       $(".cant_producto_box").html(formato_miles(e.data.cant_producto));
       $(".cant_total_venta_box").html(formato_miles(e.data.cant_total_venta));
-      $(".cant_total_pago_box").html(formato_miles(e.data.cant_total_pago));
+      $(".cant_total_stock_box").html(formato_miles(e.data.cant_total_stock));
     } else {
       ver_errores(e);
     }    
   }).fail( function(e) { ver_errores(e); } );
 }
 
-function chart_linea_barra(idnubeproyecto) {
+function chart_linea_barra() {
   'use strict'
 
   $('.cant_ft_aceptadas').html(`<i class="fas fa-spinner fa-pulse fa-lg"></i>`);
@@ -77,12 +77,12 @@ function chart_linea_barra(idnubeproyecto) {
 
   var mode = 'index'; var intersect = true;
 
-  var idnubeproyecto = localStorage.getItem("nube_idproyecto");
+  var id_sucursal = localStorage.getItem("nube_id_sucursal");
   var year_filtro = $("#year_filtro").select2("val");
   var month_filtro = $("#month_filtro").select2("val");
   var dias_por_mes =cant_dias_mes(year_filtro, month_filtro);
   
-  $.post("../ajax/chart_compra_producto.php?op=chart_linea", { 'idnubeproyecto': idnubeproyecto , 'year_filtro': year_filtro, 'month_filtro':month_filtro, 'dias_por_mes':dias_por_mes }, function (e, status) {
+  $.post("../ajax/chart_compra_producto.php?op=chart_linea", { 'id_sucursal': id_sucursal , 'year_filtro': year_filtro, 'month_filtro':month_filtro, 'dias_por_mes':dias_por_mes }, function (e, status) {
     e = JSON.parse(e);   console.log(e);
     if (e.status == true) {
       // :::::::::::::::::::::::::::::::::::::::::::: C H A R T    P R O G R E S ::::::::::::::::::::::::::::::::::::
@@ -101,9 +101,9 @@ function chart_linea_barra(idnubeproyecto) {
       $('.progress_ft_eliminadas').css({ width: `${eliminadas.toFixed(2)}%`, });
       $('.progress_ft_rechazadas_eliminadas').css({ width: `${rechazadas_eliminadas.toFixed(2)}%`, });
 
-      $('.monto_pagado').html(`<b><small>S/</small> ${formato_miles(e.data.factura_total_pago)}</b> <b>/</b> <small>S/</small> ${formato_miles(e.data.factura_total_gasto)}`);
+      $('.monto_pagado').html(`<b> ${formato_miles(e.data.factura_total_pago)}</b> <b>/</b>  ${formato_miles(e.data.factura_total_gasto)}`);
       var no_pagado = e.data.factura_total_gasto - e.data.factura_total_pago;
-      $('.monto_no_pagado').html(`<b><small>S/</small> ${ formato_miles(no_pagado)}</b> <b>/</b> <small>S/</small> ${formato_miles(e.data.factura_total_gasto)}`);
+      $('.monto_no_pagado').html(`<b> ${ formato_miles(no_pagado)}</b> <b>/</b>  ${formato_miles(e.data.factura_total_gasto)}`);
       var monto_pagado = (e.data.factura_total_pago/e.data.factura_total_gasto)*100; console.log(monto_pagado);
       var monto_no_pagado = (no_pagado/e.data.factura_total_gasto)*100; console.log(monto_no_pagado);
       $('.progress_monto_pagado').css({ width: `${monto_pagado.toFixed(2)}%`, });
@@ -201,16 +201,17 @@ function chart_linea_barra(idnubeproyecto) {
       var productos_mas_vendidos = ""; var colores_leyenda = "";
       e.data.productos_mas_vendidos.forEach((key, indice) => {
         colores_leyenda = colores_leyenda.concat(`<li><i class="fas fa-circle ${color_char_pie[indice]}"></i> ${key.producto}</li>`);
+        var imagen_perfil = key.imagen == null || key.imagen == ''? 'producto-sin-foto.svg' : key.imagen ;
         productos_mas_vendidos = productos_mas_vendidos.concat(`
           <tr>
             <td>              
               <div class="user-block">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/${key.imagen}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('../dist/docs/producto/img_perfil/${key.imagen}', '${encodeHtml(key.producto)}');" data-toggle="tooltip" data-original-title="Ver imagen">
+                <img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/${imagen_perfil}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('../dist/docs/producto/img_perfil/${imagen_perfil}', '${encodeHtml(key.producto)}');" data-toggle="tooltip" data-original-title="Ver imagen">
                 <span class="username"><p class="mb-0" >${key.producto}</p></span>
-                <span class="description">${key.descripcion}</span>
+                <span class="description"><b>Lab.:</b> ${key.laboratorio}</span>
               </div>
             </td>
-            <td class="text-right">S/ ${formato_miles(key.precio_referencial)}</td>
+            <td class="text-center">S/ ${formato_miles(key.precio_referencial)}</td>
             <td class="text-center"> ${formato_miles(key.cantidad_vendida)} </td>
             <td class="text-center">
               <a href="resumen_venta_producto.php" class="text-muted" data-toggle="tooltip" data-original-title="Ver más"> <i class="fas fa-search"></i> </a>
@@ -241,9 +242,9 @@ function chart_linea_barra(idnubeproyecto) {
               backgroundColor: ['#dc3545', '#00a65a', '#f39c12', '#09a5be', '#007bff', '#2d1582']
             }
           ]
-        },
+        },        
         options: {
-          legend: {  display: true, position:'right'   },
+          legend: {  display: true, position:'bottom', align: "start" },
           events: false,
           animation: {
             duration: 500,
@@ -278,7 +279,7 @@ function chart_linea_barra(idnubeproyecto) {
             }
           }
         }
-      });
+      });     
 
       // dowload - imagen chart PIE
       //var image = pieChart.toBase64Image(); // console.log(image);
@@ -290,28 +291,9 @@ function chart_linea_barra(idnubeproyecto) {
       // var getCanvas; //global variable
       // html2canvas(element, { onrendered: function (canvas) { getCanvas = canvas; } });
 
-      $("#btn-download-chart-pie-productos-mas-usados").on('click', function () {
-        // var imgageData = getCanvas.toDataURL("image/jpg");
-        // //Now browser starts downloading it instead of just showing it
-        // var newData = imgageData.replace(/^data:image\/jpg/, "data:application/octet-stream");
-        // $("#btn-download-chart-pie-productos-mas-usados").attr("download", "productos-mas-usados.jpg").attr("href", newData);
-        var a = document.createElement('a');
-        a.href = pieChart.toBase64Image();
-        a.download = 'my_file_name.png';
-        // Trigger the download
-        a.click();
+      
 
-        // para agregar el chart en una imagen
-        // document.getElementById('some-image-tag').src = myChart.toBase64Image();
-      });
-
-      $("#btn-download-chart-linea").on('click', function () {     console.log('descargando chart linea');   
-        var a = document.createElement('a');
-        a.href = chart_linea.toBase64Image();
-        a.download = 'Compras_y_pagos_por_mes.png';
-        // Trigger the download
-        a.click();
-      });
+      
 
     } else {
       ver_errores(e);
@@ -319,6 +301,21 @@ function chart_linea_barra(idnubeproyecto) {
   });  
 }
 
+function download_chart_linea() {  
+  var a = document.createElement('a');
+  a.href = chart_linea.toBase64Image();
+  a.download = 'Compras_y_pagos_por_mes.png';
+  // Trigger the download
+  a.click();      
+}
+
+function download_chart_pie_productos_mas_usados() {        
+  var a = document.createElement('a');
+  a.href = pieChart.toBase64Image();
+  a.download = 'chart-dona-productos-mas-usados.png';
+  // Trigger the download
+  a.click();
+};
 
 init();
 
@@ -349,6 +346,7 @@ function ver_img_producto(file, nombre) {
 function export_productos_mas_usados() {
   var anio = $("#year_filtro").select2("val") ; 
   var mes = $("#month_filtro").select2("val"); 
+  var id_sucursal = localStorage.getItem("nube_id_sucursal");
 
-  $(`.btn-export-productos-mas-usados`).attr('href', `../reportes/export_xlsx_compra_producto_mas_usado.php?anio=${anio}&mes=${mes}`);
+  $(`.btn-export-productos-mas-usados`).attr('href', `../reportes/export_xlsx_compra_producto_mas_usado.php?id_sucursal=${id_sucursal}&anio=${anio}&mes=${mes}`);
 }

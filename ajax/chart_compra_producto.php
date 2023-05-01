@@ -23,19 +23,19 @@
       switch ($_GET["op"]) {
         
         case 'box_content_reporte':
-          $rspta = $chart_venta_producto->box_content_reporte();
+          $rspta = $chart_venta_producto->box_content_reporte($_POST["id_sucursal"]);
           //Codificar el resultado utilizando json
           echo json_encode( $rspta, true) ;
         break;
 
         case 'chart_linea':
-          $rspta = $chart_venta_producto->chart_linea($_POST["idnubeproyecto"], $_POST["year_filtro"], $_POST["month_filtro"], $_POST["dias_por_mes"]);
+          $rspta = $chart_venta_producto->chart_linea($_POST["id_sucursal"], $_POST["year_filtro"], $_POST["month_filtro"], $_POST["dias_por_mes"]);
           //Codificar el resultado utilizando json
           echo json_encode( $rspta, true) ;
         break;
 
         case 'export_productos_mas_usados':
-          $rspta = $chart_venta_producto->export_productos_mas_usados($_GET["anio"], $_GET["mes"]);
+          $rspta = $chart_venta_producto->export_productos_mas_usados($_GET["id_sucursal"], $_GET["anio"], $_GET["mes"]);
           //Codificar el resultado utilizando json
           echo json_encode( $rspta, true) ;
         break;

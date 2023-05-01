@@ -71,8 +71,7 @@ function init() {
   $("#laboratorio_pro").select2({ theme: "bootstrap4", placeholder: "Seleccinar una laboratorio", allowClear: true, });
   $("#presentacion_pro").select2({ theme: "bootstrap4", placeholder: "Seleccinar una presentación", allowClear: true, });
 
-  no_select_tomorrow("#fecha_compra");
-  no_select_over_18('#nacimiento_per');
+  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
   //$('#filtro_fecha_inicio').inputmask('dd-mm-yyyy', { 'placeholder': 'dd-mm-yyyy' });
@@ -195,7 +194,7 @@ function regresar() {
 }
 
 //TABLA - COMPRAS
-function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
+function tbla_principal(nube_idsucursal, fecha_1, fecha_2, id_proveedor, comprobante) {
   //console.log(idproyecto);
   tabla_compra_producto = $("#tabla-compra").dataTable({
     responsive: true, 
@@ -211,7 +210,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
       { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax: {
-      url: `../ajax/compra_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
+      url: `../ajax/compra_producto.php?op=tbla_principal&nube_idsucursal=${nube_idsucursal}&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -253,7 +252,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5",  "pdf"],
     ajax: {
-      url: "../ajax/compra_producto.php?op=listar_compra_x_porveedor",
+      url: `../ajax/compra_producto.php?op=listar_compra_x_porveedor&nube_idsucursal=${nube_idsucursal}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -400,7 +399,7 @@ var impuesto = 18;
 var cont = 0;
 var detalles = 0;
 
-function agregarDetalleComprobante(idproducto, codigo, nombre, unidad_medida, um_abreviatura,  laboratorio, presentacion, precio_actual, img) {
+function agregarDetalleComprobante(idproducto, codigo, nombre, unidad_medida, um_abreviatura,  laboratorio, presentacion, precio_venta, img) {
   
   var precio_sin_igv =0;
   var cantidad = 1;
@@ -423,7 +422,7 @@ function agregarDetalleComprobante(idproducto, codigo, nombre, unidad_medida, um
     // } else {
 
       if ($("#tipo_comprobante").select2("val") == "Factura") {
-        var subtotal = cantidad * precio_actual;
+        var subtotal = cantidad * precio_venta;
       } else {
         var subtotal = cantidad * precio_sin_igv;
       }
@@ -469,8 +468,8 @@ function agregarDetalleComprobante(idproducto, codigo, nombre, unidad_medida, um
         <td class="py-1 hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${parseFloat(precio_sin_igv).toFixed(2)}" readonly min="0" ></td>
         <td class="py-1 hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number" name="precio_igv[]" id="precio_igv[]" value="${parseFloat(precio_igv).toFixed(2)}" readonly  ></td>
         <td class="py-1 form-group">
-          <input type="number" class="w-135px form-control valid_precio_con_igv "  name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(precio_actual).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
-          <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(precio_actual).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
+          <input type="number" class="w-135px form-control valid_precio_con_igv "  name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(precio_venta).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
+          <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(precio_venta).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
         </td>
         <td class="py-1 form-group">
           <input type="number" class="w-135px form-control valid_precio_venta" name="valid_precio_venta[${cont}]" id="valid_precio_venta_${cont}" value="0" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" >
@@ -1137,8 +1136,7 @@ function guardar_proveedor(e) {
         if (evt.lengthComputable) {
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress_proveedor").css({"width": percentComplete+'%'});
-          $("#barra_progress_proveedor").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_proveedor").css({"width": percentComplete+'%'}).text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
@@ -1146,13 +1144,11 @@ function guardar_proveedor(e) {
     beforeSend: function () {
       $("#barra_progress_proveedor_div").show();
       $("#guardar_registro_proveedor").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress_proveedor").css({ width: "0%",  });
-      $("#barra_progress_proveedor").text("0%").addClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_proveedor").css({ width: "0%",  }).text("0%").addClass('progress-bar-striped progress-bar-animated');
     },
     complete: function () {
       $("#barra_progress_proveedor_div").hide();
-      $("#barra_progress_proveedor").css({ width: "0%", });
-      $("#barra_progress_proveedor").text("0%").removeClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_proveedor").css({ width: "0%", }).text("0%").removeClass('progress-bar-striped progress-bar-animated');
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
@@ -1302,7 +1298,7 @@ function mostrar_productos(idproducto, cont) {
       $("#laboratorio_pro").val(e.data.idlaboratorio).trigger("change");  
       $("#presentacion_pro").val(e.data.idpresentacion).trigger("change");  
       $("#unidad_medida_pro").val(e.data.idunidad_medida).trigger("change");
-      $("#precio_actual_pro").val(e.data.precio_actual);
+      $("#precio_venta_pro").val(e.data.precio_venta);
       $("#principio_activo_pro").val(e.data.principio_activo);  
       $("#descripcion_pro").val(e.data.descripcion);
 
@@ -1760,6 +1756,9 @@ $(function () {
   $('#unidad_medida_pro').rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $('#categoria_producto_pro').rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
+  no_select_tomorrow("#fecha_compra");
+  no_select_over_18('#nacimiento_per');
+
 });
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
@@ -1791,7 +1790,7 @@ function filtros() {
   $('.cargando').show().html(`<i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando ${nombre_proveedor} ${nombre_comprobante}...`);
   //console.log(fecha_1, fecha_2, id_proveedor, comprobante);
 
-  tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante);
+  tbla_principal(localStorage.getItem("nube_id_sucursal"), fecha_1, fecha_2, id_proveedor, comprobante);
 }
 
 // ver imagen grande del producto agregado a la compra

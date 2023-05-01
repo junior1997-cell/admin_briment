@@ -22,7 +22,7 @@ function init(){
 
 	$("#lResumenProducto").addClass("active");
 	
-	tbla_principal(localStorage.getItem('nube_idproyecto'));	
+	tbla_principal(localStorage.getItem('nube_id_sucursal'));	
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   // lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', null);
   // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_prov', null);
@@ -84,7 +84,7 @@ function table_show_hide(flag) {
 }
 
 // TABLA - PRINCIPAL
-function tbla_principal(id_proyecto) {
+function tbla_principal(nube_idsucursal) {
 	tabla_principal=$('#tbla-resumen-insumos').dataTable({
 		responsive: true,
 		lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
@@ -99,7 +99,7 @@ function tbla_principal(id_proyecto) {
       { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
 		ajax:	{
-      url: '../ajax/resumen_compra_producto.php?op=tbla_principal',
+      url: `../ajax/resumen_compra_producto.php?op=tbla_principal&nube_idsucursal=${nube_idsucursal}`,
       type : "get",
       dataType : "json",						
       error: function(e){

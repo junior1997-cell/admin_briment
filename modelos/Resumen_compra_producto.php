@@ -14,15 +14,15 @@ class ResumenCompraProducto
 	}
 
   //Implementar un método para listar los registros
-  public function tbla_principal() {
+  public function tbla_principal($nube_idsucursal) {
     $data = [];
-    $sql = "SELECT p.idproducto, p.codigo, p.nombre AS nombre_producto, p.precio_actual, p.imagen, um.nombre AS unidad_medida, 
+    $sql = "SELECT p.idproducto, p.codigo, p.nombre AS nombre_producto, p.precio_venta, p.imagen, um.nombre AS unidad_medida, 
     l.nombre AS laboratorio, 
     SUM(dcp.cantidad) AS cantidad, SUM(dcp.precio_sin_igv) AS precio_sin_igv, SUM(dcp.igv) AS igv, SUM(dcp.precio_con_igv) AS precio_con_igv,
     AVG(dcp.precio_con_igv) AS precio_compra_promedio, SUM(dcp.descuento) AS descuento, SUM(dcp.subtotal) AS subtotal
     FROM compra_producto as cp, detalle_compra_producto as dcp, producto as p, unidad_medida as um, laboratorio as l
     WHERE cp.idcompra_producto = dcp.idcompra_producto AND dcp.idproducto = p.idproducto AND p.idunidad_medida = um.idunidad_medida 
-    AND p.idlaboratorio = l.idlaboratorio AND cp.estado = '1' AND cp.estado_delete = '1' 
+    AND p.idlaboratorio = l.idlaboratorio AND cp.estado = '1' AND cp.estado_delete = '1' AND cp.idpersona_sucursal = $nube_idsucursal
     GROUP BY dcp.idproducto ORDER BY p.nombre ASC;";
     $producto = ejecutarConsulta($sql); if ( $producto['status'] == false) {return $producto; } 
 
@@ -54,7 +54,7 @@ class ResumenCompraProducto
         "igv"             => $val['igv'],
         "precio_con_igv"  => $val['precio_con_igv'],
         "precio_compra_promedio"    => $val['precio_compra_promedio'],
-        "precio_actual"   => $val['precio_actual'],
+        "precio_venta"   => $val['precio_venta'],
         "descuento"       => $val['descuento'],
         "subtotal"        => $val['subtotal'],
         "stock"           => $stock,

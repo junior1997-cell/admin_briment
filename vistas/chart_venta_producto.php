@@ -75,7 +75,7 @@
                       <!-- /.col -->
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3  col-xl-3">
                         <div class="info-box mb-3">
-                        <span class="info-box-icon bg-danger elevation-1"><img src="../dist/svg/blanco-abono-ico.svg" class="nav-icon" alt="" style="width: 31px !important;" ></span>
+                        <span class="info-box-icon bg-danger elevation-1"><i class="nav-icon fas fa-syringe text-dark-0"></i></span>
 
                           <div class="info-box-content">
                             <span class="info-box-text">Productos</span>

@@ -773,7 +773,7 @@
                               <th>Nombre Producto</th>
                               <th>Stock</th>
                               <th data-toggle="tooltip" data-original-title="Precio Unitario">Presentacion.</th>
-                              <th>Descripción</th>
+                              <th>Principio Activo</th>
                             </thead>
                             <tbody></tbody>
                           </table>
@@ -1147,8 +1147,8 @@
                                 <!-- Precio actual-->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-6" style="display: none;" >
                                   <div class="form-group">
-                                    <label for="precio_actual_pro">Precio</label>
-                                    <input type="text" name="precio_actual_pro" class="form-control" id="precio_actual_pro"/>
+                                    <label for="precio_venta_pro">Precio</label>
+                                    <input type="text" name="precio_venta_pro" class="form-control" id="precio_venta_pro"/>
                                   </div>
                                 </div>
                                 <!-- Principio activo-->

@@ -32,7 +32,7 @@
 
         case 'tbla_principal':          
 
-          $rspta = $resumen_producto->tbla_principal();
+          $rspta = $resumen_producto->tbla_principal($_GET["nube_idsucursal"]);
           //Vamos a declarar un array
           $data = []; $count = 1;          
 

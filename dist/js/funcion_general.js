@@ -151,6 +151,7 @@ function format_m_a(fecha) {
 // restringimos la fecha para no elegir mañana
 function no_select_tomorrow(nombre_input) { 
   var hoy = moment().format('YYYY-MM-DD'); $(nombre_input).attr('max',hoy);
+  $(nombre_input).rules("add", { max: hoy, messages: { max: `Ingresa una fecha menor a: ${format_d_m_a(hoy)}` } });
 }
 
 // restringimos la fecha para no elegir menores de 18

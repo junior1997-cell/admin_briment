@@ -114,7 +114,7 @@
                                   <th>Compra</th>
                                   <th>Precio venta</th>
                                   <th class="text-nowrap px-2">0.00</th>   
-                                  <th class="text-nowrap px-2"><i class="fas fa-spinner fa-pulse fa-sm"></i></th>       
+                                  <th class="text-nowrap px-2">0.00</th>       
                                   
                                   <th>Producto</th> 
                                   <th>Categoría</th> 

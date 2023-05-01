@@ -260,7 +260,7 @@ class Venta_producto
 
     $sql = "SELECT vp.idventa_producto, vp.idpersona, vp.fecha_venta, vp.establecimiento, vp.tipo_comprobante, vp.serie_comprobante, 
     vp.val_igv, vp.subtotal, vp.igv, vp.total, vp.descripcion, vp.fecha_proximo_pago, vp.comprobante, vp.metodo_pago, vp.estado,
-    p.nombres as cliente, p.tipo_documento, p.numero_documento, p.celular, p.direccion,  p.es_socio, tp.nombre as tipo_persona
+    p.nombres as cliente, p.tipo_documento, p.numero_documento, p.celular, p.direccion, tp.nombre as tipo_persona
     FROM venta_producto as vp, persona as p, tipo_persona as tp 
     WHERE vp.idpersona = p.idpersona AND p.idtipo_persona = tp.idtipo_persona AND vp.estado= '1' AND vp.estado_delete = '1' 
     $filtro_proveedor $filtro_comprobante $filtro_fecha ORDER BY vp.fecha_venta DESC;";
@@ -284,7 +284,6 @@ class Venta_producto
         'tipo_documento'    => $value['tipo_documento'],
         'numero_documento'  => $value['numero_documento'],
         'tipo_persona'      => $value['tipo_persona'],
-        'es_socio'          => ($value['es_socio'] ? 'SOCIO' : 'NO SOCIO') ,
         'fecha_venta'       => $value['fecha_venta'],
         'tipo_comprobante'  => $value['tipo_comprobante'],
         'serie_comprobante' => $value['serie_comprobante'],

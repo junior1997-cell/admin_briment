@@ -279,10 +279,10 @@
                               </div>
 
                               <!-- Progress -->
-                              <div class="col-md-12" id="barra_progress_div">
+                              <div class="col-md-12 m-t-20px" id="barra_progress_persona_div" style="display: none !important;">
                                 <div class="form-group">
-                                  <div class="progress" style="display: none !important;">
-                                    <div id="barra_progress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                  <div class="progress" >
+                                    <div id="barra_progress_persona" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                   </div>
                                 </div>
                               </div>

@@ -239,6 +239,14 @@
                                     <div class="text-center" id="doc1_nombre"><!-- aqui va el nombre del pdf --></div>
                                   </div>
 
+                                  <!-- Progress -->
+                                  <div class="col-md-12 m-t-20px" id="barra_progress_otro_ingreso_div" style="display: none;">
+                                    <div class="form-group">
+                                      <div class="progress" >
+                                        <div id="barra_progress_otro_ingreso" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
 
                                 <div class="row" id="cargando-2-fomulario" style="display: none;">
@@ -270,7 +278,7 @@
                 
                 <!-- Modal agregar proveedores -->
                 <div class="modal fade" id="modal-agregar-persona">
-                  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                  <div class="modal-dialog modal-dialog-scrollable modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h4 class="modal-title">Agregar Persona</h4>
@@ -280,111 +288,193 @@
                       </div>
 
                       <div class="modal-body">
-                        <!-- form start -->
-                        <form id="form-persona" name="form-persona" method="POST">
-                          <div class="card-body row">                               
-                            
-                            <!-- id proveedores -->
-                            <input type="hidden" name="idpersona" id="idpersona" />
+                        <div class="card-body px-1 py-1">
+                          <div class="row">                              
+                            <div class=" col-12 col-sm-12">
+                              <div class="card card-success card-outline card-outline-tabs mb-0">
+                                <div class="card-header p-0 border-bottom-0">
+                                  <ul class="nav nav-tabs lista-items" id="tabs-for-tab" role="tablist">
+                                    <li class="nav-item">
+                                      <a class="nav-link active" role="tab" ><i class="fas fa-spinner fa-pulse fa-sm"></i></a>
+                                    </li>           
+                                  </ul> 
 
-                            <div class="col-lg-4">
-                              <div class="form-group">
-                                <label for="idtipopersona"> Tipo Persona <sup class="text-danger">*</sup></label>
-                                <!-- <div class="input-group"> -->
-                                  <select name="idtipopersona" id="idtipopersona" class="form-control select2" placeholder="Seleccinar un tipo"> </select>
-                              </div>
-                            </div>  
-
-                            <!-- Tipo de documento -->
-                            <div class="col-lg-4">
-                              <div class="form-group">
-                                <label for="tipo_documento">Tipo de documento</label>
-                                <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
-                                  <option value="RUC">RUC</option>
-                                  <option selected value="DNI">DNI</option>
-                                </select>
-                              </div>
-                            </div>
-
-                            <!-- N° de documento -->
-                            <div class="col-lg-4">
-                              <div class="form-group">
-                                <label for="num_documento">N° RUC / DNI</label>
-                                <div class="input-group">
-                                  <input type="number" name="num_documento" class="form-control" id="num_documento" placeholder="N° de documento" />
-                                  <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar Reniec/SUNAT" onclick="buscar_sunat_reniec('');">
-                                    <span class="input-group-text" style="cursor: pointer;">
-                                      <i class="fas fa-search text-primary" id="search"></i>
-                                      <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge" style="display: none;"></i>
-                                    </span>
-                                  </div>
                                 </div>
+                                <div class="card-body" > 
+                                  <div class="tab-content" id="tabs-for-tabContent">
+                                    <!-- TABLA - RESUMEN -->
+                                    <div class="tab-pane fade show active" id="tabs-for-persona" role="tabpanel" aria-labelledby="tabs-for-persona-tab">
+                                      <div class="row">                                                                             
+                                        <div class="col-12">
+                                          <!-- form start -->
+                                          <form id="form-persona" name="form-persona" method="POST">
+                                            <div class="card-body">
+
+                                              <div class="row" id="cargando-1-fomulario">
+                                                <!-- id persona -->
+                                                <input type="hidden" name="idpersona_per" id="idpersona_per" />
+                                                <!-- tipo persona  -->
+                                                <input type="hidden" name="id_tipo_persona_per" id="id_tipo_persona_per" value="2" />
+                                                <!-- Tipo de documento -->
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-2 cp_tipo_doc">
+                                                  <div class="form-group">
+                                                    <label for="tipo_documento_per">Tipo Doc.</label>
+                                                    <select name="tipo_documento_per" id="tipo_documento_per" class="form-control" placeholder="Tipo de documento">
+                                                      <option selected value="DNI">DNI</option>
+                                                      <option value="RUC">RUC</option>
+                                                      <option value="CEDULA">CEDULA</option>
+                                                      <option value="OTRO">OTRO</option>
+                                                    </select>
+                                                  </div>
+                                                </div>
+                                                
+                                                <!-- N° de documento -->
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-3 cp_num_doc">
+                                                  <div class="form-group">
+                                                    <label for="num_documento_per">N° de documento</label>
+                                                    <div class="input-group">
+                                                      <input type="number" name="num_documento_per" class="form-control" id="num_documento_per" placeholder="N° de documento" />
+                                                      <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar Reniec/SUNAT" onclick="buscar_sunat_reniec('_per');">
+                                                        <span class="input-group-text" style="cursor: pointer;">
+                                                          <i class="fas fa-search text-primary" id="search_per"></i>
+                                                          <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge_per" style="display: none;"></i>
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                                <!-- Nombre -->
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-7 cp_nombre">
+                                                  <div class="form-group">
+                                                    <label for="nombre_per">Nombres/Razon Social</label>
+                                                    <input type="text" name="nombre_per" id="nombre_per" class="form-control" placeholder="Nombres y apellidos" />
+                                                  </div>
+                                                </div>
+                                                <!-- Telefono -->
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-2 cp_telefono">
+                                                  <div class="form-group">
+                                                    <label for="telefono_per">Teléfono</label>
+                                                    <input type="text" name="telefono_per" id="telefono_per" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
+                                                  </div>
+                                                </div>
+
+                                                <!-- Correo electronico -->
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 cp_email">
+                                                  <div class="form-group">
+                                                    <label for="email_per">Correo electrónico</label>
+                                                    <input type="email" name="email_per" class="form-control" id="email_per" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
+                                                  </div>
+                                                </div>
+
+                                                <!-- fecha de nacimiento -->
+                                                <div class="col-12 col-sm-10 col-md-6 col-lg-3 cp_f_nacimiento">
+                                                  <div class="form-group">
+                                                    <label for="nacimiento_per">Fecha Nacimiento</label>
+                                                    <input
+                                                      type="date"
+                                                      class="form-control"
+                                                      name="nacimiento_per"
+                                                      id="nacimiento_per"
+                                                      placeholder="Fecha de Nacimiento"
+                                                      onclick="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');"
+                                                      onchange="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');"
+                                                    />
+                                                    <input type="hidden" name="edad_per" id="edad_per" />
+                                                  </div>
+                                                </div>
+
+                                                <!-- edad -->
+                                                <div class="col-12 col-sm-2 col-md-6 col-lg-3 cp_edad">
+                                                  <div class="form-group">
+                                                    <label for="edad_per">Edad</label>
+                                                    <p class="edad_per" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
+                                                  </div>
+                                                </div>
+                                                
+                                                <!-- cargo_trabajador  -->
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 cp_cargo">
+                                                  <div class="form-group">
+                                                    <label for="cargo_trabajador_per">Cargo </label>
+                                                    <select name="cargo_trabajador_per" id="cargo_trabajador_per" class="form-control select2 cargo_trabajador" style="width: 100%;">
+                                                      <!-- Aqui listamos los cargo_trabajador -->
+                                                    </select>
+                                                  </div>
+                                                </div>
+
+                                                <!-- Sueldo(Mensual) -->
+                                                <div class="col-12 col-sm-6 col-md-3 col-lg-3 cp_s_mensual">
+                                                  <div class="form-group">
+                                                    <label for="sueldo_mensual_per">Sueldo(Mensual)</label>
+                                                    <input type="number" step="any" name="sueldo_mensual_per" class="form-control" id="sueldo_mensual_per" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
+                                                  </div>
+                                                </div>
+
+                                                <!-- Sueldo(Diario) -->
+                                                <div class="col-12 col-sm-6 col-md-3 col-lg-3 cp_s_diario">
+                                                  <div class="form-group">
+                                                    <label for="sueldo_diario_per">Sueldo(Diario)</label>
+                                                    <input type="number" step="any" name="sueldo_diario_per" class="form-control" id="sueldo_diario_per" readonly />
+                                                  </div>
+                                                </div>                              
+
+                                                <!-- Direccion -->
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-12 cp_direccion">
+                                                  <div class="form-group">
+                                                    <label for="direccion_per">Dirección</label>                                  
+                                                    <textarea name="direccion_per" id="direccion_per" class="form-control" placeholder="Dirección" rows="2"></textarea>
+                                                  </div>
+                                                </div>
+
+                                                <!-- imagen perfil -->
+                                                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                                                  <div class="col-lg-12 borde-arriba-naranja mt-2 mb-2"></div>
+                                                  <label for="foto1">Foto de perfil</label> <br />
+                                                  <img onerror="this.src='../dist/img/default/img_defecto.png';" src="../dist/img/default/img_defecto.png" class="img-thumbnail" id="foto1_i" style="cursor: pointer !important;" width="auto" />
+                                                  <input style="display: none;" type="file" name="foto1" id="foto1" accept="image/*" />
+                                                  <input type="hidden" name="foto1_actual" id="foto1_actual" />
+                                                  <div class="text-center" id="foto1_nombre"><!-- aqui va el nombre de la FOTO --></div>
+                                                </div>
+
+                                                <!-- Progress -->
+                                                <div class="col-md-12 m-t-20px" id="barra_progress_persona_div" style="display: none;">
+                                                  <div class="form-group">
+                                                    <div class="progress" >
+                                                      <div id="barra_progress_persona" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <div class="row" id="cargando-2-fomulario" style="display: none;" >
+                                                <div class="col-lg-12 text-center">
+                                                  <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
+                                                  <h4>Cargando...</h4>
+                                                </div>
+                                              </div>
+                                                    
+                                            </div>
+                                            <!-- /.card-body -->
+                                            <button type="submit" style="display: none;" id="submit-form-persona">Submit</button>
+                                          </form>
+                                        </div>
+                                        <!-- /.col -->
+                                      </div>
+                                      <!-- /.row -->
+                                    </div>                                    
+                                  </div>
+                                  <!-- /.tab-content -->
+                                </div>
+                                <!-- /.card-body -->
                               </div>
                             </div>
-
-                            <!-- Nombre -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="nombre">Razón Social / Nombre y Apellidos</label>
-                                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Razón Social o  Nombre" />
-                              </div>
-                            </div>
-
-                            <!-- Direccion -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="direccion">Dirección</label>
-                                <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Dirección" />
-                              </div>
-                            </div>
-
-                            <!-- Telefono -->
-                            <div class="col-lg-4">
-                              <div class="form-group">
-                                <label for="telefono">Teléfono</label>
-                                <input type="text" name="telefono" id="telefono" class="form-control" data-inputmask="'mask': ['999-999-999', '+099 99 99 999']" data-mask />
-                              </div>
-                            </div>
-
-                            <!-- Titular de la cuenta -->
-                            <div class="col-lg-4">
-                              <div class="form-group">
-                                <label for="titular_cuenta">Titular de la cuenta</label>
-                                <input type="text" name="titular_cuenta" class="form-control" id="titular_cuenta" placeholder="Titular de la cuenta" />
-                              </div>
-                            </div>
-
-                            <!-- banco -->
-                            <div class="col-lg-4">
-                              <div class="form-group">
-                                <label for="banco">Banco</label>
-                                <select name="banco" id="banco" class="form-control select2" style="width: 100%;" onchange="formato_banco();">
-                                  <!-- Aqui listamos los bancos -->
-                                </select>
-                                <!-- <small id="banco_validar" class="text-danger" style="display: none;">Por favor selecione un cargo</small> -->
-                              </div>
-                            </div>
-
-                            <!-- Cuenta bancaria -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="c_bancaria" class="chargue-format-1">Cuenta Bancaria</label>
-                                <input type="text" name="c_bancaria" class="form-control" id="c_bancaria" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
-                              </div>
-                            </div>
-
-                            <!-- CCI -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="cci" class="chargue-format-2">CCI</label>
-                                <input type="text" name="cci" class="form-control" id="cci" placeholder="CCI" data-inputmask="" data-mask />
-                              </div>
-                            </div>         
-
+                            <!-- /.col -->
                           </div>
-                          <!-- /.card-body -->
-                          <button type="submit" style="display: none;" id="submit-form-persona">Submit</button>
-                        </form>
+                          
+                        </div>
+                        <!-- /.card-body -->
+
+                        
                       </div>
                       <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

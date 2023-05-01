@@ -75,7 +75,7 @@
                       <!-- /.col -->
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3  col-xl-3">
                         <div class="info-box mb-3">
-                        <span class="info-box-icon bg-danger elevation-1"><img src="../dist/svg/blanco-abono-ico.svg" class="nav-icon" alt="" style="width: 31px !important;" ></span>
+                        <span class="info-box-icon bg-danger elevation-1"><i class="nav-icon fas fa-syringe text-dark-0"></i></span>
 
                           <div class="info-box-content">
                             <span class="info-box-text">Productos</span>
@@ -88,14 +88,14 @@
                       <!-- /.col -->
 
                       <!-- fix for small devices only -->
-                      <div class="clearfix hidden-md-up"></div>
+                      <div class="clearfix hidden-md-up"></div> 
 
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box mb-3">
                           <span class="info-box-icon bg-success elevation-1"><i class="nav-icon fa-solid fa-sack-dollar text-dark-0"></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Total venta</span>
+                            <span class="info-box-text">Total compra</span>
                             <span class="info-box-number cant_total_venta_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
@@ -105,11 +105,11 @@
                       <!-- /.col -->
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-warning elevation-1"><i class="nav-icon fa-solid fa-hand-holding-dollar"></i></span>
+                          <span class="info-box-icon bg-warning elevation-1"><i class="nav-icon fas fa-cubes"></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Total pago</span>
-                            <span class="info-box-number cant_total_pago_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-text">Total stock</span>
+                            <span class="info-box-number cant_total_stock_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
                         </div>
@@ -157,7 +157,7 @@
                             <div class=" d-flex justify-content-center ">
                               <h3 class="card-title font-weight-bold">Compras y Pagos por Mes</h3>
                               <!-- <a href="javascript:void(0);">View Report</a> -->
-                              <a class="btn btn-tool btn-sm float-right" id="btn-download-chart-linea" data-toggle="tooltip" data-original-title="Descargar gráfico">
+                              <a class="btn btn-tool btn-sm float-right" onclick="download_chart_linea();" data-toggle="tooltip" data-original-title="Descargar gráfico">
                                 <i class="fas fa-download fa-xl"></i>
                               </a>
                             </div>
@@ -325,7 +325,7 @@
                               <thead>
                               <tr>
                                 <th>Producto</th>
-                                <th>Precio referencial</th>
+                                <th class="text-center">Precio venta</th>
                                 <th class="text-center">Cantidad</th>
                                 <th class="text-center">Mas</th>
                               </tr>
@@ -344,7 +344,7 @@
                           <div class="card-header border-0">
                             <h3 class="card-title text-center">Productos mas usados</h3>
                             <div class="card-tools">                              
-                              <a class="btn btn-tool btn-sm" id="btn-download-chart-pie-productos-mas-usados">
+                              <a class="btn btn-tool btn-sm"  onclick="download_chart_pie_productos_mas_usados();">
                                 <i class="fas fa-download"></i>
                               </a>
                               <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="fas fa-bars"></i>  </a> -->
@@ -357,7 +357,7 @@
                                   <canvas id="chart_pie_productos_mas_usados" height="250"></canvas>
                                 </div>
                               </div>
-                              <!-- <div class="col-md-4">
+                              <!-- <div class="col-md-12">
                                 <ul class="chart-legend clearfix leyenda-pai-productos-mas-usados" >
                                 </ul>
                               </div> -->
@@ -365,6 +365,10 @@
                           </div>
                         </div>
                         <!-- /.card -->
+                      </div>
+
+                      <div class="col-12 col-sm-12 col-md-10 col-lg-6 col-xl-6" style="display: none;" >
+                        <canvas id="chart_pie_productos_mas_usados_v2" height="250"></canvas>
                       </div>
 
                       <div class="col-lg-6 hidden">
