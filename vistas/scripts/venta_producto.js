@@ -6,7 +6,7 @@ var tabla_venta_producto;
 var tabla_venta_x_proveedor;
 var tabla_detalle_compra_x_proveedor;
 
-var tablamateriales;
+var tablamateriales, tabla_validar_stock;
 
 var tabla_pago_venta;
 
@@ -86,6 +86,8 @@ function init() {
   $('#precio_sin_igv_p').number( true, 2 );
   $('#precio_igv_p').number( true, 2 );
   $('#precio_total_p').number( true, 2 );
+
+  $('#monto_pago_compra').number( true, 2 );
 
   $('#monto_pv').number( true, 2 );
 
@@ -577,6 +579,7 @@ function agregarDetalleComprobante(idproducto, codigo, nombre, unidad_medida, um
 
         $('[data-toggle="tooltip"]').tooltip();
 
+        update_stock(idproducto, cont);
         cont++;
         evaluar(); 
       } 
@@ -1749,6 +1752,26 @@ function limpiar_producto() {
 
 //Función ListarArticulos
 function listarmateriales() {
+  tabla_validar_stock = $("#tbla_validar_stock").dataTable({
+    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
+    aProcessing: true, //Activamos el procesamiento del datatables
+    aServerSide: true, //Paginación y filtrado realizados por el servidor
+    dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
+    buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate"></i>', action: function ( e, dt, node, config ) { tablamateriales.ajax.reload(null, false); tabla_validar_stock.ajax.reload(null, false); toastr_success('Exito!!', 'Actualizando tabla', 400); } }
+    ],
+    ajax: {
+      url: `../ajax/ajax_general.php?op=tblaProductosVentaValidarStock&id_sucursal=${localStorage.getItem("nube_id_sucursal")}`,
+      type: "get",
+      dataType: "json",
+      error: function (e) {
+        console.log(e.responseText); ver_errores(e);
+      },
+    },    
+    bDestroy: true,
+    iDisplayLength: -1, //Paginación
+  }).DataTable();
+
   tablamateriales = $("#tblamateriales").dataTable({
     // responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
@@ -1756,7 +1779,7 @@ function listarmateriales() {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom:"<'row'<'col-md-3'B><'col-md-3 float-left'l><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>", //Definimos los elementos del control de tabla
     buttons: [
-      { text: '<i class="fa-solid fa-arrows-rotate"></i>', action: function ( e, dt, node, config ) { tablamateriales.ajax.reload(null, false); toastr_success('Exito!!', 'Actualizando tabla', 400); } }
+      { text: '<i class="fa-solid fa-arrows-rotate"></i>', action: function ( e, dt, node, config ) { tablamateriales.ajax.reload(null, false); tabla_validar_stock.ajax.reload(null, false); toastr_success('Exito!!', 'Actualizando tabla', 400); } }
     ],
     ajax: {
       url: `../ajax/ajax_general.php?op=tblaProductosVenta&id_sucursal=${localStorage.getItem("nube_id_sucursal")}`,
@@ -2158,7 +2181,8 @@ function update_stock(id, count) {console.log(id, count);
   var dif   = stock - cant;
   console.log('stock =' + stock, 'cant =' + cant, 'dif =' + dif);
   if (stock >= cant) {    
-    $(`#table_stock_${id}`).html(formato_miles(dif));    
+    $(`#table_stock_${id}`).html(formato_miles(dif));
+    $(`#table_venta_stock_${id}`).html(formato_miles(dif));    
     modificarSubtotales();    
   } else {
     $(`#valid_cantidad_${count}`).val(0);
@@ -2180,6 +2204,7 @@ function recover_stock(id, count, cantidad_entrante, type_recover = false) {
     
     $(`.btn-file-delete-${count}`).html(`<i class="fas fa-spinner fa-pulse"></i>`).addClass('disabled');    
     $(`#table_stock_${id}`).html( formato_miles(stock_actual) );
+    $(`#table_venta_stock_${id}`).html(formato_miles(stock_actual));
     eliminarDetalle(id, count);
 
   } else if(type_recover == 'recover_remove_edit') { /* -- recuperamos cuando EDITAMOS una nueva venta -- */ 
@@ -2187,6 +2212,7 @@ function recover_stock(id, count, cantidad_entrante, type_recover = false) {
     
     $(`.btn-file-delete-${count}`).html(`<i class="fas fa-spinner fa-pulse"></i>`).addClass('disabled');     
     $(`#table_stock_${id}`).html( formato_miles(stock_actual) );    
+    $(`#table_venta_stock_${id}`).html(formato_miles(stock_actual));
     $(`#add-productos-eliminados`).append(`<input name="idproducto_recover[] value="" /><input name="stock_recover[] value="" />`);    
     eliminarDetalle(id, count);
      

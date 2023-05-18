@@ -126,11 +126,8 @@ if (!function_exists('ejecutarConsulta')) {
   function multiplo_number($numero, $multiplo) {  if($numero%$multiplo == 0){ return true; }else{ return false; } }
 
   function quitar_formato_miles($number) {
-
     $sin_format = 0;
-
-    if ( !empty($number) ) { $sin_format = floatval(str_replace(",", "", $number)); }
-    
+    if ( !empty($number) ) { $sin_format = floatval(str_replace(",", "", $number)); }    
     return $sin_format;
   }
 

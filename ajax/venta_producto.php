@@ -177,7 +177,7 @@ if (!isset($_SESSION["nombre"])) {
     
       // :::::::::::::::::::::::::: S E C C I O N   V E N T A  ::::::::::::::::::::::::::
       case 'guardaryeditarcompra':
-
+        $monto_pago_compra = empty($monto_pago_compra) ? 0 : quitar_formato_miles($monto_pago_compra) ;
         if (empty($idventa_producto)) {
           
           $rspta = $venta_producto->insertar($idcliente, $num_doc, $fecha_venta, $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 

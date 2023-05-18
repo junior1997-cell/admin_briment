@@ -2,7 +2,7 @@ var tabla_laboratorio_af;
 
 //Función que se ejecuta al inicio
 function init() {
-  listar_c_insumos_af();
+  listar_tabla_laboratorio();
 
   //Guardar  
   $("#guardar_registro_laboratorio").on("click", function (e) { $("#submit-form-laboratorio").submit(); });
@@ -23,8 +23,8 @@ function limpiar_form_laboratorio() {
   $(".error.invalid-feedback").remove();
 }
 
-//Función listar_c_insumos_af 
-function listar_c_insumos_af () {
+//Función listar_tabla_laboratorio 
+function listar_tabla_laboratorio () {
 
   tabla_laboratorio_af=$('#tabla-laboratorio-af').dataTable({
     responsive: true,
@@ -39,7 +39,7 @@ function listar_c_insumos_af () {
       { extend: 'pdfHtml5', exportOptions: { columns: [0,1,2,3,4], }, text: `<i class="far fa-file-pdf fa-lg" data-toggle="tooltip" data-original-title="PDF"></i>`, className: "btn bg-gradient-danger", footer: false, orientation: 'landscape', pageSize: 'LEGAL',  },
     ],
     ajax:{
-      url: '../ajax/laboratorio.php?op=listar_c_producto',
+      url: '../ajax/laboratorio.php?op=listar_tabla_laboratorio',
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -70,12 +70,12 @@ function listar_c_insumos_af () {
 
 //Función para guardar o editar
 
-function guardaryeditar_c_insumos_af(e) {
+function guardar_y_editar_laboratorio(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
   var formData = new FormData($("#form-laboratorio")[0]);
  
   $.ajax({
-    url: "../ajax/laboratorio.php?op=guardaryeditar_c_insumos_af",
+    url: "../ajax/laboratorio.php?op=guardar_y_editar_laboratorio",
     type: "POST",
     data: formData,
     contentType: false,
@@ -88,7 +88,7 @@ function guardaryeditar_c_insumos_af(e) {
 
 	      tabla_laboratorio_af.ajax.reload(null, false);
          
-				limpiar_l_af();
+				limpiar_form_laboratorio();
 
         $("#modal-agregar-laboratorio").modal("hide");
 
@@ -128,14 +128,14 @@ function guardaryeditar_c_insumos_af(e) {
   });
 }
 
-function mostrar_c_insumos_af (idlaboratorio ) {
+function mostrar_editar_laboratorio (idlaboratorio ) {
 
   console.log(idlaboratorio);
 
   $("#cargando-7-fomulario").hide();
   $("#cargando-8-fomulario").show();
 
-  limpiar_l_af();
+  limpiar_form_laboratorio();
 
   $("#modal-agregar-laboratorio").modal("show")
 
@@ -158,7 +158,7 @@ function mostrar_c_insumos_af (idlaboratorio ) {
 
 
 //Función para desactivar y eliminar registros
-function eliminar_c_insumos_af(idlaboratorio, nombre ) {
+function eliminar_laboratorio(idlaboratorio, nombre ) {
   crud_eliminar_papelera(
     "../ajax/laboratorio.php?op=desactivar",
     "../ajax/laboratorio.php?op=delete", 
@@ -204,7 +204,7 @@ $(function () {
       $(element).removeClass("is-invalid").addClass("is-valid");   
     },
     submitHandler: function (e) {
-      guardaryeditar_c_insumos_af(e);      
+      guardar_y_editar_laboratorio(e);      
     },
   });
 });

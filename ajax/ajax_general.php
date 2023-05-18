@@ -539,14 +539,52 @@
 
             $datas[] = [
               "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' .  $data_agregar .')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
-              "1" => '<div class="user-block w-250px">'.
+              "1" => $reg['codigo'],
+              "2" => '<div class="user-block w-250px">'.
                 '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="' . $img . '" alt="user image" onerror="' . $imagen_error . '" onclick="ver_img_producto(\'' . $img . '\', \''.encodeCadenaHtml($reg['nombre']).'\');">'.
                 '<span class="username"><p class="mb-0" >' . $reg['nombre'] . '</p></span>
                 <span class="description"><b>Lab.: </b>' . $reg['laboratorio'] . '</span>'.
               '</div>',
-              "2" =>'<span class="badge '.$clas_stok.' font-size-14px" stock="'.$reg['stock'].'" id="table_stock_'.$reg['idproducto'].'">'.$reg['stock'].'</span>',
-              "3" => number_format($reg['precio_venta'], 2, '.', ','),
-              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['principio_activo'] . '</textarea>'. $toltip,
+              "3" =>'<span class="badge '.$clas_stok.' font-size-14px" id="table_venta_stock_'.$reg['idproducto'].'" >'.$reg['stock'].'</span>',
+              "4" => $reg['precio_venta'],
+              "5" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['principio_activo'] . '</textarea>'. $toltip,
+            ];
+          }
+  
+          $results = [
+            "sEcho" => 1, //Información para el datatables
+            "iTotalRecords" => count($datas), //enviamos el total registros al datatable
+            "iTotalDisplayRecords" => count($datas), //enviamos el total registros a visualizar
+            "aaData" => $datas,
+          ];
+
+          echo json_encode($results, true);
+        } else {
+
+          echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
+        }
+    
+      break;
+
+      case 'tblaProductosVentaValidarStock':
+          
+        $rspta = $ajax_general->tblaProductos($_GET["id_sucursal"]); 
+
+        $datas = [];         
+
+        if ($rspta['status'] == true) {
+          foreach ($rspta['data'] as $key => $reg) {            
+
+            if ( $reg['stock'] <= 0) { $clas_stok = 'badge-danger'; }
+            else if ($reg['stock'] > 0 && $reg['stock'] <= 10) { $clas_stok = 'badge-warning'; }
+            else if ($reg['stock'] > 10) { $clas_stok = 'badge-success'; }
+
+            $datas[] = [
+              "0" => $reg['nombre'],
+              "1" => $reg['laboratorio'],
+              "2" => '<span class="badge '.$clas_stok.' font-size-14px" stock="'.$reg['stock'].'" id="table_stock_'.$reg['idproducto'].'">'.$reg['stock'].'</span>',
+              "3" => $reg['precio_venta'],
+              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg['principio_activo'] . '</textarea>',
             ];
           }
   

@@ -106,35 +106,35 @@ class ChartCompraProducto
         array_push($data_pagos, (empty($mes['data']) ? 0 : (empty($mes['data']['total_deposito']) ? 0 : floatval($mes['data']['total_deposito']) ) ));       
   
       }
-      $sql_3 = "SELECT COUNT(idcompra_producto) as factura_total FROM compra_producto WHERE  YEAR(fecha_compra) = '$year_filtro' ;";
+      $sql_3 = "SELECT COUNT(idcompra_producto) as factura_total FROM compra_producto WHERE  YEAR(fecha_compra) = '$year_filtro' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_total = ejecutarConsultaSimpleFila($sql_3); if ($factura_total['status'] == false) { return $factura_total; }
 
-      $sql_4 = "SELECT COUNT(idcompra_producto) as factura_aceptadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1' ;";
+      $sql_4 = "SELECT COUNT(idcompra_producto) as factura_aceptadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1' AND idpersona_sucursal = '$id_sucursal';";
       $factura_aceptadas = ejecutarConsultaSimpleFila($sql_4); if ($factura_aceptadas['status'] == false) { return $factura_aceptadas; }
 
-      $sql_5 = "SELECT COUNT(idcompra_producto) as factura_rechazadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='0' AND estado_delete='1' ;";
+      $sql_5 = "SELECT COUNT(idcompra_producto) as factura_rechazadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='0' AND estado_delete='1' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_rechazadas = ejecutarConsultaSimpleFila($sql_5); if ($factura_rechazadas['status'] == false) { return $factura_rechazadas; }
 
-      $sql_6 = "SELECT COUNT(idcompra_producto) as factura_eliminadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='0' ;";
+      $sql_6 = "SELECT COUNT(idcompra_producto) as factura_eliminadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='0' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_eliminadas = ejecutarConsultaSimpleFila($sql_6); if ($factura_eliminadas['status'] == false) { return $factura_eliminadas; }
 
-      $sql_7 = "SELECT COUNT(idcompra_producto) as factura_rechazadas_eliminadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='0' OR estado_delete='0' ;";
+      $sql_7 = "SELECT COUNT(idcompra_producto) as factura_rechazadas_eliminadas FROM compra_producto WHERE YEAR(fecha_compra) = '$year_filtro' AND estado='0' OR estado_delete='0' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_rechazadas_eliminadas = ejecutarConsultaSimpleFila($sql_7); if ($factura_rechazadas_eliminadas['status'] == false) { return $factura_rechazadas_eliminadas; }
 
       // -------------------------
       $sql_8 = "SELECT SUM(total_compra) as factura_total_gasto
-      FROM compra_producto  WHERE  YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1';";
+      FROM compra_producto  WHERE  YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1' AND idpersona_sucursal = '$id_sucursal';";
       $factura_total_gasto = ejecutarConsultaSimpleFila($sql_8); if ($factura_total_gasto['status'] == false) { return $factura_total_gasto; }
 
       $sql_9 = "SELECT SUM(pcp.monto) as factura_total_pago  
       FROM pago_compra_producto as pcp, compra_producto as cp 
-      WHERE pcp.idcompra_producto = cp.idcompra_producto  AND  YEAR(pcp.fecha_pago) = '$year_filtro' AND cp.estado='1' AND cp.estado_delete='1' AND pcp.estado='1' AND pcp.estado_delete='1';";
+      WHERE pcp.idcompra_producto = cp.idcompra_producto  AND  YEAR(pcp.fecha_pago) = '$year_filtro' AND cp.estado='1' AND cp.estado_delete='1' AND pcp.estado='1' AND pcp.estado_delete='1' AND cp.idpersona_sucursal = '$id_sucursal';";
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9); if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
       $sql_10 = "SELECT dt.idproducto, p.nombre as producto, p.imagen, p.precio_venta as precio_referencial, SUM(dt.cantidad) AS cantidad_vendida, p.descripcion, l.nombre as laboratorio
       FROM compra_producto as cp, detalle_compra_producto as dt, producto as p, laboratorio as l
-      WHERE cp.idcompra_producto = dt.idcompra_producto AND dt.idproducto = p.idproducto AND l.idlaboratorio = p.idlaboratorio AND  YEAR(cp.fecha_compra) = '$year_filtro'
+      WHERE cp.idcompra_producto = dt.idcompra_producto AND dt.idproducto = p.idproducto AND l.idlaboratorio = p.idlaboratorio AND  YEAR(cp.fecha_compra) = '$year_filtro' AND cp.idpersona_sucursal = '$id_sucursal'
       GROUP BY dt.idproducto
       ORDER BY SUM(dt.cantidad) DESC
       LIMIT 0 , 6;";
@@ -151,46 +151,46 @@ class ChartCompraProducto
       for ($i=1; $i <= $dias_filtro ; $i++) {
         $sql_1 = "SELECT idpersona, SUM(total_compra) as total_gasto , ELT(MONTH(fecha_compra), 'En.', 'Febr.', 'Mzo.', 'Abr.', 'My.', 'Jun.', 'Jul.', 'Agt.', 'Sept.', 'Oct.', 'Nov.', 'Dic.') as mes_name_abreviado, 
         ELT(MONTH(fecha_compra), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre') as mes_name, fecha_compra 
-        FROM compra_producto  WHERE DAY(fecha_compra)='$i' AND MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1';";
+        FROM compra_producto  WHERE DAY(fecha_compra)='$i' AND MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1' AND idpersona_sucursal = '$id_sucursal';";
         $mes = ejecutarConsultaSimpleFila($sql_1); if ($mes['status'] == false) { return $mes; }
         array_push($data_gasto, (empty($mes['data']) ? 0 : (empty($mes['data']['total_gasto']) ? 0 : floatval($mes['data']['total_gasto']) ) ));
   
         $sql_2 = "SELECT SUM(pg.monto) as total_deposito  
-        FROM pago_compra_producto as pg, compra_producto as cpp 
-        WHERE pg.idcompra_producto = cpp.idcompra_producto AND DAY(pg.fecha_pago)='$i' AND MONTH(pg.fecha_pago)='$mes_filtro' AND YEAR(pg.fecha_pago) = '$year_filtro' AND cpp.estado='1' AND cpp.estado_delete='1';";
+        FROM pago_compra_producto as pg, compra_producto as cp 
+        WHERE pg.idcompra_producto = cp.idcompra_producto AND DAY(pg.fecha_pago)='$i' AND MONTH(pg.fecha_pago)='$mes_filtro' AND YEAR(pg.fecha_pago) = '$year_filtro' AND cp.estado='1' AND cp.estado_delete='1' AND cp.idpersona_sucursal = '$id_sucursal';";
         $mes = ejecutarConsultaSimpleFila($sql_2); if ($mes['status'] == false) { return $mes; }
         array_push($data_pagos, (empty($mes['data']) ? 0 : (empty($mes['data']['total_deposito']) ? 0 : floatval($mes['data']['total_deposito']) ) ));
       }
 
-      $sql_3 = "SELECT COUNT(idcompra_producto) as factura_total FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro';";
+      $sql_3 = "SELECT COUNT(idcompra_producto) as factura_total FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND idpersona_sucursal = '$id_sucursal';";
       $factura_total = ejecutarConsultaSimpleFila($sql_3); if ($factura_total['status'] == false) { return $factura_total; }
 
-      $sql_4 = "SELECT COUNT(idcompra_producto) as factura_aceptadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1' ;";
+      $sql_4 = "SELECT COUNT(idcompra_producto) as factura_aceptadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_aceptadas = ejecutarConsultaSimpleFila($sql_4); if ($factura_aceptadas['status'] == false) { return $factura_aceptadas; }
 
-      $sql_5 = "SELECT COUNT(idcompra_producto) as factura_rechazadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='0' AND estado_delete='1' ;";
+      $sql_5 = "SELECT COUNT(idcompra_producto) as factura_rechazadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='0' AND estado_delete='1' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_rechazadas = ejecutarConsultaSimpleFila($sql_5); if ($factura_rechazadas['status'] == false) { return $factura_rechazadas; }
 
-      $sql_6 = "SELECT COUNT(idcompra_producto) as factura_eliminadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='0' ;";
+      $sql_6 = "SELECT COUNT(idcompra_producto) as factura_eliminadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='0' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_eliminadas = ejecutarConsultaSimpleFila($sql_6); if ($factura_eliminadas['status'] == false) { return $factura_eliminadas; }
 
-      $sql_7 = "SELECT COUNT(idcompra_producto) as factura_rechazadas_eliminadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='0' OR estado_delete='0' ;";
+      $sql_7 = "SELECT COUNT(idcompra_producto) as factura_rechazadas_eliminadas FROM compra_producto WHERE MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='0' OR estado_delete='0' AND idpersona_sucursal = '$id_sucursal' ;";
       $factura_rechazadas_eliminadas = ejecutarConsultaSimpleFila($sql_7); if ($factura_rechazadas_eliminadas['status'] == false) { return $factura_rechazadas_eliminadas; }
 
       // -------------------------
       $sql_8 = "SELECT SUM(total_compra) as factura_total_gasto 
-      FROM compra_producto  WHERE  MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1';";
+      FROM compra_producto  WHERE  MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1' AND idpersona_sucursal = '$id_sucursal';";
       $factura_total_gasto = ejecutarConsultaSimpleFila($sql_8); if ($factura_total_gasto['status'] == false) { return $factura_total_gasto; }
 
       $sql_9 = "SELECT SUM(pcg.monto) as factura_total_pago  
       FROM pago_compra_producto as pcg, compra_producto as cp 
-      WHERE pcg.idcompra_producto = cp.idcompra_producto  AND MONTH(pcg.fecha_pago)='$mes_filtro' AND YEAR(pcg.fecha_pago) = '$year_filtro' AND cp.estado='1' AND cp.estado_delete='1' AND pcg.estado='1' AND pcg.estado_delete='1';";
+      WHERE pcg.idcompra_producto = cp.idcompra_producto  AND MONTH(pcg.fecha_pago)='$mes_filtro' AND YEAR(pcg.fecha_pago) = '$year_filtro' AND cp.estado='1' AND cp.estado_delete='1' AND pcg.estado='1' AND pcg.estado_delete='1' AND cp.idpersona_sucursal = '$id_sucursal';";
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9); if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
       $sql_10 = "SELECT dt.idproducto,p.nombre as producto, p.imagen, p.precio_venta as precio_referencial, SUM(dt.cantidad) AS cantidad_vendida, p.descripcion, l.nombre as laboratorio
-      FROM compra_producto as cpp, detalle_compra_producto as dt, producto as p, laboratorio as l
-      WHERE cpp.idcompra_producto = dt.idcompra_producto AND dt.idproducto = p.idproducto AND l.idlaboratorio = p.idlaboratorio AND MONTH(cpp.fecha_compra)='$mes_filtro' AND  YEAR(cpp.fecha_compra) = '$year_filtro'
+      FROM compra_producto as cp, detalle_compra_producto as dt, producto as p, laboratorio as l
+      WHERE cp.idcompra_producto = dt.idcompra_producto AND dt.idproducto = p.idproducto AND l.idlaboratorio = p.idlaboratorio AND MONTH(cp.fecha_compra)='$mes_filtro' AND  YEAR(cp.fecha_compra) = '$year_filtro' AND cp.idpersona_sucursal = '$id_sucursal'
       GROUP BY dt.idproducto
       ORDER BY SUM(dt.cantidad) DESC
       LIMIT 0 , 6;";
@@ -227,8 +227,8 @@ class ChartCompraProducto
     ];
   }
 
-  public function anios_select2() {
-    $sql = "SELECT DISTINCTROW YEAR(fecha_compra) as anios FROM compra_producto WHERE estado = '1' AND estado_delete = '1' ORDER BY fecha_compra DESC;";
+  public function anios_select2( $id_sucursal ) {
+    $sql = "SELECT DISTINCTROW YEAR(fecha_compra) as anios FROM compra_producto WHERE estado = '1' AND estado_delete = '1' AND idpersona_sucursal = '$id_sucursal' ORDER BY fecha_compra DESC;";
     return ejecutarConsultaArray($sql);
   }
     

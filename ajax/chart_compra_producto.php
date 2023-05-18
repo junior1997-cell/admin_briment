@@ -41,7 +41,7 @@
         break;
 
         case 'anios_select2':
-          $rspta = $chart_venta_producto->anios_select2();
+          $rspta = $chart_venta_producto->anios_select2($_GET["id_sucursal"]);
 
           $data ="";
          

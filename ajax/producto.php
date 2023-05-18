@@ -90,7 +90,7 @@
         break;
     
         case 'tbla_principal':
-          $rspta = $producto->tbla_principal($_GET["idpresentacion"]);
+          $rspta = $producto->tbla_principal($_GET["id_sucursal"], $_GET["idpresentacion"]);
           //Vamos a declarar un array
           $data = []; $cont=1;
 

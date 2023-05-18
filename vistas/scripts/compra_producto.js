@@ -1252,7 +1252,7 @@ function listarmateriales() {
     buttons: [
       { text: '<i class="fa-solid fa-arrows-rotate" data-toggle="tooltip" data-original-title="Recargar"></i>', className: "btn bg-gradient-info", action: function ( e, dt, node, config ) { tablamateriales.ajax.reload(null, false); toastr_success('Exito!!', 'Actualizando tabla', 400); } },    ],
     ajax: {
-      url: "../ajax/ajax_general.php?op=tblaProductosCompra",
+      url: `../ajax/ajax_general.php?op=tblaProductosCompra&id_sucursal=${localStorage.getItem("nube_id_sucursal")}`,
       type: "get",
       dataType: "json",
       error: function (e) {

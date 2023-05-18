@@ -10,7 +10,7 @@ function init() {
   $("#lAllProducto").addClass("active");
   $('.lAllProducto-img').attr('src', '../dist/svg/negro-abono-ico.svg');
   lista_de_items();
-  tbla_principal();
+  tbla_principal(localStorage.getItem("nube_id_sucursal"));
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
 
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida', null);
@@ -84,13 +84,13 @@ function lista_de_items() {
       e.data.forEach((val, index) => {
         data_html = data_html.concat(`
         <li class="nav-item">
-          <a class="nav-link" onclick="delay(function(){tbla_principal('${val.idpresentacion}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
+          <a class="nav-link" onclick="delay(function(){tbla_principal('${localStorage.getItem("nube_id_sucursal")}', '${val.idpresentacion}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
         </li>`);
       });
 
       $(".lista-items").html(`
         <li class="nav-item">
-          <a class="nav-link active" onclick="delay(function(){tbla_principal('todos')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="true">Todos</a>
+          <a class="nav-link active" onclick="delay(function(){tbla_principal('${localStorage.getItem("nube_id_sucursal")}', 'todos')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="true">Todos</a>
         </li>
         ${data_html}
       `); 
@@ -101,7 +101,7 @@ function lista_de_items() {
 }
 
 //Función Listar
-function tbla_principal(idpresentacion = 'todos') {  
+function tbla_principal(id_sucursal, idpresentacion = 'todos') {  
 
   tabla = $("#tabla-producto").dataTable({
     responsive: true,
@@ -117,7 +117,7 @@ function tbla_principal(idpresentacion = 'todos') {
       { extend: "colvis", text: `Columnas`, className: "btn bg-gradient-gray", exportOptions: { columns: "th:not(:last-child)", }, },
     ],
     ajax: {
-      url: `../ajax/producto.php?op=tbla_principal&idpresentacion=${idpresentacion}`,
+      url: `../ajax/producto.php?op=tbla_principal&id_sucursal=${id_sucursal}&idpresentacion=${idpresentacion}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -202,11 +202,11 @@ function guardaryeditar(e) {
     beforeSend: function () {
       $("#guardar_registro").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
       $("#barra_progress_producto").css({ width: "0%",  }).text("0%").addClass('progress-bar-striped progress-bar-animated');
-      $("#barra_progress_div").show();
+      $("#barra_progress_producto_div").show();
     },
     complete: function () {
       $("#barra_progress_producto").css({ width: "0%", }).text("0%").removeClass('progress-bar-striped progress-bar-animated');
-      $("#barra_progress_div").hide();
+      $("#barra_progress_producto_div").hide();
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });

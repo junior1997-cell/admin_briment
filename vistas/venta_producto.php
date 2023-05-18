@@ -270,7 +270,7 @@
                                   <div style="display: none !important;" id="add-productos-eliminados"> </div>
 
                                   <!-- Tipo de Empresa -->
-                                  <div class="col-lg-5">
+                                  <div class="col-lg-8">
                                     <div class="form-group">
                                       <label for="idcliente">Cliente <sup class="text-danger">(único*)</sup></label>
                                       <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc('#idcliente', '#num_doc');"> </select>
@@ -386,7 +386,7 @@
                                         <th>Código</th>
                                         <th>Cantidad</th>
                                         <th>Producto</th>
-                                        <th>Lote</th>
+                                        <th>Lote - Fecha Vencimiento</th>
                                         <th>Unidad</th>
                                         <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U <small>(neto)</small></th>
                                         <th class="hidden">IGV</th>
@@ -683,6 +683,7 @@
                           <table id="tblamateriales" class="table table-striped table-bordered table-condensed table-hover" style="width: 100% !important;">
                             <thead>
                               <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
+                              <th>Código</th>
                               <th>Nombre Producto</th>
                               <th>Stock</th>
                               <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U.</th>
@@ -1073,6 +1074,36 @@
                         <div class="modal-footer justify-content-between">
                           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_producto();">Close</button>
                           <button type="submit" class="btn btn-success" id="guardar_registro_material">Guardar Cambios</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- MODAL - TABLA PARA VALIDAR  S T O C K  -->                 
+                  <div class="modal fade " id="modal-validar-stock">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Validar Stock</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text-danger" aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body" id="data-tabla-valida-stock">
+                          <table id="tbla_validar_stock" class="table table-striped table-bordered table-condensed table-hover" style="width: 100% !important;">
+                            <thead>
+                              <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
+                              <th>Nombre Producto</th>
+                              <th>Stock</th>
+                              <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U.</th>
+                              <th>Principio Activo</th>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                          <!-- <button type="submit" class="btn btn-success" >Guardar Cambios</button> -->
                         </div>
                       </div>
                     </div>

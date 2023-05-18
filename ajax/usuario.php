@@ -108,10 +108,10 @@
   require_once "../modelos/Usuario.php";
   require_once "../modelos/Permiso.php";
   require_once "../modelos/Persona.php";      
-
-  $usuario = new Usuario($_SESSION['idusuario']);  
-  $permisos = new Permiso($_SESSION['idusuario']);
-  $persona = new Persona($_SESSION['idusuario']);
+  $sesion_id_usuario = isset($_SESSION['idusuario']) ? $_SESSION['idusuario'] : 0 ;
+  $usuario = new Usuario($sesion_id_usuario);  
+  $permisos = new Permiso($sesion_id_usuario);
+  $persona = new Persona($sesion_id_usuario);
 
   date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
 

@@ -17,7 +17,7 @@
     $nombre_laboratorio = isset($_POST["nombre_laboratorio"]) ? limpiarCadena($_POST["nombre_laboratorio"]) : "";
 
     switch ($_GET["op"]) {
-      case 'guardaryeditar_c_insumos_af':
+      case 'guardar_y_editar_laboratorio':
         if (empty($idlaboratorio)) {
           $rspta = $marca_l->insertar($nombre_laboratorio);
           echo json_encode( $rspta, true) ;
@@ -44,7 +44,7 @@
         echo json_encode( $rspta, true) ;
       break;
 
-      case 'listar_c_producto':
+      case 'listar_tabla_laboratorio':
         $rspta = $marca_l->listar();
         //Vamos a declarar un array
         $data = [];  $cont = 1;
@@ -56,8 +56,8 @@
             $data[] = [
               "0" => $cont++,
               "1" => $reg->estado
-                ? '<button class="btn btn-warning btn-sm" onclick="mostrar_c_insumos_af(' .  $reg->idlaboratorio . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_c_insumos_af(' . $reg->idlaboratorio .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'
+                ? '<button class="btn btn-warning btn-sm" onclick="mostrar_editar_laboratorio(' .  $reg->idlaboratorio . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_laboratorio(' . $reg->idlaboratorio .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'
                 : '',
               "2" => $reg->nombre,
               

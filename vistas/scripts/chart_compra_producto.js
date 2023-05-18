@@ -20,7 +20,8 @@ function init() {
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   var anio_actual = moment().format('YYYY');
-  lista_select2(`../ajax/chart_compra_producto.php?op=anios_select2`, '#year_filtro', anio_actual);
+  var id_sucursal = localStorage.getItem("nube_id_sucursal");
+  lista_select2(`../ajax/chart_compra_producto.php?op=anios_select2&id_sucursal=${id_sucursal}`, '#year_filtro', anio_actual);
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
 
